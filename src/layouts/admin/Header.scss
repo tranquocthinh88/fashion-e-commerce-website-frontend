@@ -1,28 +1,40 @@
 .logo_shop-item {
     width: 100px;
     height: 100px;
-    margin-top: 10px;
-    margin-left: 30px;
+    // margin-top: 10px;
+    // margin-left: 30px;
 }
+
 .navbar-item {
     padding: 1px;
     width: 50px;
     height: 50px;
     border-radius: 100px;
 }
+
 .message-item {
     width: 50px;
     height: 50px;
 }
+
 .account-item {
     width: 32px;
     height: 30px;
 }
+
 .notification-item {
     width: 30px;
     height: 30px;
 }
+
 .setting-item {
     width: 30px;
     height: 30px;
+}
+
+.btn {
+    width: 10;
+    height: 50;
+    margin-left: 40;
+    margin-bottom: 10;
 }
