@@ -6,10 +6,10 @@ export const theme = extendTheme({
     light: {
       palette: {
         primary: {
-          main: pink[600],
+          main: pink[200],
         },
         background: {
-            paper: pink[600],
+            paper: pink[400],
         }
       },
     },
