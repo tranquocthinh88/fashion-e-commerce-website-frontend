@@ -15,7 +15,7 @@ const Footer = () => {
             <Box>
                 <Box sx={{ fontSize: 20, fontWeight: 'bold' }}>Email: tranthinh88zz@gmail.com</Box>
                 <Box sx={{ fontSize: 20, fontWeight: 'bold' }}>Email: trungthinh2k2@gmail.com</Box>
-                <Box sx={{ fontSize: 20, fontWeight: 'bold' }}>Địa chỉ: 12 Nguyễn Văn Bảo Street, Phường 4, Quận Gò Vấp, TPHCM</Box>
+                <Box sx={{ fontSize: 20, fontWeight: 'bold' }}>Địa chỉ: 12 Nguyễn Văn Bảo, Phường 4, Quận Gò Vấp, TPHCM</Box>
             </Box>
         </Box>
     </Box>;

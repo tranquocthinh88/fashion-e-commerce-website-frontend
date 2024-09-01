@@ -1,5 +1,4 @@
 import { Box, Button, TextField, } from "@mui/material";
-import logo from '../../assets/logo.png';
 import message from '../../assets/message.png';
 import account from '../../assets/account.png';
 import notification from '../../assets/notification.png';
@@ -7,7 +6,11 @@ import setting from '../../assets/setting.png';
 import navbar from '../../assets/navbar.png';
 import '../admin/Header.scss';
 
-const Header = () => {
+type HeaderProps = {
+    handleOpenNavbar: () => void;
+}
+
+const Header = ({handleOpenNavbar} : HeaderProps) => {
     return (
         <Box>
             <Box sx={{
@@ -16,17 +19,14 @@ const Header = () => {
                 flexDirection: "row",
                 justifyContent: "space-between",
                 alignItems: "center",
-                pt: 0.3, pb: 0.3,
+                pt: 1, pb: 1,
             }}>
-                <Box sx={{ display: "flex", justifyContent: "center", width: "15%", }}>
-                    <img src={logo} alt="Logo" className="logo_shop-item" />
-                </Box>
                 <Box sx={{
                     display: "flex", width: "10%", transition: "transform 0.3s ease-in-out",
                     '&:hover': {
                         transform: "scale(1.1)",
                     }
-                }}>
+                }} onClick={handleOpenNavbar}>
                     <img src={navbar} alt="Navbar" className="navbar-item" />
                 </Box>
 
@@ -34,6 +34,7 @@ const Header = () => {
                     <TextField
                         id="search"
                         label="Search..."
+                        variant="outlined"
                         sx={{ width: "100%" }}
                     />
                 </Box>

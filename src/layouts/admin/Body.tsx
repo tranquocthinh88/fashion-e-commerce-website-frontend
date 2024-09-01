@@ -54,8 +54,8 @@ const Body = () => {
                 }
             }}>
                 <Box sx={{ marginTop: 3.5, marginLeft: 2 }}>
-                    <Box sx={{ fontSize: 35, fontWeight: 'bold' }}>200</Box>
-                    <Box sx={{ fontSize: 30, fontWeight: '20px', }}>Daily Visits</Box>
+                    <Box sx={{ fontSize: 35, fontWeight: 'bold' }}>4023</Box>
+                    <Box sx={{ fontSize: 30, fontWeight: '20px', }}>New User</Box>
                 </Box>
                 <img src={newUser} alt="New User" className="new-user-item" />
             </Box>
