@@ -1,7 +1,7 @@
 import { Box, Button, Card, CardContent, CardMedia, Rating, Typography } from "@mui/material";
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 
-const ProductCard = () => {
+const ProductCard = ({ product, quantitySold }: any) => {
     return (
         <Card sx={{
             maxWidth: 250,
@@ -21,7 +21,7 @@ const ProductCard = () => {
             />
             <CardContent sx={{ background: "white" }}>
                 <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <Typography sx={{ fontSize: 12 }}>Đã bán: 50</Typography>
+                    <Typography sx={{ fontSize: 12 }}>Đã bán: {quantitySold}</Typography>
                     <Rating sx={{ pb: "3px" }} size="small" name="rating-read" value={5} readOnly />
                 </Box>
                 <Typography gutterBottom
@@ -37,26 +37,25 @@ const ProductCard = () => {
                         fontSize: 14
                     }}
                 >
-                    Áo Khoác Gió Nam 3C 2 Lớp Thể Thao Phối Lưng Năng động, Phong cách
+                    {product.name}
                 </Typography>
                 <Box sx={{ display: 'flex', justifyContent: 'flex-start', alignItems: "center" }}>
                     <Typography gutterBottom
                         sx={{ color: 'red', fontSize: 14 }}>
-                        149000đ
+                        {product.price}đ
                     </Typography>
                     <Typography gutterBottom
                         sx={{ color: 'gray', textDecoration: 'line-through', pl: 1, fontSize: 16 }}>
                         199000đ
                     </Typography>
                 </Box>
-                <Box sx={{ display: "flex", justifyContent: "center", gap: 1 }}>
+                <Box sx={{ display: "flex", justifyContent: 'center'}}>
                     <Button sx={{
-                        display: 'flex', alignItems: 'center', justifyContent: 'center',
                         ':hover': {
                             background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
                             color: 'white',
                         },
-                    }}>Thêm vào giỏ<AddShoppingCartIcon sx={{ ml: 1 }} /></Button>
+                    }}>Thêm vào giỏ<AddShoppingCartIcon sx={{ ml: 1}} /></Button>
                 </Box>
             </CardContent>
         </Card>
