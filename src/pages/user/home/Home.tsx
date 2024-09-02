@@ -1,8 +1,8 @@
-import { Box, Button, Container, Rating, Typography } from "@mui/material";
-import Slide from "../../../component/Slide";
-import ProductCard from "../../../component/user/product/ProductCard";
+import { Box, Button, Container, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import { primaryGradient } from "../../../theme";
+import Slide from "../../../components/Slide";
+import ProductCard from "../../../components/user/product/ProductCard";
 
 
 const productSales = [
@@ -67,13 +67,12 @@ const Home = () => {
             <Slide />
             <Box sx={{
                 width: "100%",
-                // height: 500,
                 background: "white",
                 pt: 2,
                 pb: 2,
             }}>
                 <Box sx={{
-                    background: "rgba(255, 0, 188, 0.18)",
+                    background: "rgba(255, 0, 188, 0.07)",
                     borderRadius: 4,
                 }}>
                     <Typography
@@ -105,7 +104,7 @@ const Home = () => {
                     </Container>
                 </Box>
                 <Box sx={{
-                    background: "rgba(255, 0, 188, 0.18)",
+                    background: "rgba(255, 0, 188, 0.07)",
                     borderRadius: 4,
                 }}>
                     <Typography
