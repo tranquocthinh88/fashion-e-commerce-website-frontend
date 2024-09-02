@@ -1,13 +1,13 @@
-import { Box, Button, Container, ListItemButton, TextField, Typography } from "@mui/material";
+import { Badge, Box, Container, IconButton, ListItemButton, TextField, Tooltip, Typography } from "@mui/material";
 import logo from '../../assets/logo.png';
-import message from '../../assets/message.png'; // Import the message.png file
-import account from '../../assets/account.png'; // Import the account.png file
-import notification from '../../assets/notification.png'; // Import the notification.png file
-import setting from '../../assets/setting.png'; // Import the setting.png file
 import '../admin/Header.scss';
 import { UserMenu } from "../common/Menu";
 import { Link, useLocation } from "react-router-dom";
-import { blueGradient, thirdGradient } from "../../theme";
+import { thirdGradient } from "../../theme";
+import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import MailIcon from '@mui/icons-material/Mail';
+import { Notifications } from "@mui/icons-material";
 
 
 const Header = () => {
@@ -22,30 +22,51 @@ const Header = () => {
                 alignItems: "center",
                 pt: 2, pb: 2,
             }}>
-                <Box sx={{ display: "flex", justifyContent: "center", width: "15%",}}>
+                <Box sx={{ display: "flex", justifyContent: "center", width: "15%", }}>
                     <img src={logo} alt="Logo" className="logo_shop-item" />
                 </Box>
-                
-                <Box sx={{width: "65%", pr: 20}}>
+
+                <Box sx={{ width: "65%", pr: 20 }}>
                     <TextField
                         id="search"
                         label="Search..."
-                        sx={{ width: "100%"}}
+                        sx={{ width: "100%" }}
                     />
                 </Box>
-                <Box sx={{display: "flex", width: "20%",}}>
-                    <Button className="btn">
-                        <img src={message} alt="Message" className="message-item" />
-                    </Button>
-                    <Button className="btn">
-                        <img src={account} alt="Account" className="account-item" />
-                    </Button>
-                    <Button className="btn">
-                        <img src={notification} alt="Notification" className="notification-item" />
-                    </Button>
-                    <Button className="btn">
-                        <img src={setting} alt="Setting" className="setting-item" />
-                    </Button>
+                <Box sx={{
+                    display: "flex",
+                    gap: 2, 
+                    justifyContent: "flex-end", 
+                    width: "20%", 
+                    pr: 5
+                }}>
+
+                    <Tooltip title="tin nhắn">
+                        <IconButton>
+                            <Badge badgeContent={4} color="primary">
+                                <MailIcon />
+                            </Badge>
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip title="giỏ hàng">
+                        <IconButton>
+                            <Badge badgeContent={4} color="primary">
+                                <ShoppingCartIcon />
+                            </Badge>
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip title="thông báo">
+                        <IconButton>
+                            <Badge badgeContent={4} color="primary">
+                                <Notifications />
+                            </Badge>
+                        </IconButton>
+                    </Tooltip>
+                    <Tooltip title="tài khoản">
+                        <IconButton>
+                            <AccountCircleIcon />
+                        </IconButton>
+                    </Tooltip>
                 </Box>
             </Box>
             <Container>

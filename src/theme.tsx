@@ -13,13 +13,13 @@ export const theme = extendTheme({
         }
       },
     },
-    dark: {
-      palette: {
-        primary: {
-          main: pink[400],
-        },
-      },
-    },
+    // dark: {
+    //   palette: {
+    //     primary: {
+    //       main: pink[400],
+    //     },
+    //   },
+    // },
   },
 });
 
