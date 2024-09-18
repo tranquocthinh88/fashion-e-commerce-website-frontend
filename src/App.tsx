@@ -1,10 +1,10 @@
 
-import Dashboard from "./pages/admin/Dashboard"
+// import Dashboard from "./pages/admin/Dashboard"
 
 function App() {
   return (
     <>
-      <Dashboard />
+      {/* <Dashboard /> */}
     </>
   )
 }

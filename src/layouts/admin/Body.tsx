@@ -4,11 +4,12 @@ import dailyVisit from '../../assets/dailyvisit.png';
 import newOrder from '../../assets/neworder.png';
 import newUser from '../../assets/newuser.png';
 import sale from '../../assets/sales.png';
-import saleDiagram from '../../assets/sale_diagram.png';
 import '../admin/Body.scss'
+import ColumnChartCustom from "../../components/admin/chart/ColumnChartCustom";
+import CircleChartCustom from "../../components/admin/chart/CircleChartCustom";
 
 const Body = () => {
-    return <Box sx={{ background: bodyAdminColor, pt: 1, pb: 2 }}>
+    return <Box sx={{ background: bodyAdminColor, pt: 1, pb: 2, pl: 1 }}>
         <Box sx={{ fontSize: 30, fontWeight: 'bold' }}>Dashboard !</Box>
         <Box sx={{ display: 'flex', justifyContent: 'space-around', marginTop: 3 }}>
             <Box sx={{
@@ -60,13 +61,13 @@ const Body = () => {
                 <img src={newUser} alt="New User" className="new-user-item" />
             </Box>
         </Box>
-        <Box sx={{ justifyContent: 'center', display: 'flex', marginTop: 5 }}>
-            <img src={saleDiagram} alt="Sale Diagram" className="sale-diagram" />
-        </Box>
-        <Box sx={{ display: 'flex', justifyContent: 'space-around' }}>
-            <Box sx={{ fontSize: 30, fontWeight: 'bold', marginLeft: 55 }}>2021</Box>
-            <Box sx={{ fontSize: 30, fontWeight: 'bold' }}>2022</Box>
-            <Box sx={{ fontSize: 30, fontWeight: 'bold', marginRight: 50 }}>2023</Box>
+        <Box sx={{display: 'flex', alignItems: 'center'}}>
+            <Box sx={{ width: '80%' }}>
+                <ColumnChartCustom />
+            </Box>
+            <Box sx={{ width: '40%' }}>
+                <CircleChartCustom />
+            </Box>
         </Box>
     </Box>
 }

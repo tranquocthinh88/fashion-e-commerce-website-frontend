@@ -1,16 +1,16 @@
-import { Box, Button, TextField, } from "@mui/material";
-import message from '../../assets/message.png';
-import account from '../../assets/account.png';
-import notification from '../../assets/notification.png';
-import setting from '../../assets/setting.png';
-import navbar from '../../assets/navbar.png';
-import '../admin/Header.scss';
+import { Box, TextField, } from "@mui/material";
+import ReorderIcon from '@mui/icons-material/Reorder';
+import { navbarHover } from "../../theme";
+import MessageIcon from '@mui/icons-material/Message';
+import AccountCircleIcon from '@mui/icons-material/AccountCircle';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+import SettingsIcon from '@mui/icons-material/Settings';
 
 type HeaderProps = {
     handleOpenNavbar: () => void;
 }
 
-const Header = ({handleOpenNavbar} : HeaderProps) => {
+const Header = ({ handleOpenNavbar }: HeaderProps) => {
     return (
         <Box>
             <Box sx={{
@@ -19,15 +19,23 @@ const Header = ({handleOpenNavbar} : HeaderProps) => {
                 flexDirection: "row",
                 justifyContent: "space-between",
                 alignItems: "center",
-                pt: 1, pb: 1,
+                pt: 2, pb: 2,
             }}>
                 <Box sx={{
-                    display: "flex", width: "10%", transition: "transform 0.3s ease-in-out",
-                    '&:hover': {
-                        transform: "scale(1.1)",
+                    display: "flex",
+                    marginLeft: 10,
+                    width: 50,
+                    height: 50,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    ':hover': {
+                        background: navbarHover,
+                        color: 'white',
+                        borderRadius: '50%',
+                        transition: 'background 0.5s ease-in-out',
                     }
                 }} onClick={handleOpenNavbar}>
-                    <img src={navbar} alt="Navbar" className="navbar-item" />
+                    <ReorderIcon sx={{ fontSize: 40 }} />
                 </Box>
 
                 <Box sx={{ width: "35%", marginRight: 40 }}>
@@ -38,19 +46,67 @@ const Header = ({handleOpenNavbar} : HeaderProps) => {
                         sx={{ width: "100%" }}
                     />
                 </Box>
-                <Box sx={{ display: "flex", width: "20%", }}>
-                    <Button className="btn">
-                        <img src={message} alt="Message" className="message-item" />
-                    </Button>
-                    <Button className="btn">
-                        <img src={account} alt="Account" className="account-item" />
-                    </Button>
-                    <Button className="btn">
-                        <img src={notification} alt="Notification" className="notification-item" />
-                    </Button>
-                    <Button className="btn">
-                        <img src={setting} alt="Setting" className="setting-item" />
-                    </Button>
+                <Box sx={{ display: "flex", width: "20%", justifyContent: 'space-around' }}>
+                    <Box sx={{
+                        display: "flex",
+                        width: 40,
+                        height: 40,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        ':hover': {
+                            background: navbarHover,
+                            color: 'white',
+                            borderRadius: '50%',
+                            transition: 'background 0.5s ease-in-out',
+                        }
+                    }} >
+                        <MessageIcon />
+                    </Box>
+                    <Box sx={{
+                        display: "flex",
+                        width: 40,
+                        height: 40,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        ':hover': {
+                            background: navbarHover,
+                            color: 'white',
+                            borderRadius: '50%',
+                            transition: 'background 0.5s ease-in-out',
+                        }
+                    }} >
+                        <AccountCircleIcon />
+                    </Box>
+                    <Box sx={{
+                        display: "flex",
+                        width: 40,
+                        height: 40,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        ':hover': {
+                            background: navbarHover,
+                            color: 'white',
+                            borderRadius: '50%',
+                            transition: 'background 0.5s ease-in-out',
+                        }
+                    }} >
+                        <NotificationsIcon />
+                    </Box>
+                    <Box sx={{
+                        display: "flex",
+                        width: 40,
+                        height: 40,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        ':hover': {
+                            background: navbarHover,
+                            color: 'white',
+                            borderRadius: '50%',
+                            transition: 'background 0.5s ease-in-out',
+                        }
+                    }} >
+                        <SettingsIcon />
+                    </Box>
                 </Box>
             </Box>
         </Box>

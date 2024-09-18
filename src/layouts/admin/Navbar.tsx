@@ -10,6 +10,7 @@ import { navbarAdminColor, navbarHover } from '../../theme';
 import logo from '../../assets/logo.png';
 import '../admin/Navbar.scss';
 import IconButtonGradient from '../../components/common/IconButtonGradient';
+import { useEffect, useState } from 'react';
 
 type NavbarProps = {
     isOpenNavbar: boolean;
@@ -24,7 +25,17 @@ const Navbar = ({ isOpenNavbar }: NavbarProps) => {
         { icon: <StackedLineChartIcon />, label: 'Thống kê' },
         { icon: <MarkUnreadChatAltIcon />, label: 'Tin nhắn' },
         { icon: <LocationOnIcon />, label: 'Chi nhánh' },
-    ]
+    ];
+
+    const [selectedLabel, setSelectedLabel] = useState('Dashboard');
+    useEffect(() => {
+        setSelectedLabel('Dashboard');
+    }, []);
+
+    const handleMenuItemClick = (label: string) => {
+        setSelectedLabel(label);
+    };
+
     return <Box
         // className={`navbar ${isOpenNavbar ? "open" : "closed"}`}
         sx={{
@@ -36,7 +47,7 @@ const Navbar = ({ isOpenNavbar }: NavbarProps) => {
             sx={{ mt: 1 }}>
             <img src={logo} alt="Logo" className="logo-shop-item" />
         </Box>
-        <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', marginTop: 5,  }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', marginTop: 5, }}>
             {buttonIcon.map((item, index) => {
                 return isOpenNavbar ?
                     (
@@ -47,15 +58,22 @@ const Navbar = ({ isOpenNavbar }: NavbarProps) => {
                                 color: 'white'
                             },
                             justifyContent: 'space-around',
-                
-                        }}>
+                            color: selectedLabel === item.label ? 'red' : 'inherit',
+                            cursor: 'pointer',
+                        }} onClick={() => handleMenuItemClick(item.label)} >
                             <Typography>{item.label}</Typography>
                             <IconButtonGradient >
                                 {item.icon}
                             </IconButtonGradient>
                         </Box>
                     ) : (
-                        <IconButtonGradient sx={{mt:4}}> 
+                        <IconButtonGradient key={index} sx={{
+                            mt: 4,
+                            color: selectedLabel === item.label ? 'red' : 'inherit',
+                            cursor: 'pointer',
+                        }}
+                            onClick={() => handleMenuItemClick(item.label)}
+                        >
                             {item.icon}
                         </IconButtonGradient>
                     )
