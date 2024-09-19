@@ -9,7 +9,7 @@ import ColumnChartCustom from "../../components/admin/chart/ColumnChartCustom";
 import CircleChartCustom from "../../components/admin/chart/CircleChartCustom";
 
 const Body = () => {
-    return <Box sx={{ background: bodyAdminColor, pt: 1, pb: 2, pl: 1 }}>
+    return <Box sx={{ background: bodyAdminColor, pt: 1, pb: 2, pl: 1, height: '100%',width: '100%' }}>
         <Box sx={{ fontSize: 30, fontWeight: 'bold' }}>Dashboard !</Box>
         <Box sx={{ display: 'flex', justifyContent: 'space-around', marginTop: 3 }}>
             <Box sx={{
