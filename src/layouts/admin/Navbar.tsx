@@ -11,13 +11,14 @@ import logo from '../../assets/logo.png';
 import '../admin/Navbar.scss';
 import IconButtonGradient from '../../components/common/IconButtonGradient';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 type NavbarProps = {
     isOpenNavbar: boolean;
 }
 
 const Navbar = ({ isOpenNavbar }: NavbarProps) => {
+    const location = useLocation();
     const buttonIcon = [
         { icon: <Home />, label: 'Dashboard', path: '/admin/dashboard' },
         { icon: <ProductionQuantityLimitsIcon />, label: 'Sản phẩm', path: '/admin/products' },
@@ -65,23 +66,25 @@ const Navbar = ({ isOpenNavbar }: NavbarProps) => {
                                 color: 'white'
                             },
                             justifyContent: 'space-around',
-                            color: selectedLabel === item.label ? 'red' : 'inherit',
+                            color: location.pathname === item.path ? 'red' : 'inherit',
                             cursor: 'pointer',
                         }} onClick={() => handleMenuItemClick(item.label, item.path)} >
                             <Typography>{item.label}</Typography>
                             <IconButtonGradient >
                                 {item.icon}
+                                
                             </IconButtonGradient>
                         </Box>
                     ) : (
                         <IconButtonGradient key={index} sx={{
                             mt: 4,
-                            color: selectedLabel === item.label ? 'red' : 'inherit',
+                            color: location.pathname === item.path ? 'red' : 'inherit',
                             cursor: 'pointer',
                         }}
                             onClick={() => handleMenuItemClick(item.label, item.path)}
                         >
                             {item.icon}
+                            
                         </IconButtonGradient>
                     )
             })}
