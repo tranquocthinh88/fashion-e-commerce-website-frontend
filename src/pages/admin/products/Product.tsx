@@ -22,9 +22,13 @@ const rows = [
     createData('003', 'Eclair', 262, 16.0, 24, 6.0),
     createData('004', 'Cupcake', 305, 3.7, 67, 4.3),
     createData('005', 'Gingerbread', 356, 16.0, 49, 3.9),
-    createData('005', 'Gingerbread', 356, 16.0, 49, 3.9),
-    createData('005', 'Gingerbread', 356, 16.0, 49, 3.9),
-    createData('005', 'Gingerbread', 356, 16.0, 49, 3.9),
+    createData('006', 'Gingerbread', 356, 16.0, 49, 3.9),
+    createData('007', 'Gingerbread', 356, 16.0, 49, 3.9),
+    createData('008', 'Gingerbread', 356, 16.0, 49, 3.9),
+    createData('009', 'Gingerbread', 356, 16.0, 49, 3.9),
+    createData('010', 'Gingerbread', 356, 16.0, 49, 3.9),
+    createData('011', 'Gingerbread', 356, 16.0, 49, 3.9),
+    createData('012', 'Gingerbread', 356, 16.0, 49, 3.9),
 ];
 
 const Product = () => {
@@ -67,7 +71,7 @@ const Product = () => {
             </Box>
             <Box sx={{ display: 'flex', gap: '12px', flexWrap: 'wrap', justifyContent: 'center'}}>
                 {rows.map(() => (
-                    <Box sx={{width: '320px'}}>
+                    <Box sx={{width: '300px', mt: 1}}>
                         <ProductCardAdmin />
                     </Box>
                 ))}
