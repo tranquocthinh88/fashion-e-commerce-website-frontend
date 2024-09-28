@@ -46,6 +46,21 @@ const Header = ({ handleOpenNavbar }: HeaderProps) => {
                         sx={{ width: "100%" }}
                     />
                 </Box>
+                <Box sx={{
+                    display: "flex",
+                    width: 40,
+                    height: 40,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    ':hover': {
+                        background: navbarHover,
+                        color: 'white',
+                        borderRadius: '50%',
+                        transition: 'background 0.5s ease-in-out',
+                    }
+                }} >
+                    <AccountCircleIcon />
+                </Box>
                 <Box sx={{ display: "flex", width: "20%", justifyContent: 'space-around' }}>
                     <Box sx={{
                         display: "flex",
@@ -61,21 +76,6 @@ const Header = ({ handleOpenNavbar }: HeaderProps) => {
                         }
                     }} >
                         <MessageIcon />
-                    </Box>
-                    <Box sx={{
-                        display: "flex",
-                        width: 40,
-                        height: 40,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        ':hover': {
-                            background: navbarHover,
-                            color: 'white',
-                            borderRadius: '50%',
-                            transition: 'background 0.5s ease-in-out',
-                        }
-                    }} >
-                        <AccountCircleIcon />
                     </Box>
                     <Box sx={{
                         display: "flex",

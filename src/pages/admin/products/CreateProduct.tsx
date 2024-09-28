@@ -102,10 +102,10 @@ const CreateProduct = () => {
                     tabIndex={-1}
                     startIcon={<CloudUploadIcon />}
                     sx={{
-                       ':hover': {
-                                background: navbarHover,
-                                color: 'white'
-                            },
+                        ':hover': {
+                            background: navbarHover,
+                            color: 'white'
+                        },
                         backgroundColor: '#E6B9DB'
                     }}
                 >
@@ -163,7 +163,14 @@ const CreateProduct = () => {
                     />
                 </Box>
                 <Box sx={{ p: 2, pl: 3 }}>
-                    <Button variant="contained">Thêm</Button>
+                    <Button variant="contained"
+                        sx={{
+                            ':hover': {
+                                background: navbarHover,
+                                color: 'white'
+                            },
+                            backgroundColor: '#E6B9DB'
+                        }}>Thêm</Button>
                 </Box>
 
                 <TableContainer component={Paper} sx={{ p: 2 }}>

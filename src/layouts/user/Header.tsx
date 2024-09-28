@@ -2,7 +2,7 @@ import { Badge, Box, Container, IconButton, ListItemButton, TextField, Tooltip, 
 import logo from '../../assets/logo.png';
 import '../admin/Header.scss';
 import { UserMenu } from "../common/Menu";
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { thirdGradient } from "../../theme";
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
@@ -11,6 +11,7 @@ import { Notifications } from "@mui/icons-material";
 
 
 const Header = () => {
+    const navigate = useNavigate();
     const location = useLocation();
     return (
         <Box>
@@ -62,8 +63,8 @@ const Header = () => {
                             </Badge>
                         </IconButton>
                     </Tooltip>
-                    <Tooltip title="tài khoản">
-                        <IconButton>
+                    <Tooltip title="Đăng nhập/Đăng kí">
+                        <IconButton onClick={() => navigate("/login")}>
                             <AccountCircleIcon />
                         </IconButton>
                     </Tooltip>
