@@ -20,10 +20,15 @@
     "@mui/styles": "^6.0.1",
     "@mui/x-charts": "^7.16.0",
     "@mui/x-data-grid": "^7.18.0",
+    "@types/js-cookie": "^3.0.6",
+    "axios": "^1.7.7",
+    "formik": "^2.4.6",
+    "js-cookie": "^3.0.5",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.26.1",
-    "styled-components": "^6.1.13"
+    "styled-components": "^6.1.13",
+    "yup": "^1.4.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.66",

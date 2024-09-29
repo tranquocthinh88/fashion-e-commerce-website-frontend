@@ -1,15 +1,67 @@
-import { Box, Button, Link, TextField } from "@mui/material";
+import { Box, Button, Link, TextField, Typography } from "@mui/material";
 import { bodyAdminColor } from "../../../theme";
 import FacebookIcon from '@mui/icons-material/Facebook';
 import GoogleIcon from '@mui/icons-material/Google';
 import './Login&Register.scss';
 import { CSSTransition } from 'react-transition-group';
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
+import { useFormik } from 'formik';
+import * as yup from 'yup';
+import Cookies from 'js-cookie';
+import { ResponseSuccess } from "../../../dtos/responses/response.success";
+import { LoginResponseDto } from "../../../dtos/responses/login.response";
+import { login } from "../../../services/auth.service";
+import { LoginRequestDto } from "../../../dtos/requests/login.dto";
+import { saveToken } from "../../../services/token.service";
+import { useState } from "react";
+
+const validationLoginSchema = yup.object({
+    email: yup.string().email('Email không hợp lệ').required('Vui lòng nhập email'),
+    password: yup.string().required('Vui lòng nhập mật khẩu')
+});
 
 
 const Login = () => {
+    const [error, setError] = useState('');
     const navigate = useNavigate();
-    
+    const location = useLocation();
+
+    const formikLogin = useFormik({
+        initialValues: {
+            email: '',
+            password: ''
+        },
+        validationSchema: validationLoginSchema,
+        onSubmit: async (values:LoginRequestDto) => {
+            try {
+                // setOpen(true);
+
+                // Gửi yêu cầu đăng nhập
+                const response: ResponseSuccess<LoginResponseDto> = await login(values);
+
+                const accessToken = Cookies.get('accessToken');
+                const refreshToken = Cookies.get('refreshToken');
+                if (accessToken && refreshToken) {
+                    const loginResponse: LoginResponseDto = {
+                        accessToken: accessToken,
+                        refreshToken: refreshToken
+                    };
+
+                    saveToken(loginResponse);
+                    console.log("Đã lưu token vào localStorage");
+                } else {
+                    console.log("Không thể lấy token từ cookie.");
+                }
+                const from = location.state?.from || '/home';
+                navigate(from);
+            } catch (error) {
+                // setOpen(false);
+                localStorage.removeItem("token");
+                setError('Email hoặc mật khẩu không đúng');
+            }
+        }
+    });
+
     return (
         <Box sx={{ width: '100vw', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', background: bodyAdminColor }}>
             <Box className="red-panel" sx={{ width: 800, height: 400, display: 'flex' }}>
@@ -35,18 +87,30 @@ const Login = () => {
                         <TextField
                             id="email"
                             label="Email"
+                            name="email"
+                            type="email"
                             placeholder="Nhập email"
-                            multiline
+                            value={formikLogin.values.email}
+                            onChange={formikLogin.handleChange}
+                            onBlur={formikLogin.handleBlur}
+                            error={formikLogin.touched.email && Boolean(formikLogin.errors.email)}
+                            helperText={formikLogin.touched.email && formikLogin.errors.email}
                             sx={{ width: 300 }}
                         />
                         <TextField
                             id="password"
-                            label="Password"
-                            placeholder="Nhập password"
-                            multiline
+                           label="Mật khẩu"
+                           name="password"
+                           type="password"
+                            placeholder="Nhập mật khẩu"
+                           value={formikLogin.values.password}
+                           onChange={formikLogin.handleChange}
+                           onBlur={formikLogin.handleBlur}
+                           error={formikLogin.touched.password && Boolean(formikLogin.errors.password)}
+                           helperText={formikLogin.touched.password && formikLogin.errors.password}
                             sx={{ width: 300 }}
                         />
-
+                        {error && <Typography component={'span'} sx={{ color: 'red' }}>{error}</Typography>}
                         <Link
                             component="button"
                             variant="body2"
@@ -55,6 +119,7 @@ const Login = () => {
                         </Link>
 
                         <Button variant="contained" sx={{ backgroundColor: 'red', color: 'white', width: 150, borderRadius: 10, ml: 9 }}
+                            onClick={() => formikLogin.submitForm()}
                         >
                             Đăng nhập
                         </Button>
