@@ -8,6 +8,10 @@ import CreateProduct from "../pages/admin/products/CreateProduct";
 import User from "../pages/admin/user/User";
 import Login from "../pages/user/auth/Login";
 import Register from "../pages/user/auth/Register";
+import RevenueStatistics from "../pages/admin/statistics/RevenueStatistics";
+import BestSeller from "../pages/admin/statistics/BestSeller";
+import Message from "../pages/admin/message/Message";
+import Invoice from "../pages/admin/invoice/Invoice";
 
 export const router = createBrowserRouter([
   {
@@ -29,6 +33,22 @@ export const router = createBrowserRouter([
   {
     path: "/admin/users",
     element: <AdminLayout><User/></AdminLayout>
+  },
+  {
+    path: "/admin/invoices",
+    element: <AdminLayout><Invoice/></AdminLayout>
+  },
+  {
+    path: "/admin/messages",
+    element: <AdminLayout><Message/></AdminLayout>
+  },
+  {
+    path: "/admin/statistics/revenue",
+    element: <AdminLayout><RevenueStatistics/></AdminLayout>
+  },
+  {
+    path: "/admin/statistics/best-sellers",
+    element: <AdminLayout><BestSeller/></AdminLayout>
   },
   {
     path: "/login",
