@@ -34,7 +34,7 @@ const User = () => {
     
     return (
         <Box sx={{ background: bodyAdminColor, width: '100%', height: '100%' }}>
-            <Box sx={{ fontSize: 30, fontWeight: 'bold', ml: 2 }}>Users</Box>
+            <Box sx={{ fontSize: 30, fontWeight: 'bold', ml: 2 }}>Người dùng</Box>
             <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end' }}>
                 <TextField
                     id="standard-textarea"
