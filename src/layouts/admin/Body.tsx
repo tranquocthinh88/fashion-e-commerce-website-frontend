@@ -13,7 +13,7 @@ const Body = () => {
         <Box sx={{ fontSize: 30, fontWeight: 'bold' }}>Dashboard !</Box>
         <Box sx={{ display: 'flex', justifyContent: 'space-around', marginTop: 3 }}>
             <Box sx={{
-                background: dailyVisitGradient, width: "16%", height: 150, display: 'flex', transition: "transform 0.5s ease-in-out",
+                background: dailyVisitGradient, width: "22%", height: 150, display: 'flex', transition: "transform 0.5s ease-in-out",
                 '&:hover': {
                     transform: "scale(1.1)",
                 }
@@ -25,7 +25,7 @@ const Body = () => {
                 <img src={dailyVisit} alt="Daily" className="daily-item" />
             </Box>
             <Box sx={{
-                background: saleGradient, width: "16%", height: 150, display: 'flex', transition: "transform 0.5s ease-in-out",
+                background: saleGradient, width: "22%", height: 150, display: 'flex', transition: "transform 0.5s ease-in-out",
                 '&:hover': {
                     transform: "scale(1.1)",
                 }
@@ -37,7 +37,7 @@ const Body = () => {
                 <img src={sale} alt="Sales" className="sales-item" />
             </Box>
             <Box sx={{
-                background: newOrderGradient, width: "16%", height: 150, display: 'flex', transition: "transform 0.5s ease-in-out",
+                background: newOrderGradient, width: "22%", height: 150, display: 'flex', transition: "transform 0.5s ease-in-out",
                 '&:hover': {
                     transform: "scale(1.1)",
                 }
@@ -49,7 +49,7 @@ const Body = () => {
                 <img src={newOrder} alt="New Order" className="new-order-item" />
             </Box>
             <Box sx={{
-                background: newUserGradient, width: "16%", height: 150, display: 'flex', transition: "transform 0.5s ease-in-out",
+                background: newUserGradient, width: "22%", height: 150, display: 'flex', transition: "transform 0.5s ease-in-out",
                 '&:hover': {
                     transform: "scale(1.1)",
                 }

@@ -1,58 +1,54 @@
-import { Box, Button, Container, Typography } from "@mui/material";
+import { Box, Container, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
-import { primaryGradient } from "../../../theme";
 import Slide from "../../../components/Slide";
 import ProductCard from "../../../components/user/product/ProductCard";
-
-
-const productSales = [
-    {
-        product: {
-            id: 1,
-            name: 'Product A',
-            price: 100,
-        },
-        quantitySold: 50,
-    },
-    {
-        product: {
-            id: 2,
-            name: 'Product B',
-            price: 150,
-        },
-        quantitySold: 30,
-    },
-    {
-        product: {
-            id: 3,
-            name: 'Product C',
-            price: 200,
-        },
-        quantitySold: 20,
-    },
-    {
-        product: {
-            id: 4,
-            name: 'Product D',
-            price: 250,
-        },
-        quantitySold: 60,
-    },
-    {
-        product: {
-            id: 5,
-            name: 'Product E',
-            price: 300,
-        },
-        quantitySold: 40,
-    },
-];
-
-
+import { getProductsDiscount } from "../../../services/product.service";
+import { ProductUserResponse } from "../../../dtos/responses/products/productUser-response";
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
+import Slider from "react-slick";
+import CustomArrow from "../../../components/user/customs/CustomArrow ";
 
 const Home = () => {
-
+    const [productSales, setProductSales] = useState<ProductUserResponse[]>([]);
     const [isVisible, setIsVisible] = useState(true);
+
+    const settings = {
+        dots: true, // Hiển thị nút chỉ báo trang
+        infinite: false, // Không cuộn vô hạn
+        speed: 500, // Tốc độ chuyển đổi slide
+        slidesToShow: 5, // Số lượng sản phẩm trên mỗi trang
+        slidesToScroll: 5, // Số sản phẩm khi cuộn mỗi lần
+        prevArrow: <CustomArrow type="prev" />,
+        nextArrow: <CustomArrow type="next" />,
+        initialSlide: 0,
+        responsive: [
+            {
+                breakpoint: 1024,
+                settings: {
+                    slidesToShow: 3,
+                    slidesToScroll: 3,
+                    infinite: true,
+                    dots: true
+                }
+            },
+            {
+                breakpoint: 600,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 2,
+                    initialSlide: 2
+                }
+            },
+            {
+                breakpoint: 480,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1
+                }
+            }
+        ]
+    };
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -60,6 +56,17 @@ const Home = () => {
         }, 500);
 
         return () => clearInterval(interval);
+    }, []);
+
+    useEffect(() => {
+        (async () => {
+            try {
+                const response = await getProductsDiscount(1, 40, [], [])
+                setProductSales(response.data.data);
+            } catch (error) {
+                console.log(error);
+            }
+        })()
     }, []);
 
     return (
@@ -82,27 +89,23 @@ const Home = () => {
                             transition: 'opacity 0.5s ease-in-out',
                         }}
                     >Sản phẩm khuyến mãi</Typography>
-
                     <Container>
-                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, justifyContent: 'center' }}>
-                            {productSales.map((product) => (
-                                <Box key={product.product.id}>
-                                    <ProductCard product={product.product} quantitySold={product.quantitySold} />
+                        <Slider {...settings}>
+                            {productSales.map((productSale: ProductUserResponse) => (
+                                <Box key={productSale.product.id} sx={{ width: '100%', maxWidth: '250px', margin: '0 10px' }}>
+                                    <ProductCard product={productSale} />
                                 </Box>
                             ))}
-                        </Box>
-                        <Box sx={{ display: 'flex', justifyContent: 'center', m: 2 }}>
-                            <Button sx={{
-                                width: '200px',
-                                margin: 2,
-                                ':hover': {
-                                    background: primaryGradient,
-                                    color: 'white',
-                                }
-                            }}>Xem thêm</Button>
-                        </Box>
+                        </Slider>
                     </Container>
                 </Box>
+            </Box>
+            <Box sx={{
+                width: "100%",
+                background: "white",
+                pt: 2,
+                pb: 2,
+            }}>
                 <Box sx={{
                     background: "rgba(255, 0, 188, 0.07)",
                     borderRadius: 4,
@@ -113,25 +116,15 @@ const Home = () => {
                             opacity: isVisible ? 1 : 0,
                             transition: 'opacity 0.5s ease-in-out',
                         }}
-                    >Sản phẩm bán chạy</Typography>
+                    >Sản phẩm khuyến mãi</Typography>
                     <Container>
-                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 1, justifyContent: 'center' }}>
-                            {productSales.map((product) => (
-                                <Box key={product.product.id}>
-                                    <ProductCard product={product.product} quantitySold={product.quantitySold} />
+                        <Slider {...settings}>
+                            {productSales.map((productSale: ProductUserResponse) => (
+                                <Box key={productSale.product.id} sx={{ width: '100%', maxWidth: '250px', margin: '0 10px' }}>
+                                    <ProductCard product={productSale} />
                                 </Box>
                             ))}
-                        </Box>
-                        <Box sx={{ display: 'flex', justifyContent: 'center', m: 2 }}>
-                            <Button sx={{
-                                width: '200px',
-                                margin: 2,
-                                ':hover': {
-                                    background: primaryGradient,
-                                    color: 'white',
-                                }
-                            }}>Xem thêm</Button>
-                        </Box>
+                        </Slider>
                     </Container>
                 </Box>
             </Box>
