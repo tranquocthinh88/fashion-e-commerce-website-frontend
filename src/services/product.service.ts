@@ -1,5 +1,6 @@
 import requestConfig, { ContentType, Method } from "../configs/axios.config";
 import { PageResponse } from "../dtos/responses/page.response";
+import { ProductResponse } from "../dtos/responses/products/product.response";
 import { ProductUserResponse } from "../dtos/responses/products/productUser-response";
 import { ResponseSuccess } from "../dtos/responses/response.success";
 
@@ -18,7 +19,6 @@ export const getProductsSale = async (): Promise<ResponseSuccess<ProductUserResp
         return Promise.reject(error);
     }
 }
-
 
 export const getProductsDiscount = async (pageNo: number = 1, pageSize: number = 40, search: {
     field: string;
@@ -43,6 +43,20 @@ export const getProductsDiscount = async (pageNo: number = 1, pageSize: number =
     try {
         const response = await requestConfig(
             `products/page-product-discount?pageNo=${pageNo}&pageSize=${pageSize}&${sortResult}&${searchResult}`,
+            Method.GET,
+            [],
+            ContentType.JSON
+        );
+        return response.data;
+    } catch (error) {
+        return Promise.reject(error);
+    }
+}
+
+export const getProductById = async (productId: number): Promise<ResponseSuccess<ProductResponse>> => {
+    try {
+        const response = await requestConfig(
+            `products/${productId}`,
             Method.GET,
             [],
             ContentType.JSON

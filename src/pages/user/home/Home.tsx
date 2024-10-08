@@ -68,7 +68,6 @@ const Home = () => {
             }
         })()
     }, []);
-
     return (
         <Box>
             <Slide />
