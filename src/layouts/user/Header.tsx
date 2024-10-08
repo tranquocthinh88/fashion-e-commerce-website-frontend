@@ -1,4 +1,4 @@
-import { Badge, Box, Container, IconButton, ListItemButton, TextField, Tooltip, Typography } from "@mui/material";
+import { Badge, Box, Container, IconButton, Input, ListItemButton, TextField, Tooltip, Typography } from "@mui/material";
 import logo from '../../assets/logo.png';
 import '../admin/Header.scss';
 import { UserMenu } from "../common/Menu";
@@ -8,11 +8,19 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import { Notifications } from "@mui/icons-material";
+import { useState } from "react";
+import RoomChat from "../../pages/user/chat/RoomChat";
 
 
 const Header = () => {
     const navigate = useNavigate();
     const location = useLocation();
+
+     const [isChatOpen, setIsChatOpen] = useState(false);
+
+     const toggleChat = () => {
+         setIsChatOpen(!isChatOpen);
+     }
     return (
         <Box>
             <Box sx={{
@@ -43,7 +51,7 @@ const Header = () => {
                 }}>
 
                     <Tooltip title="tin nhắn">
-                        <IconButton>
+                        <IconButton onClick={toggleChat}>
                             <Badge badgeContent={4} color="primary">
                                 <MailIcon />
                             </Badge>
@@ -97,6 +105,10 @@ const Header = () => {
                     ))}
                 </Box>
             </Container>
+
+            {isChatOpen && 
+                <RoomChat />
+            }
         </Box>
     )
 }

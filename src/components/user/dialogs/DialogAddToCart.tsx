@@ -11,7 +11,6 @@ import { ResponseSuccess } from "../../../dtos/responses/response.success";
 import { ProductResponse } from "../../../dtos/responses/products/product.response";
 import { getProductById } from "../../../services/product.service";
 import { ProductModel } from "../../../models/product.model";
-import { ProductImageModel } from "../../../models/product-image.model";
 import { ProductDetailModel } from "../../../models/product-detail.model";
 
 type Props = {
@@ -55,7 +54,6 @@ const DiaLogAddToCart = ({ open, handleClose, product }: Props) => {
     const [buyQuantity, setBuyQuantity] = useState<number>(1);
     const [availableQuantity, setAvailableQuantity] = useState<number>(0);
     const [productResponse, setProductResponse] = useState<ProductModel>();
-    const [productImages, setProductImages] = useState<ProductImageModel[]>([]);
     const [productDetails, setProductDetails] = useState<ProductDetailModel[]>([]);
 
     useEffect(() => {
@@ -64,7 +62,6 @@ const DiaLogAddToCart = ({ open, handleClose, product }: Props) => {
                 const response: ResponseSuccess<ProductResponse> = await getProductById(Number(product.product.id));
 
                 setProductResponse(response.data.product);
-                setProductImages(response.data.productImage ?? []);
                 setProductDetails(response.data.productDetail ?? []);
 
                 let uniqueColors: ColorModel[] = [];
