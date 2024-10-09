@@ -59,7 +59,7 @@ const DiaLogAddToCart = ({ open, handleClose, product }: Props) => {
     useEffect(() => {
         (async () => {
             try {
-                const response: ResponseSuccess<ProductResponse> = await getProductById(Number(product.product.id));
+                const response: ResponseSuccess<ProductResponse> = await getProductById(product.product.id ?? '');
 
                 setProductResponse(response.data.product);
                 setProductDetails(response.data.productDetail ?? []);
@@ -130,7 +130,7 @@ const DiaLogAddToCart = ({ open, handleClose, product }: Props) => {
             <DialogContent>
                 <Box sx={{ display: "flex", flexDirection: "row" }}>
                     <Box sx={{ width: "40%", background: "gray", height: 400, resizeMode: 'contain' }}>  Hình ảnh
-                        <img src="{product?.product?.thumbnail}" alt="product" style={{ width: "100%", height: "100%" }} />
+                        <img src="{product.product?.thumbnail}" alt="product" style={{ width: "100%", height: "100%" }} />
                     </Box>
                     <Box sx={{ display: "flex", flexDirection: "column", ml: 2 }}> {/* Chi tiết*/}
                         <Typography
@@ -150,7 +150,7 @@ const DiaLogAddToCart = ({ open, handleClose, product }: Props) => {
                             sx={{
                                 fontSize: 14
                             }}
-                        >Thương hiệu: {product.product.provider?.providerName}</Typography>
+                        >Thương hiệu: {product.product?.provider?.providerName}</Typography>
                         <Box sx={{
                             background: "#e4e4e4",
                             p: 1, display: 'flex',
@@ -164,7 +164,7 @@ const DiaLogAddToCart = ({ open, handleClose, product }: Props) => {
                                 }}
                             >Giá: </Typography>
                             <Typography variant="h5" sx={{ color: 'red', fontWeight: '600', }}>{product.priceFinal}</Typography>
-                            <Typography variant="h5" sx={{ color: 'gray', fontWeight: '300', textDecoration: 'line-through' }}>{product.product.price}</Typography>
+                            <Typography variant="h5" sx={{ color: 'gray', fontWeight: '300', textDecoration: 'line-through' }}>{product.product?.price}</Typography>
                         </Box>
                         <Box sx={{ display: "flex", flexDirection: "row", minHeight: "36px", mb: 2, mt: 2 }}> {/* Màu sắc */}
                             <Typography sx={{ width: "100px", mr: 2 }}>Màu sắc: </Typography>

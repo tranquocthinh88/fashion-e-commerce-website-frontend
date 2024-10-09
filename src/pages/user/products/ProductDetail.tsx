@@ -51,8 +51,8 @@ const ProductDetail = () => {
     useEffect(() => {
         (async () => {
             try {
-                const response: ResponseSuccess<ProductResponse> = await getProductById(Number(id));
-
+                const response: ResponseSuccess<ProductResponse> = await getProductById(id ?? '');
+  
                 setProductResponse(response.data.product);
                 setProductImages(response.data.productImage ?? []);
                 setProductDetails(response.data.productDetail ?? []);
@@ -122,6 +122,7 @@ const ProductDetail = () => {
                     <Typography variant="h6">{productResponse?.provider?.providerName}</Typography>
                     <Box sx={{ display: 'flex', gap: '25px' }}>
                         <Typography variant="h5" sx={{ color: 'red', fontWeight: '700', }}>{productResponse?.price}</Typography>
+                        {/* {productResponse. > 0 && <Typography variant="h5" sx={{ color: 'red', fontWeight: '700', }}>{productResponse?.price - productResponse?.price * productResponse?.discount / 100}</Typography>} */}
                         <Typography variant="h5" sx={{ color: 'gray', fontWeight: '300', textDecoration: 'line-through' }}>{productResponse?.price}</Typography>
                     </Box>
                     {productResponse?.avgRating ? <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2, alignItems: 'center' }}> <Rating name="read-only" value={productResponse?.avgRating} readOnly />

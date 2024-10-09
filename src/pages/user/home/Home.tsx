@@ -2,7 +2,7 @@ import { Box, Container, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import Slide from "../../../components/Slide";
 import ProductCard from "../../../components/user/product/ProductCard";
-import { getProductsDiscount } from "../../../services/product.service";
+import { getProductsDiscount, getProductsNewCreatedAt, getProductsSold } from "../../../services/product.service";
 import { ProductUserResponse } from "../../../dtos/responses/products/productUser-response";
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
@@ -11,6 +11,8 @@ import CustomArrow from "../../../components/user/customs/CustomArrow ";
 
 const Home = () => {
     const [productSales, setProductSales] = useState<ProductUserResponse[]>([]);
+    const [productNews, setProductNews] = useState<ProductUserResponse[]>([]);
+    const [productSolds, setProductSolds] = useState<ProductUserResponse[]>([]);
     const [isVisible, setIsVisible] = useState(true);
 
     const settings = {
@@ -63,6 +65,10 @@ const Home = () => {
             try {
                 const response = await getProductsDiscount(1, 40, [], [])
                 setProductSales(response.data.data);
+                const response1 = await getProductsNewCreatedAt(1, 20, [], [])
+                setProductNews(response1.data.data);
+                const response2 = await getProductsSold(1, 20, [], [])
+                setProductSolds(response2.data.data);
             } catch (error) {
                 console.log(error);
             }
@@ -115,12 +121,40 @@ const Home = () => {
                             opacity: isVisible ? 1 : 0,
                             transition: 'opacity 0.5s ease-in-out',
                         }}
-                    >Sản phẩm khuyến mãi</Typography>
+                    >Sản phẩm bán chạy</Typography>
                     <Container>
-                        <Slider {...settings}>
-                            {productSales.map((productSale: ProductUserResponse) => (
-                                <Box key={productSale.product.id} sx={{ width: '100%', maxWidth: '250px', margin: '0 10px' }}>
-                                    <ProductCard product={productSale} />
+                    <Slider {...settings}> 
+                            {productSolds.map((productSold: ProductUserResponse) => (
+                                <Box key={productSold.product.id} sx={{ width: '100%', maxWidth: '250px', margin: '0 10px', textAlign: 'left' }}>
+                                    <ProductCard product={productSold} />
+                                </Box>
+                            ))}
+                        </Slider>
+                    </Container>
+                </Box>
+            </Box>
+            <Box sx={{
+                width: "100%",
+                background: "white",
+                pt: 2,
+                pb: 2,
+            }}>
+                <Box sx={{
+                    background: "rgba(255, 0, 188, 0.07)",
+                    borderRadius: 4,
+                }}>
+                    <Typography
+                        variant="h6" sx={{
+                            color: 'red', p: 1,
+                            opacity: isVisible ? 1 : 0,
+                            transition: 'opacity 0.5s ease-in-out',
+                        }}
+                    >Sản phẩm mới về</Typography>
+                    <Container>
+                    <Slider {...settings}>
+                            {productNews.map((productNew: ProductUserResponse) => (
+                                <Box key={productNew.product.id} sx={{ width: '100%', maxWidth: '250px', margin: '0 10px' }}>
+                                    <ProductCard product={productNew} />
                                 </Box>
                             ))}
                         </Slider>

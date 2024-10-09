@@ -1,4 +1,4 @@
-import { Badge, Box, Container, IconButton, Input, ListItemButton, TextField, Tooltip, Typography } from "@mui/material";
+import { Badge, Box, Container, IconButton, ListItemButton, TextField, Tooltip, Typography } from "@mui/material";
 import logo from '../../assets/logo.png';
 import '../admin/Header.scss';
 import { UserMenu } from "../common/Menu";
@@ -105,7 +105,6 @@ const Header = () => {
                     ))}
                 </Box>
             </Container>
-
             {isChatOpen && 
                 <RoomChat />
             }
