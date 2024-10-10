@@ -129,10 +129,10 @@ const DiaLogAddToCart = ({ open, handleClose, product }: Props) => {
         >
             <DialogContent>
                 <Box sx={{ display: "flex", flexDirection: "row" }}>
-                    <Box sx={{ width: "40%", background: "gray", height: 400, resizeMode: 'contain' }}>  Hình ảnh
-                        <img src="{product.product?.thumbnail}" alt="product" style={{ width: "100%", height: "100%" }} />
+                    <Box sx={{ width: "40%", background: "gray", height: 400, resizeMode: 'contain' }}>
+                        <img src={product.product?.thumbnail} alt="product" style={{ width: "100%", height: "100%" }} />
                     </Box>
-                    <Box sx={{ display: "flex", flexDirection: "column", ml: 2 }}> {/* Chi tiết*/}
+                    <Box sx={{ width: "60%", display: "flex", flexDirection: "column", ml: 2 }}> {/* Chi tiết*/}
                         <Typography
                             sx={{
                                 fontWeight: '500',
@@ -164,7 +164,12 @@ const DiaLogAddToCart = ({ open, handleClose, product }: Props) => {
                                 }}
                             >Giá: </Typography>
                             <Typography variant="h5" sx={{ color: 'red', fontWeight: '600', }}>{product.priceFinal}</Typography>
-                            <Typography variant="h5" sx={{ color: 'gray', fontWeight: '300', textDecoration: 'line-through' }}>{product.product?.price}</Typography>
+                            {product.priceFinal != product.product.price &&
+                                <Typography variant="h5"
+                                    sx={{ color: 'gray', fontWeight: '300', textDecoration: 'line-through' }}>
+                                    {product.product?.price}
+                                </Typography>
+                            }
                         </Box>
                         <Box sx={{ display: "flex", flexDirection: "row", minHeight: "36px", mb: 2, mt: 2 }}> {/* Màu sắc */}
                             <Typography sx={{ width: "100px", mr: 2 }}>Màu sắc: </Typography>
@@ -213,9 +218,9 @@ const DiaLogAddToCart = ({ open, handleClose, product }: Props) => {
                                 </Button>
                             </Box>
                         </Box>
-                        <Link to={`/products/${product.product.id}`} 
-                        style={{ textDecoration: 'none', color: 'blue', marginTop: '8px', display: 'block' }}>
-                         Xem chi tiết sản phẩm</Link>
+                        <Link to={`/products/${product.product.id}`}
+                            style={{ textDecoration: 'none', color: 'blue', marginTop: '8px', display: 'block' }}>
+                            Xem chi tiết sản phẩm</Link>
                     </Box>
                 </Box>
             </DialogContent>

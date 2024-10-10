@@ -14,6 +14,8 @@ import { login } from "../../../services/auth.service";
 import { LoginRequestDto } from "../../../dtos/requests/login.dto";
 import { saveToken } from "../../../services/token.service";
 import { useState } from "react";
+import { UserModel } from "../../../models/user.model";
+import { getUserByEmail, saveUserToLocalStorage } from "../../../services/user.service";
 
 const validationLoginSchema = yup.object({
     email: yup.string().email('Email không hợp lệ').required('Vui lòng nhập email'),
@@ -52,10 +54,13 @@ const Login = () => {
                 } else {
                     console.log("Không thể lấy token từ cookie.");
                 }
+
+                const responseUser: ResponseSuccess<UserModel> = await getUserByEmail(values.email);
+                saveUserToLocalStorage(responseUser.data);
+
                 const from = location.state?.from || '/home';
                 navigate(from);
             } catch (error) {
-                // setOpen(false);
                 localStorage.removeItem("token");
                 setError('Email hoặc mật khẩu không đúng');
             }

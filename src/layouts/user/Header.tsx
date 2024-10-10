@@ -10,8 +10,8 @@ import MailIcon from '@mui/icons-material/Mail';
 import { Notifications } from "@mui/icons-material";
 import { useState } from "react";
 import RoomChat from "../../pages/user/chat/RoomChat";
-
-
+import ProtectRouter from "../../routes/ProtectRoutes";
+import { Role } from "../../models/user.model";
 const Header = () => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -106,7 +106,8 @@ const Header = () => {
                 </Box>
             </Container>
             {isChatOpen && 
-                <RoomChat />
+             <ProtectRouter role={Role.ROLE_USER}> <RoomChat /></ProtectRouter>
+               
             }
         </Box>
     )

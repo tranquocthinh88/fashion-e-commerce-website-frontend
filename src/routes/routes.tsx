@@ -1,4 +1,4 @@
-import { createBrowserRouter } from "react-router-dom";
+import { createBrowserRouter, Navigate } from "react-router-dom";
 import UserLayout from "../layouts/user/UserLayout";
 import Home from "../pages/user/home/Home";
 import Dashboard from "../pages/admin/Dashboard";
@@ -13,16 +13,52 @@ import BestSeller from "../pages/admin/statistics/BestSeller";
 import Message from "../pages/admin/message/Message";
 import Invoice from "../pages/admin/invoice/Invoice";
 import ProductDetail from "../pages/user/products/ProductDetail";
+import RoomChat from "../pages/user/chat/RoomChat";
+import ProtectRouter from "./ProtectRoutes";
+import { Role } from "../models/user.model";
 
-export const router = createBrowserRouter([
+const adminRoutes = [
+  {}
+];
+
+const userRoutes = [
+  {
+    path: "/chat",
+    element: <ProtectRouter role={Role.ROLE_USER}><UserLayout><RoomChat /></UserLayout></ProtectRouter>,
+  }
+];
+
+const publicRoutes = [
   {
     path: "/home",
     element: <UserLayout><Home /></UserLayout>
   },
   {
+    path: "/",
+    element: <Navigate to="/home" />
+  },
+  {
     path: '/products/:id',
     element: <UserLayout><ProductDetail /></UserLayout>
   },
+  {
+    path: "/login",
+    element: <Login />
+  },
+  {
+    path: "/register",
+    element: <Register />
+  },
+];
+
+export const router = createBrowserRouter([
+  ...adminRoutes,
+  ...userRoutes,
+  ...publicRoutes
+]);
+
+export const router1 = createBrowserRouter([
+  
   {
     path: "/admin/dashboard",
     element: <AdminLayout><Dashboard /></AdminLayout>
@@ -54,13 +90,5 @@ export const router = createBrowserRouter([
   {
     path: "/admin/statistics/best-sellers",
     element: <AdminLayout><BestSeller /></AdminLayout>
-  },
-  {
-    path: "/login",
-    element: <Login />
-  },
-  {
-    path: "/register",
-    element: <Register />
   },
 ])
