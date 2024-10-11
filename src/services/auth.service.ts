@@ -1,10 +1,10 @@
 import requestConfig, { ContentType, Method } from "../configs/axios.config";
 import { connect } from "../configs/websocket";
 import { LoginRequestDto } from "../dtos/requests/login.dto"
-import { LoginResponseDto } from "../dtos/responses/login.response";
+import { LoginResponse } from "../dtos/responses/login.response";
 import { ResponseSuccess } from "../dtos/responses/response.success";
 
-export const login = async (loginRequestDto: LoginRequestDto): Promise<ResponseSuccess<LoginResponseDto>> => {
+export const login = async (loginRequestDto: LoginRequestDto): Promise<ResponseSuccess<LoginResponse>> => {
     try {
         const response = await requestConfig(
             `auth/login`,
@@ -24,4 +24,25 @@ export const login = async (loginRequestDto: LoginRequestDto): Promise<ResponseS
     } catch (error) {
         return Promise.reject(error);
     }
+}
+
+
+export const logout = async (refreshToken: string): Promise<ResponseSuccess<string>> => {
+    try {
+        const response = await requestConfig(
+            `auth/logout`,
+            Method.POST,
+            refreshToken,
+            ContentType.TEXT_PLAIN
+        );
+        return response.data;
+    } catch (error) {
+        return Promise.reject(error);
+    }
+}
+
+
+export const removeLocalStorage = () => {
+    localStorage.removeItem('token');
+    localStorage.removeItem('user');
 }

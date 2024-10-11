@@ -1,4 +1,4 @@
-export type LoginResponseDto = {
+export type LoginResponse = {
     accessToken: string,
     refreshToken: string
 }

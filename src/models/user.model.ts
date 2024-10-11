@@ -14,7 +14,7 @@ export type UserModel = {
     id: number;
     createdAt: Date;
     updatedAt: Date;
-    name: string;
+    username: string;
     email: string;
     phoneNumber?: string;
     dateOfBirth?: Date;

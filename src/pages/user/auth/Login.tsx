@@ -9,7 +9,7 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import Cookies from 'js-cookie';
 import { ResponseSuccess } from "../../../dtos/responses/response.success";
-import { LoginResponseDto } from "../../../dtos/responses/login.response";
+import { LoginResponse } from "../../../dtos/responses/login.response";
 import { login } from "../../../services/auth.service";
 import { LoginRequestDto } from "../../../dtos/requests/login.dto";
 import { saveToken } from "../../../services/token.service";
@@ -39,12 +39,12 @@ const Login = () => {
                 // setOpen(true);
 
                 // Gửi yêu cầu đăng nhập
-                const response: ResponseSuccess<LoginResponseDto> = await login(values);
+                const response: ResponseSuccess<LoginResponse> = await login(values);
 
                 const accessToken = Cookies.get('accessToken');
                 const refreshToken = Cookies.get('refreshToken');
                 if (accessToken && refreshToken) {
-                    const loginResponse: LoginResponseDto = {
+                    const loginResponse: LoginResponse = {
                         accessToken: accessToken,
                         refreshToken: refreshToken
                     };
@@ -67,6 +67,12 @@ const Login = () => {
         }
     });
 
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+        if (event.key === 'Enter') {
+          formikLogin.submitForm(); // Gọi hàm submitForm khi nhấn Enter
+        }
+      };
+
     return (
         <Box sx={{ width: '100vw', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', background: bodyAdminColor }}>
             <Box className="red-panel" sx={{ width: 800, height: 400, display: 'flex' }}>
@@ -77,7 +83,9 @@ const Login = () => {
                     alignItems: 'center',
                     justifyContent: 'center',
                     gap: 2
-                }}>
+                }}
+                onKeyDown={handleKeyDown} 
+                >
                     <Box sx={{ fontSize: 25, fontWeight: 'bold' }}>Đăng nhập</Box>
                     <Box sx={{ display: 'flex', gap: 2 }}>
                         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 50, height: 50, border: '1px solid black', borderRadius: '50%' }}>
