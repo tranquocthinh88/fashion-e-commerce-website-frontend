@@ -10,7 +10,7 @@ import CircleChartCustom from "../../components/admin/chart/CircleChartCustom";
 
 const Body = () => {
     return <Box sx={{ background: bodyAdminColor, pt: 1, pb: 2, pl: 1, height: '100%',width: '100%' }}>
-        <Box sx={{ fontSize: 30, fontWeight: 'bold' }}>Dashboard !</Box>
+        <Box sx={{ fontSize: 30, fontWeight: 'bold' }}>Trang chủ !</Box>
         <Box sx={{ display: 'flex', justifyContent: 'space-around', marginTop: 3 }}>
             <Box sx={{
                 background: dailyVisitGradient, width: "22%", height: 150, display: 'flex', transition: "transform 0.5s ease-in-out",
