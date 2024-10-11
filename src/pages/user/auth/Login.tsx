@@ -1,4 +1,4 @@
-import { Box, Button, Link, TextField, Typography } from "@mui/material";
+import { Alert, Box, Button, Link, Snackbar, Typography } from "@mui/material";
 import { bodyAdminColor } from "../../../theme";
 import FacebookIcon from '@mui/icons-material/Facebook';
 import GoogleIcon from '@mui/icons-material/Google';
@@ -9,11 +9,14 @@ import { useFormik } from 'formik';
 import * as yup from 'yup';
 import Cookies from 'js-cookie';
 import { ResponseSuccess } from "../../../dtos/responses/response.success";
-import { LoginResponseDto } from "../../../dtos/responses/login.response";
+import { LoginResponse } from "../../../dtos/responses/login.response";
 import { login } from "../../../services/auth.service";
 import { LoginRequestDto } from "../../../dtos/requests/login.dto";
 import { saveToken } from "../../../services/token.service";
 import { useState } from "react";
+import { UserModel } from "../../../models/user.model";
+import { getUserByEmail, saveUserToLocalStorage } from "../../../services/user.service";
+import CustomTextField from "../../../components/common/TextFieldCustom";
 
 const validationLoginSchema = yup.object({
     email: yup.string().email('Email không hợp lệ').required('Vui lòng nhập email'),
@@ -32,17 +35,15 @@ const Login = () => {
             password: ''
         },
         validationSchema: validationLoginSchema,
-        onSubmit: async (values:LoginRequestDto) => {
+        onSubmit: async (values: LoginRequestDto) => {
             try {
-                // setOpen(true);
-
-                // Gửi yêu cầu đăng nhập
-                const response: ResponseSuccess<LoginResponseDto> = await login(values);
+                const response: ResponseSuccess<LoginResponse> = await login(values);
+                console.log(response.data);
 
                 const accessToken = Cookies.get('accessToken');
                 const refreshToken = Cookies.get('refreshToken');
                 if (accessToken && refreshToken) {
-                    const loginResponse: LoginResponseDto = {
+                    const loginResponse: LoginResponse = {
                         accessToken: accessToken,
                         refreshToken: refreshToken
                     };
@@ -52,27 +53,59 @@ const Login = () => {
                 } else {
                     console.log("Không thể lấy token từ cookie.");
                 }
+
+                const responseUser: ResponseSuccess<UserModel> = await getUserByEmail(values.email);
+                saveUserToLocalStorage(responseUser.data);
+
+                // Điều hướng ngay lập tức sau khi hiển thị Snackbar
                 const from = location.state?.from || '/home';
-                navigate(from);
+                navigate(from, { state: { showAlert: true, status: 'success', message: 'Đăng nhập thành công!' } });
+
+
             } catch (error) {
-                // setOpen(false);
                 localStorage.removeItem("token");
                 setError('Email hoặc mật khẩu không đúng');
+
+                showAlert('error', 'Email hoặc mật khẩu không đúng');
             }
         }
     });
 
+
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+        if (event.key === 'Enter') {
+            formikLogin.submitForm();
+        }
+    };
+
+    const [openAlert, setOpenAlert] = useState({
+        show: false,
+        status: '',
+        message: ''
+    });
+
+    const showAlert = (status: string, message: string) => {
+        setOpenAlert({
+            show: true,
+            status: status,
+            message: message
+        });
+    };
+
+
     return (
         <Box sx={{ width: '100vw', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', background: bodyAdminColor }}>
-            <Box className="red-panel" sx={{ width: 800, height: 400, display: 'flex' }}>
+            <Box className="red-panel" sx={{ width: 800, minHeight: 400, display: 'flex' }}>
                 <Box sx={{
-                    width: 800, height: 400, backgroundColor: "white",
+                    width: 800, minHeight: 400, backgroundColor: "white",
                     display: 'flex',
                     flexDirection: 'column',
                     alignItems: 'center',
                     justifyContent: 'center',
                     gap: 2
-                }}>
+                }}
+                    onKeyDown={handleKeyDown}
+                >
                     <Box sx={{ fontSize: 25, fontWeight: 'bold' }}>Đăng nhập</Box>
                     <Box sx={{ display: 'flex', gap: 2 }}>
                         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 50, height: 50, border: '1px solid black', borderRadius: '50%' }}>
@@ -83,33 +116,9 @@ const Login = () => {
                         </Box>
                     </Box>
                     <Box sx={{ fontSize: 15 }}>Hoặc tài khoản của bạn</Box>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
-                        <TextField
-                            id="email"
-                            label="Email"
-                            name="email"
-                            type="email"
-                            placeholder="Nhập email"
-                            value={formikLogin.values.email}
-                            onChange={formikLogin.handleChange}
-                            onBlur={formikLogin.handleBlur}
-                            error={formikLogin.touched.email && Boolean(formikLogin.errors.email)}
-                            helperText={formikLogin.touched.email && formikLogin.errors.email}
-                            sx={{ width: 300 }}
-                        />
-                        <TextField
-                            id="password"
-                           label="Mật khẩu"
-                           name="password"
-                           type="password"
-                            placeholder="Nhập mật khẩu"
-                           value={formikLogin.values.password}
-                           onChange={formikLogin.handleChange}
-                           onBlur={formikLogin.handleBlur}
-                           error={formikLogin.touched.password && Boolean(formikLogin.errors.password)}
-                           helperText={formikLogin.touched.password && formikLogin.errors.password}
-                            sx={{ width: 300 }}
-                        />
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '100%', alignItems: 'center' }}>
+                        <CustomTextField label="Email" id="email" name="email" type="email" formik={formikLogin} />
+                        <CustomTextField label="Mật khẩu" id="password" name="password" type="password" formik={formikLogin} />
                         {error && <Typography component={'span'} sx={{ color: 'red' }}>{error}</Typography>}
                         <Link
                             component="button"
@@ -118,7 +127,7 @@ const Login = () => {
                             Quên mật khẩu?
                         </Link>
 
-                        <Button variant="contained" sx={{ backgroundColor: 'red', color: 'white', width: 150, borderRadius: 10, ml: 9 }}
+                        <Button variant="contained" sx={{ backgroundColor: 'red', color: 'white', width: 150, borderRadius: 10, mb: 2 }}
                             onClick={() => formikLogin.submitForm()}
                         >
                             Đăng nhập
@@ -132,7 +141,9 @@ const Login = () => {
                     unmountOnExit
                 >
                     <Box sx={{
-                        width: 800, height: 400, backgroundColor: "red",
+                        width: 800,
+                        flexGrow: 1,
+                        backgroundColor: "red",
                         display: 'flex',
                         flexDirection: 'column',
                         alignItems: 'center',
@@ -142,11 +153,21 @@ const Login = () => {
                         <Box sx={{ fontSize: 15, color: 'white', mt: 2 }}>Nhập thông tin cá nhân của bạn</Box>
                         <Box sx={{ fontSize: 15, color: 'white' }}>và bắt đầu hành trình với chúng tôi!</Box>
                         <Button variant="contained" sx={{ backgroundColor: 'red', color: 'white', width: 150, borderRadius: 10, mt: 3, border: '1px solid white' }}
-                           onClick={() => navigate("/register")}>
+                            onClick={() => navigate("/register")}>
                             Đăng ký
                         </Button>
                     </Box>
                 </CSSTransition>
+                <Snackbar
+                    anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                    open={openAlert.show}
+                    autoHideDuration={3000}
+                    onClose={() => setOpenAlert({ show: false, status: '', message: '' })}
+                >
+                    <Alert severity={openAlert.status === 'success' ? 'success' : 'error'} variant="filled">
+                        {openAlert.message}
+                    </Alert>
+                </Snackbar>
             </Box>
         </Box>
     );
