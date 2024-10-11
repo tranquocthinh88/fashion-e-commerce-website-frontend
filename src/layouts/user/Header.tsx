@@ -129,7 +129,7 @@ const Header = () => {
                                 'aria-labelledby': 'basic-button',
                             }}
                         >
-                            <MenuItem>Thông tin cá nhân</MenuItem>
+                            <MenuItem onClick={()=> {navigate("UserDetail")}}>Quản lý tài khoản</MenuItem>
                             <MenuItem onClick={handleLogout}>Đăng xuất</MenuItem>
                         </Menu>
                     </>

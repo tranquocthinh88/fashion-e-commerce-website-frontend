@@ -1,4 +1,4 @@
-import { Box, Container, Typography } from "@mui/material";
+import { Alert, Box, Container, Snackbar, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import Slide from "../../../components/Slide";
 import ProductCard from "../../../components/user/product/ProductCard";
@@ -8,12 +8,14 @@ import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
 import Slider from "react-slick";
 import CustomArrow from "../../../components/user/customs/CustomArrow ";
+import { useLocation } from "react-router-dom";
 
 const Home = () => {
     const [productSales, setProductSales] = useState<ProductUserResponse[]>([]);
     const [productNews, setProductNews] = useState<ProductUserResponse[]>([]);
     const [productSolds, setProductSolds] = useState<ProductUserResponse[]>([]);
     const [isVisible, setIsVisible] = useState(true);
+    const location = useLocation();
 
     const settings = {
         dots: true, // Hiển thị nút chỉ báo trang
@@ -74,6 +76,22 @@ const Home = () => {
             }
         })()
     }, []);
+    const [openAlert, setOpenAlert] = useState({
+        show: false,
+        status: '',
+        message: ''
+    });
+
+    useEffect(() => {
+        if (location.state?.showAlert) {
+            setOpenAlert({
+                show: true,
+                status: location.state.status,
+                message: location.state.message
+            });
+        }
+    }, [location.state]);
+
     return (
         <Box>
             <Slide />
@@ -161,6 +179,16 @@ const Home = () => {
                     </Container>
                 </Box>
             </Box>
+            <Snackbar
+                anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+                open={openAlert.show}
+                autoHideDuration={3000}
+                onClose={() => setOpenAlert({ show: false, status: '', message: '' })}
+            >
+                <Alert severity={openAlert.status === 'success' ? 'success' : 'error'} variant="filled">
+                    {openAlert.message}
+                </Alert>
+            </Snackbar>
         </Box >
     );
 }
