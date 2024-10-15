@@ -12,7 +12,7 @@ import IconButtonGradient from '../../components/common/IconButtonGradient';
 import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
-import MoreIcon from '@mui/icons-material/More';
+import LocalShippingIcon from '@mui/icons-material/LocalShipping';
 
 type NavbarProps = {
     isOpenNavbar: boolean;
@@ -27,7 +27,7 @@ const Navbar = ({ isOpenNavbar }: NavbarProps) => {
     const [isStatisticsOpen, setIsStatisticsOpen] = useState(false);
 
     const buttonIcon = [
-        { icon: <Home />, label: 'Dashboard', path: '/admin/dashboard' },
+        { icon: <Home />, label: 'Trang chủ', path: '/admin/dashboard' },
         { icon: <ProductionQuantityLimitsIcon />, label: 'Sản phẩm', path: '/admin/products' },
         { icon: <PeopleAltIcon />, label: 'Người dùng', path: '/admin/users' },
         { icon: <ReceiptIcon />, label: 'Hóa đơn', path: '/admin/invoices' },
@@ -96,7 +96,7 @@ const Navbar = ({ isOpenNavbar }: NavbarProps) => {
                         <Box sx={{ pl : 4}}>
                             {[
                                 { label: 'Thống kê doanh thu', icon: <AttachMoneyIcon />, path: '/admin/statistics/revenue' },
-                                { label: 'Sản phẩm bán chạy', icon: <MoreIcon />, path: '/admin/statistics/best-sellers' }
+                                { label: 'Sản phẩm bán chạy', icon: <LocalShippingIcon />, path: '/admin/statistics/best-sellers' }
                             ].map((subItem, subIndex) => (
                                 <Box
                                     key={subIndex}

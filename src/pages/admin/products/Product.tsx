@@ -1,8 +1,9 @@
-import { Box, Button, Select, TextField } from "@mui/material";
+import { Box, Button, MenuItem, Select, TextField } from "@mui/material";
 import { bodyAdminColor } from "../../../theme";
 import SearchIcon from '@mui/icons-material/Search';
 import { useNavigate } from "react-router-dom";
 import ProductCardAdmin from "../../../components/admin/cards/ProductCardAdmin";
+import { useState } from "react";
 
 function createData(
     id: string,
@@ -33,9 +34,14 @@ const rows = [
 
 const Product = () => {
     const navigate = useNavigate();
+    const [filterOption, setFilterOption] = useState(); // State cho Select
+
+    const handleSelectChange = (event: any) => {
+        setFilterOption(event.target.value); // Cập nhật state khi chọn option
+    };
     return (
         <Box sx={{ background: bodyAdminColor, width: '100%', height: '100%', display: 'flex', flexDirection: 'column', p: 1.5 }}>
-            <Box sx={{ fontSize: 30, fontWeight: 'bold' }}>Product !</Box>
+            <Box sx={{ fontSize: 30, fontWeight: 'bold' }}>Sản phẩm !</Box>
             <Box sx={{
                 width: 170,
                 mt: 2, mb: 2, transition: "transform 0.3s ease-in-out", '&:hover': {
@@ -49,12 +55,15 @@ const Product = () => {
             </Box>
             <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', mb: 2 }}>
                 <Box sx={{ display: 'flex', flexDirection: 'row' }}>
-                    <Box sx={{ fontSize: 17, fontWeight: 'bold', mt: 0.5 }}>Lọc sản phẩm</Box>
-                    <Select sx={{ width: 100, height: 38, ml: 1 }}>
-                        <option value="Red">Red</option>
-                        <option value="Yellow">Yellow</option>
-                        <option value="Green">Green</option>
-                        <option value="Green">Black</option>
+                    <Box sx={{ fontSize: 17, fontWeight: 'bold', mt: 0.5, ml: 2, whiteSpace: 'nowrap' }}>Lọc sản phẩm</Box>
+                    <Select
+                        value={filterOption} // Giá trị của Select
+                        onChange={handleSelectChange} // Hàm xử lý khi chọn
+                        sx={{ width: 150, height: 38, ml: 2 }}
+                    >
+                        <MenuItem value="Red">Đỏ</MenuItem>
+                        <MenuItem value="Yellow">Vàng</MenuItem>
+                        <MenuItem value="Blue">Xanh dương</MenuItem>
                     </Select>
                 </Box>
                 <Box sx={{ display: 'flex', flexDirection: 'row' }}>
@@ -69,9 +78,9 @@ const Product = () => {
                     <Button type="button" aria-label="search" sx={{ mt: 2 }}><SearchIcon sx={{ color: 'black' }} /></Button>
                 </Box>
             </Box>
-            <Box sx={{ display: 'flex', gap: '12px', flexWrap: 'wrap', justifyContent: 'center'}}>
+            <Box sx={{ display: 'flex', gap: '12px', flexWrap: 'wrap', justifyContent: 'center' }}>
                 {rows.map(() => (
-                    <Box sx={{width: '300px', mt: 1}}>
+                    <Box sx={{ width: '300px', mt: 1 }}>
                         <ProductCardAdmin />
                     </Box>
                 ))}
