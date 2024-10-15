@@ -1,3 +1,4 @@
+import { apiUrl } from "../configs/api-url";
 import requestConfig, { ContentType, Method } from "../configs/axios.config";
 import { connect } from "../configs/websocket";
 import { LoginRequestDto } from "../dtos/requests/login.dto"
@@ -78,4 +79,8 @@ export const verifyEmail = async (verifyEmailDto: VerifyEmailDto): Promise<Respo
 export const removeLocalStorage = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
+}
+
+export const loginWithSocial = (provider: string) => {
+    window.location.href = `${apiUrl}/oauth2/authorization/${provider}`;
 }

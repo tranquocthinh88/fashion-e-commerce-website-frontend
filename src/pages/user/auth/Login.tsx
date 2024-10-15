@@ -1,4 +1,4 @@
-import { Alert, Box, Button, Link, Snackbar, Typography } from "@mui/material";
+import { Alert, Box, Button, IconButton, Link, Snackbar, Typography } from "@mui/material";
 import { bodyAdminColor } from "../../../theme";
 import FacebookIcon from '@mui/icons-material/Facebook';
 import GoogleIcon from '@mui/icons-material/Google';
@@ -10,13 +10,14 @@ import * as yup from 'yup';
 import Cookies from 'js-cookie';
 import { ResponseSuccess } from "../../../dtos/responses/response.success";
 import { LoginResponse } from "../../../dtos/responses/login.response";
-import { login } from "../../../services/auth.service";
+import { login, loginWithSocial } from "../../../services/auth.service";
 import { LoginRequestDto } from "../../../dtos/requests/login.dto";
 import { saveToken } from "../../../services/token.service";
 import { useState } from "react";
 import { UserModel } from "../../../models/user.model";
 import { getUserByEmail, saveUserToLocalStorage } from "../../../services/user.service";
 import CustomTextField from "../../../components/common/TextFieldCustom";
+import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
 
 const validationLoginSchema = yup.object({
     email: yup.string().email('Email không hợp lệ').required('Vui lòng nhập email'),
@@ -108,11 +109,13 @@ const Login = () => {
                 >
                     <Box sx={{ fontSize: 25, fontWeight: 'bold' }}>Đăng nhập</Box>
                     <Box sx={{ display: 'flex', gap: 2 }}>
-                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 50, height: 50, border: '1px solid black', borderRadius: '50%' }}>
-                            <FacebookIcon />
-                        </Box>
-                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: 50, height: 50, border: '1px solid black', borderRadius: '50%' }}>
-                            <GoogleIcon />
+                        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                            <IconButton onClick={() => loginWithSocial('facebook')} >
+                                <FacebookOutlinedIcon sx={{ color: '#1976D2' }} fontSize="large" />
+                            </IconButton>
+                            <IconButton onClick={() => loginWithSocial('google')}>
+                                <GoogleIcon sx={{ color: '#DB4437'}} fontSize="large"/>
+                            </IconButton>
                         </Box>
                     </Box>
                     <Box sx={{ fontSize: 15 }}>Hoặc tài khoản của bạn</Box>
@@ -123,6 +126,7 @@ const Login = () => {
                         <Link
                             component="button"
                             variant="body2"
+                            color="#1976D2"
                         >
                             Quên mật khẩu?
                         </Link>
