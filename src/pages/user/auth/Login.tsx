@@ -1,6 +1,5 @@
 import { Alert, Box, Button, IconButton, Link, Snackbar, Typography } from "@mui/material";
 import { bodyAdminColor } from "../../../theme";
-import FacebookIcon from '@mui/icons-material/Facebook';
 import GoogleIcon from '@mui/icons-material/Google';
 import './Login&Register.scss';
 import { CSSTransition } from 'react-transition-group';
@@ -58,10 +57,13 @@ const Login = () => {
                 const responseUser: ResponseSuccess<UserModel> = await getUserByEmail(values.email);
                 saveUserToLocalStorage(responseUser.data);
 
-                // Điều hướng ngay lập tức sau khi hiển thị Snackbar
-                const from = location.state?.from || '/home';
-                navigate(from, { state: { showAlert: true, status: 'success', message: 'Đăng nhập thành công!' } });
+                const userRole = responseUser.data.role;
 
+                if (userRole === 'ROLE_ADMIN') {
+                    navigate('/admin/dashboard', { state: { showAlert: true, status: 'success', message: 'Đăng nhập thành công!' } });
+                } else {
+                    navigate(location.state?.from ||'/home', { state: { showAlert: true, status: 'success', message: 'Đăng nhập thành công!' } });
+                }
 
             } catch (error) {
                 localStorage.removeItem("token");

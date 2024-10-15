@@ -26,15 +26,15 @@ const LoginSuccsess = () => {
                     saveToken(loginResponse);
                     const response: ResponseSuccess<UserModel> = await getUserByEmail(email);
                     const user: UserModel = response.data;
-                    
+
                     saveUserToLocalStorage(user);
                 } catch (error) {
-                    navigate("/auth/login");
+                    navigate("/login");
                 }
                 navigate(historyPath || "/home");
                 localStorage.removeItem('historyPath');
             } else {
-                navigate("/auth/login");
+                navigate("/login");
             }
         })();
     }, []);
