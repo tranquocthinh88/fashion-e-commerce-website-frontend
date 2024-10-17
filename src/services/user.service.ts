@@ -1,4 +1,5 @@
 import requestConfig, { ContentType, Method } from "../configs/axios.config";
+import { userUpdateDto } from "../dtos/requests/user/user.update.dto";
 import { ResponseSuccess } from "../dtos/responses/response.success";
 import { Role, UserModel } from "../models/user.model";
 
@@ -35,4 +36,36 @@ export const getUserFromLocalStorage = () : UserModel | null => {
         return JSON.parse(userStr);
     }
     return null;
+}
+
+export const uploadAvatar = async (avatar: File) : Promise<ResponseSuccess<string>> => {
+    try {
+        const formData = new FormData();
+        formData.append('avatar', avatar);
+        const response = await requestConfig(
+            `users/upload`,
+            Method.PUT,
+            formData,
+            ContentType.FORM_DATA,
+            true
+        );
+        return response.data;
+    } catch (error) {
+        return Promise.reject(error);
+    }
+}
+
+export const updateUser = async (email: string, userUpdateDto: userUpdateDto) : Promise<ResponseSuccess<UserModel>> => {
+    try {
+        const response = await requestConfig(
+            `users/${email}`,
+            Method.PUT,
+            userUpdateDto,
+            ContentType.JSON,
+            true
+        );
+        return response.data;
+    } catch (error) {
+        return Promise.reject(error);
+    }
 }

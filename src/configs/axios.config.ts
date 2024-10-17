@@ -1,5 +1,7 @@
 import axios from 'axios';
 import { apiUrl } from './api-url';
+import { LoginResponse } from '../dtos/responses/login.response';
+import { getToken } from '../services/token.service';
 
 export enum Method {
     GET = 'GET',
@@ -15,7 +17,7 @@ export enum ContentType {
     TEXT_PLAIN = 'text/plain',
 }
 
-const requestConfig = <T>(endpoint: string, method: Method, data: T, contentType: ContentType) => {
+const requestConfig = <T>(endpoint: string, method: Method, data: T, contentType: ContentType, interceptor: boolean = false) => {
     const headers = {
         'Content-Type': contentType,
         "Access-Control-Allow-Origin": "*",
@@ -24,9 +26,19 @@ const requestConfig = <T>(endpoint: string, method: Method, data: T, contentType
 
     const instance = axios.create({
         baseURL: `${apiUrl}/api/v1/`,
-        headers,
-        withCredentials: true
+        headers
     })
+    if (interceptor) {
+        const loginResponse: LoginResponse | null = getToken();
+        if (loginResponse) {
+            instance.interceptors.request.use(config => {
+                config.headers.Authorization = `Bearer ${loginResponse.accessToken}`
+                return config;
+            }, error => {
+                return Promise.reject(error);
+            });
+        }
+    }
     return instance.request(
         {
             method,

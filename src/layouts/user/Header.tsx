@@ -129,7 +129,9 @@ const Header = () => {
                                 'aria-labelledby': 'basic-button',
                             }}
                         >
-                            <MenuItem onClick={()=> {navigate("UserDetail")}}>Quản lý tài khoản</MenuItem>
+                            <MenuItem onClick={()=> {
+                                window.location.href = `/user/${user?.email}`;
+                            }}>Quản lý tài khoản</MenuItem>
                             <MenuItem onClick={handleLogout}>Đăng xuất</MenuItem>
                         </Menu>
                     </>

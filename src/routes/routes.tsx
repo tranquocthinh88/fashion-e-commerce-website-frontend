@@ -17,6 +17,7 @@ import RoomChat from "../pages/user/chat/RoomChat";
 import ProtectRouter from "./ProtectRoutes";
 import { Role } from "../models/user.model";
 import LoginSuccsess from "../pages/user/auth/LoginSuccess";
+import UserDetail from "../pages/user/user/UserDetail";
 
 const adminRoutes = [
   {
@@ -29,6 +30,10 @@ const userRoutes = [
   {
     path: "/chat",
     element: <ProtectRouter role={Role.ROLE_USER}><UserLayout><RoomChat /></UserLayout></ProtectRouter>,
+  },
+  {
+    path: '/user/:email',
+    element: <ProtectRouter role={Role.ROLE_USER}><UserLayout><UserDetail /></UserLayout></ProtectRouter>,
   }
 ];
 

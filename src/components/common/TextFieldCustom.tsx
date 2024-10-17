@@ -7,7 +7,7 @@ interface CustomTextFieldProps {
   label: string;
   name: string;
   type: string;
-  formik: FormikProps<any>;
+  formik?: FormikProps<any>;
   [key: string]: any;
 }
 
@@ -18,11 +18,11 @@ const CustomTextField = ({ label, name, type, formik }: CustomTextFieldProps) =>
       name={name}
       type={type}
       placeholder={`Nhập ${label.toLowerCase()}`} // Hiển thị placeholder tùy theo label
-      value={formik.values[name]} // Sử dụng formik để liên kết giá trị
-      onChange={formik.handleChange} // Xử lý sự kiện thay đổi
-      onBlur={formik.handleBlur} // Xử lý sự kiện blur
-      error={formik.touched[name] && Boolean(formik.errors[name])} // Hiển thị lỗi nếu có
-      helperText={formik.touched[name] && typeof formik.errors[name] === 'string' ? formik.errors[name] : undefined} // Thông báo lỗi
+      value={formik?.values[name]} // Sử dụng formik để liên kết giá trị
+      onChange={formik?.handleChange} // Xử lý sự kiện thay đổi
+      onBlur={formik?.handleBlur} // Xử lý sự kiện blur
+      error={formik?.touched[name] && Boolean(formik.errors[name])} // Hiển thị lỗi nếu có
+      helperText={formik?.touched[name] && typeof formik.errors[name] === 'string' ? formik.errors[name] : undefined} // Thông báo lỗi
       sx={{
         width: '80%', // Điều chỉnh chiều rộng
         '& .MuiInputBase-root': {
