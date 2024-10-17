@@ -11,8 +11,10 @@ import { SizeModel } from "../../../models/size.model";
 import { ProductResponse } from "../../../dtos/responses/products/product.response";
 import { ResponseSuccess } from "../../../dtos/responses/response.success";
 import QuantityProduct from "../../../components/user/product/QuantityProduct";
-import { getProductById } from "../../../services/product.service";
+import { getProductById, getProductsForUser } from "../../../services/product.service";
 import ListImage from "../../../components/user/list/list-image";
+import { PageResponse } from "../../../dtos/responses/page.response";
+import { ProductUserResponse } from "../../../dtos/responses/products/productUser-response";
 
 const SizeColorBox = ({ text, onClick, selected }: { text: string | number, onClick(): void, selected: boolean }) => {
     return (
@@ -41,6 +43,7 @@ const ProductDetail = () => {
     const [productResponse, setProductResponse] = useState<ProductModel>();
     const [productImages, setProductImages] = useState<ProductImageModel[]>([]);
     const [productDetails, setProductDetails] = useState<ProductDetailModel[]>([]);
+    const [productDetail, setProductDetail] = useState<ProductUserResponse>();
     const [colors, setColors] = useState<ColorModel[]>([]);
     const [sizes, setSizes] = useState<SizeModel[]>([]);
     const [selectedColor, setSelectedColor] = useState<ColorModel | null>(null);
@@ -52,10 +55,23 @@ const ProductDetail = () => {
         (async () => {
             try {
                 const response: ResponseSuccess<ProductResponse> = await getProductById(id ?? '');
-  
+
                 setProductResponse(response.data.product);
                 setProductImages(response.data.productImage ?? []);
                 setProductDetails(response.data.productDetail ?? []);
+
+                const responseProductById: ResponseSuccess<PageResponse<ProductUserResponse[]>> = await getProductsForUser(1, 1, [
+                    {
+                        field: 'id',
+                        operator: '-',
+                        value: id || '',
+                    }
+                ]);
+
+                setProductDetail(responseProductById.data.data[0]);
+
+                console.log(responseProductById.data.data);
+
 
                 let uniqueColors: ColorModel[] = [];
                 response.data.productDetail?.forEach((productDetail: ProductDetailModel) => {
@@ -100,7 +116,7 @@ const ProductDetail = () => {
         const detailFilter = productDetails.filter((productDetail: ProductDetailModel) => {
             return productDetail.color.id === selectedColor?.id && productDetail.size.id === selectedSize?.id;
         });
-        
+
         if (detailFilter.length > 0) {
             return detailFilter[0];
         }
@@ -115,15 +131,26 @@ const ProductDetail = () => {
                     gap: 2,
                 }}
             >
-                 <ListImage images={productImages} />
+                <ListImage images={productImages} />
 
                 <Box sx={{ width: '60%', display: 'flex', flexDirection: 'column', gap: 1 }}>
                     <Typography variant="h5" sx={{ fontWeight: '700' }}>{productResponse?.productName}</Typography>
                     <Typography variant="h6">{productResponse?.provider?.providerName}</Typography>
                     <Box sx={{ display: 'flex', gap: '25px' }}>
-                        <Typography variant="h5" sx={{ color: 'red', fontWeight: '700', }}>{productResponse?.price}</Typography>
-                        {/* {productResponse. > 0 && <Typography variant="h5" sx={{ color: 'red', fontWeight: '700', }}>{productResponse?.price - productResponse?.price * productResponse?.discount / 100}</Typography>} */}
-                        <Typography variant="h5" sx={{ color: 'gray', fontWeight: '300', textDecoration: 'line-through' }}>{productResponse?.price}</Typography>
+                        {
+                            productDetail?.priceFinal == productDetail?.product.price ?
+                                <Typography variant="h5" sx={{ color: 'red', fontWeight: '700', }}>{productResponse?.price}</Typography>
+                                : <>
+                                    <Typography variant="h5" sx={{ color: 'red', fontWeight: '700', }}>{productDetail?.priceFinal}</Typography>
+                                    <Typography variant="h5"
+                                        sx={{ color: 'gray', fontWeight: '400', textDecoration: 'line-through' }}>
+                                        {productDetail?.product?.price}
+                                    </Typography>
+                                </>
+                        }
+
+
+
                     </Box>
                     {productResponse?.avgRating ? <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2, alignItems: 'center' }}> <Rating name="read-only" value={productResponse?.avgRating} readOnly />
                         <Typography>{productResponse.numberOfRating + ' đánh giá'}</Typography>
@@ -191,7 +218,7 @@ const ProductDetail = () => {
                 <Box>
                     <Typography variant="h6">ĐÁNH GIÁ SẢN PHẨM</Typography>
                     <Box>
-                        
+
                     </Box>
                     <Box>
 
