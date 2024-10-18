@@ -34,7 +34,8 @@ const Header = () => {
     };
     const handleClickAvatar = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
-    }; const handleLogout = async () => {
+    }; 
+    const handleLogout = async () => {
         const token: LoginResponse | null = getToken();
         if (token) {
             try {
@@ -129,7 +130,9 @@ const Header = () => {
                                 'aria-labelledby': 'basic-button',
                             }}
                         >
-                            <MenuItem onClick={()=> {navigate("UserDetail")}}>Quản lý tài khoản</MenuItem>
+                            <MenuItem onClick={()=> {
+                                window.location.href = `/user/${user?.email}`;
+                            }}>Quản lý tài khoản</MenuItem>
                             <MenuItem onClick={handleLogout}>Đăng xuất</MenuItem>
                         </Menu>
                     </>

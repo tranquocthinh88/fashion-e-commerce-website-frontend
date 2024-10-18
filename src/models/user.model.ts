@@ -16,7 +16,7 @@ export type UserModel = {
     updatedAt: Date;
     username: string;
     email: string;
-    phoneNumber?: string;
+    phone?: string;
     dateOfBirth?: Date;
     gender?: Gender;
     role?: Role;
