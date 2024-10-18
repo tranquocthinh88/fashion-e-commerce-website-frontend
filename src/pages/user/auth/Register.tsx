@@ -45,7 +45,9 @@ const Register = () => {
         },
         validationSchema: validationRegisterSchema,
         onSubmit: async (values: RegisterForm) => {
+            console.log("Đã nhận sự kiện");
             const userRegisterDto: RegisterRequestDto = values;
+            console.log("Thông tin: ", userRegisterDto);
             try {
                 await register(userRegisterDto);
                 setIsRegistered(true);
@@ -135,11 +137,11 @@ const Register = () => {
                             <Box sx={{ fontSize: 25, fontWeight: 'bold' }}>Tạo tài khoản</Box>
 
                             <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '100%', alignItems: 'center' }}>
-                                <CustomTextField label="Tên tài khoản" id="username" name="username" type="text" formik={formikRegister} />
-                                <CustomTextField label="Email" id="email" name="email" type="email" formik={formikRegister} />
-                                <CustomTextField label="Mật khẩu" id="password" name="password" type="password" formik={formikRegister} />
-                                <CustomTextField label="Xác thực mật khẩu" id="confirmPassword" name="confirmPassword" type="password" formik={formikRegister} />
-                                <CustomTextField label="Số điện thoại" id="phone" name="phone" type="text" formik={formikRegister} />
+                                <CustomTextField label="Tên tài khoản" id="username" name="username" type="text" formik={formikRegister} width="80%" />
+                                <CustomTextField label="Email" id="email" name="email" type="email" formik={formikRegister} width="80%" />
+                                <CustomTextField label="Mật khẩu" id="password" name="password" type="password" formik={formikRegister} width="80%" />
+                                <CustomTextField label="Xác thực mật khẩu" id="confirmPassword" name="confirmPassword" type="password" formik={formikRegister} width="80%" />
+                                <CustomTextField label="Số điện thoại" id="phone" name="phone" type="text" formik={formikRegister} width="80%" />
                                 {errorEmail && <Typography component={'span'} sx={{ color: 'red' }}>{errorEmail}</Typography>}
                                 <Button variant="contained"
                                     sx={{ backgroundColor: 'red', color: 'white', width: 150, borderRadius: 10, mb: 2 }}

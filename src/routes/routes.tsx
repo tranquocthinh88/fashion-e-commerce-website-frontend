@@ -16,15 +16,24 @@ import ProductDetail from "../pages/user/products/ProductDetail";
 import RoomChat from "../pages/user/chat/RoomChat";
 import ProtectRouter from "./ProtectRoutes";
 import { Role } from "../models/user.model";
+import LoginSuccsess from "../pages/user/auth/LoginSuccess";
+import UserDetail from "../pages/user/user/UserDetail";
 
 const adminRoutes = [
-  {}
+  {
+    path: "/admin/dashboard",
+    element: <ProtectRouter role={Role.ROLE_ADMIN}> <AdminLayout><Dashboard /></AdminLayout></ProtectRouter>
+  },
 ];
 
 const userRoutes = [
   {
     path: "/chat",
     element: <ProtectRouter role={Role.ROLE_USER}><UserLayout><RoomChat /></UserLayout></ProtectRouter>,
+  },
+  {
+    path: '/user/:email',
+    element: <ProtectRouter role={Role.ROLE_USER}><UserLayout><UserDetail /></UserLayout></ProtectRouter>,
   }
 ];
 
@@ -46,19 +55,13 @@ const publicRoutes = [
     element: <Login />
   },
   {
+    path: '/auth/login-success',
+    element: <LoginSuccsess></LoginSuccsess>
+  },
+  {
     path: "/register",
     element: <Register />
   },
-];
-
-export const router = createBrowserRouter([
-  ...adminRoutes,
-  ...userRoutes,
-  ...publicRoutes
-]);
-
-export const router1 = createBrowserRouter([
-  
   {
     path: "/admin/dashboard",
     element: <AdminLayout><Dashboard /></AdminLayout>
@@ -91,4 +94,15 @@ export const router1 = createBrowserRouter([
     path: "/admin/statistics/best-sellers",
     element: <AdminLayout><BestSeller /></AdminLayout>
   },
-])
+];
+
+export const router = createBrowserRouter([
+  ...adminRoutes,
+  ...userRoutes,
+  ...publicRoutes
+]);
+
+// export const router1 = createBrowserRouter([
+  
+  
+// ])
