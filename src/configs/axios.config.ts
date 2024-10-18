@@ -44,7 +44,8 @@ const requestConfig = <T>(endpoint: string, method: Method, data: T, contentType
             method,
             url: `${endpoint}`,
             data,
-            responseType: "json"
+            responseType: "json",
+            withCredentials: true
         }
     );
 }

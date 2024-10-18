@@ -12,6 +12,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import styled from 'styled-components';
 import { navbarHover } from '../../../theme';
+import DialogChangePassword from '../../common/dialogs/DialogChangePassword';
 
 const VisuallyHiddenInput = styled('input')({
     clipPath: 'inset(50%)',
@@ -28,6 +29,12 @@ const AccountInfoTab = ({ showAlert }: { showAlert: (status: string, message: st
     const [isUpdating, setIsUpdating] = useState(false);
     const [open, setOpen] = useState(false);
     const [openAlert, setOpenAlert] = useState<{ show: boolean, status: string, message: string }>({ show: false, status: '', message: '' });
+    const [openDialogChangePassword, setOpenDialogChangePassword] = useState(false);
+
+    const handleCloseDialogChangePassword = () => {
+        setOpenDialogChangePassword(false);
+    }
+
 
     const user: UserModel | null = getUserFromLocalStorage();
 
@@ -333,6 +340,27 @@ const AccountInfoTab = ({ showAlert }: { showAlert: (status: string, message: st
                             Tải lên ảnh
                             <VisuallyHiddenInput type="file" accept={"image/*"} onChange={handleUploadAvatar} />
                         </Button>
+                    </Box>
+                    <Box>
+                        <Button
+                            variant="contained"
+                            sx={{
+                                ':hover': {
+                                    background: navbarHover,
+                                    color: 'white'
+                                },
+                                // backgroundColor: '#E6B9DB'
+                            }}
+                            onClick={() => setOpenDialogChangePassword(true)}
+                        >
+                          Đổi mật khẩu
+                           
+                        </Button>
+                        {openDialogChangePassword &&
+                        <DialogChangePassword
+                            open={openDialogChangePassword}
+                            handleClose={handleCloseDialogChangePassword}
+                        />}
                     </Box>
                 </Box>
 

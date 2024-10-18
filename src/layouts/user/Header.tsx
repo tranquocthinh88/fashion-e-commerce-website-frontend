@@ -34,7 +34,8 @@ const Header = () => {
     };
     const handleClickAvatar = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
-    }; const handleLogout = async () => {
+    }; 
+    const handleLogout = async () => {
         const token: LoginResponse | null = getToken();
         if (token) {
             try {

@@ -42,6 +42,7 @@ const Login = () => {
 
                 const accessToken = Cookies.get('accessToken');
                 const refreshToken = Cookies.get('refreshToken');
+                
                 if (accessToken && refreshToken) {
                     const loginResponse: LoginResponse = {
                         accessToken: accessToken,
@@ -122,8 +123,8 @@ const Login = () => {
                     </Box>
                     <Box sx={{ fontSize: 15 }}>Hoặc tài khoản của bạn</Box>
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '100%', alignItems: 'center' }}>
-                        <CustomTextField label="Email" id="email" name="email" type="email" formik={formikLogin} />
-                        <CustomTextField label="Mật khẩu" id="password" name="password" type="password" formik={formikLogin} />
+                        <CustomTextField label="Email" id="email" name="email" type="email" formik={formikLogin} width="80%" />
+                        <CustomTextField label="Mật khẩu" id="password" name="password" type="password" formik={formikLogin} width="80%" />
                         {error && <Typography component={'span'} sx={{ color: 'red' }}>{error}</Typography>}
                         <Link
                             component="button"

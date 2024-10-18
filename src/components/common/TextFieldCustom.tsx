@@ -8,10 +8,11 @@ interface CustomTextFieldProps {
   name: string;
   type: string;
   formik?: FormikProps<any>;
+  width?: string;
   [key: string]: any;
 }
 
-const CustomTextField = ({ label, name, type, formik }: CustomTextFieldProps) => {
+const CustomTextField = ({ label, name, type, formik , width = '100%',}: CustomTextFieldProps) => {
   return (
     <TextField
       label={label}
@@ -24,7 +25,7 @@ const CustomTextField = ({ label, name, type, formik }: CustomTextFieldProps) =>
       error={formik?.touched[name] && Boolean(formik.errors[name])} // Hiển thị lỗi nếu có
       helperText={formik?.touched[name] && typeof formik.errors[name] === 'string' ? formik.errors[name] : undefined} // Thông báo lỗi
       sx={{
-        width: '80%', // Điều chỉnh chiều rộng
+        width: width, // Điều chỉnh chiều rộng
         '& .MuiInputBase-root': {
           height: 40, // Điều chỉnh chiều cao
         },
