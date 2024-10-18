@@ -41,7 +41,7 @@ const Header = ({ handleOpenNavbar }: HeaderProps) => {
                 <Box sx={{ width: "35%", marginRight: 40 }}>
                     <TextField
                         id="search"
-                        label="Search..."
+                        label="Tìm kiếm..."
                         variant="outlined"
                         sx={{ width: "100%" }}
                     />

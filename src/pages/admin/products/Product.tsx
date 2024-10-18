@@ -61,9 +61,14 @@ const Product = () => {
                         onChange={handleSelectChange} // Hàm xử lý khi chọn
                         sx={{ width: 150, height: 38, ml: 2 }}
                     >
-                        <MenuItem value="Red">Đỏ</MenuItem>
-                        <MenuItem value="Yellow">Vàng</MenuItem>
-                        <MenuItem value="Blue">Xanh dương</MenuItem>
+                        <MenuItem value="Shirt" sx={{ color: 'white' }}>Áo</MenuItem>
+                        <MenuItem value="Pants" sx={{ color: 'white' }}>Quần</MenuItem>
+                        <MenuItem value="Hat" sx={{ color: 'white' }}>Nón</MenuItem>
+                        <MenuItem value="Shoes" sx={{ color: 'white' }}>Giày</MenuItem>
+                        <MenuItem value="Handbag" sx={{ color: 'white' }}>Túi xách</MenuItem>
+                        <MenuItem value="Belt" sx={{ color: 'white' }}>Thắt lưng</MenuItem>
+                        <MenuItem value="Wallet" sx={{ color: 'white' }}>Ví</MenuItem>
+                        <MenuItem value="Sandal" sx={{ color: 'white' }}>Dép</MenuItem>
                     </Select>
                 </Box>
                 <Box sx={{ display: 'flex', flexDirection: 'row' }}>
