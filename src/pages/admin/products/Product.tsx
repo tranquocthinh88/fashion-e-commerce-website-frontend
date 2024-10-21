@@ -1,44 +1,37 @@
-import { Box, Button, MenuItem, Select, TextField } from "@mui/material";
+import { Box, Button, MenuItem, Pagination, Select, Stack, TextField, useMediaQuery } from "@mui/material";
 import { bodyAdminColor } from "../../../theme";
 import SearchIcon from '@mui/icons-material/Search';
 import { useNavigate } from "react-router-dom";
 import ProductCardAdmin from "../../../components/admin/cards/ProductCardAdmin";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { ResponseSuccess } from "../../../dtos/responses/response.success";
+import { getAllProducts } from "../../../services/product.service";
+import { ProductModel } from "../../../models/product.model";
 
-function createData(
-    id: string,
-    name: string,
-    calories: number,
-    fat: number,
-    carbs: number,
-    protein: number,
-    status: string = 'active'
-) {
-    return { id, name, calories, fat, carbs, protein, status };
-}
 
-const rows = [
-    createData('001', 'Frozen yoghurt', 159, 6.0, 24, 4.0),
-    createData('002', 'Ice cream sandwich', 237, 9.0, 37, 4.3),
-    createData('003', 'Eclair', 262, 16.0, 24, 6.0),
-    createData('004', 'Cupcake', 305, 3.7, 67, 4.3),
-    createData('005', 'Gingerbread', 356, 16.0, 49, 3.9),
-    createData('006', 'Gingerbread', 356, 16.0, 49, 3.9),
-    createData('007', 'Gingerbread', 356, 16.0, 49, 3.9),
-    createData('008', 'Gingerbread', 356, 16.0, 49, 3.9),
-    createData('009', 'Gingerbread', 356, 16.0, 49, 3.9),
-    createData('010', 'Gingerbread', 356, 16.0, 49, 3.9),
-    createData('011', 'Gingerbread', 356, 16.0, 49, 3.9),
-    createData('012', 'Gingerbread', 356, 16.0, 49, 3.9),
-];
 
 const Product = () => {
+    const isMobile = useMediaQuery('(max-width:600px)');
     const navigate = useNavigate();
+    const fNavigate = (id: number) => {
+        navigate('update/' + id);
+    }
     const [filterOption, setFilterOption] = useState(); // State cho Select
 
     const handleSelectChange = (event: any) => {
         setFilterOption(event.target.value); // Cập nhật state khi chọn option
     };
+    const [products, setProducts] = useState<ProductModel[]>([]);
+    useEffect(() => {
+        (async () => {
+            try {
+                const response: ResponseSuccess<ProductModel[]> = await getAllProducts();
+                setProducts(response.data);
+            } catch (e) {
+                console.log(e);
+            }
+        })();
+    }, []);
     return (
         <Box sx={{ background: bodyAdminColor, width: '100%', height: '100%', display: 'flex', flexDirection: 'column', p: 1.5 }}>
             <Box sx={{ fontSize: 30, fontWeight: 'bold' }}>Sản phẩm !</Box>
@@ -61,14 +54,14 @@ const Product = () => {
                         onChange={handleSelectChange} // Hàm xử lý khi chọn
                         sx={{ width: 150, height: 38, ml: 2 }}
                     >
-                        <MenuItem value="Shirt" sx={{ color: 'white' }}>Áo</MenuItem>
-                        <MenuItem value="Pants" sx={{ color: 'white' }}>Quần</MenuItem>
-                        <MenuItem value="Hat" sx={{ color: 'white' }}>Nón</MenuItem>
-                        <MenuItem value="Shoes" sx={{ color: 'white' }}>Giày</MenuItem>
-                        <MenuItem value="Handbag" sx={{ color: 'white' }}>Túi xách</MenuItem>
-                        <MenuItem value="Belt" sx={{ color: 'white' }}>Thắt lưng</MenuItem>
-                        <MenuItem value="Wallet" sx={{ color: 'white' }}>Ví</MenuItem>
-                        <MenuItem value="Sandal" sx={{ color: 'white' }}>Dép</MenuItem>
+                        <MenuItem value="Shirt" sx={{ color: 'red' }}>Áo</MenuItem>
+                        <MenuItem value="Pants" sx={{ color: 'red' }}>Quần</MenuItem>
+                        <MenuItem value="Hat" sx={{ color: 'red' }}>Nón</MenuItem>
+                        <MenuItem value="Shoes" sx={{ color: 'red' }}>Giày</MenuItem>
+                        <MenuItem value="Handbag" sx={{ color: 'red' }}>Túi xách</MenuItem>
+                        <MenuItem value="Belt" sx={{ color: 'red' }}>Thắt lưng</MenuItem>
+                        <MenuItem value="Wallet" sx={{ color: 'red' }}>Ví</MenuItem>
+                        <MenuItem value="Sandal" sx={{ color: 'red' }}>Dép</MenuItem>
                     </Select>
                 </Box>
                 <Box sx={{ display: 'flex', flexDirection: 'row' }}>
@@ -83,14 +76,37 @@ const Product = () => {
                     <Button type="button" aria-label="search" sx={{ mt: 2 }}><SearchIcon sx={{ color: 'black' }} /></Button>
                 </Box>
             </Box>
-            <Box sx={{ display: 'flex', gap: '12px', flexWrap: 'wrap', justifyContent: 'center' }}>
-                {rows.map(() => (
-                    <Box sx={{ width: '300px', mt: 1 }}>
-                        <ProductCardAdmin />
+            <Box sx={{
+            display: 'flex',
+            gap: '12px',
+            flexWrap: 'wrap',
+            justifyContent: 'center',
+            p: 0.5
+        }}>
+            {products.map((item: ProductModel, index: number) => (
+                <Box sx={{width: '270px'}} key={index}>
+                    <Box sx={{width: isMobile ? '150px' : '270px'}} key={index}>
+                        <ProductCardAdmin
+                            productId={Number(item.id) ?? 0}
+                            productName={item.productName ?? ''}
+                            productPrice={item.price ?? 0}
+                            fNavigate={fNavigate}
+                            thumbnail={item.thumbnail ?? ''}
+                        />
                     </Box>
-                ))}
-            </Box>
+                </Box>
+            ))}
         </Box>
+        <Box sx={{
+            display: 'flex', alignItems: 'center',
+            width: '100%', justifyContent: 'flex-end',
+            mt: 2
+        }}>
+            <Stack spacing={2}>
+                <Pagination count={10} variant="outlined" color={"primary"}/>
+            </Stack>
+        </Box>
+    </Box>
     )
 }
 export default Product;

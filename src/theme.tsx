@@ -1,7 +1,18 @@
 import { extendTheme } from '@mui/material/styles'
 import { pink } from '@mui/material/colors';
 
+const breakpoints = {
+  values: {
+      xs: 0,
+      sm: 600,
+      md: 960,
+      lg: 1280,
+      xl: 1920,
+  },
+};
+
 export const theme = extendTheme({
+  breakpoints: breakpoints,
   colorSchemes: {
     light: {
       palette: {

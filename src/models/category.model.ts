@@ -1,7 +1,7 @@
 import { Status } from "./enum/status.enum"
 
 export type CategoryModel = {
-    id?: number,
+    id?: number;
     categoryName?: string,
     status?: Status
 }
