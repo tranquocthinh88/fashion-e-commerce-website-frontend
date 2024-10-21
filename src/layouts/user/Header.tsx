@@ -15,11 +15,14 @@ import { getUserFromLocalStorage, isLoginAccount } from "../../services/user.ser
 import { LoginResponse } from "../../dtos/responses/login.response";
 import { getToken } from "../../services/token.service";
 import { logout, removeLocalStorage } from "../../services/auth.service";
+import { useSelector } from "react-redux";
+import { RootState } from "../../redux/stores/store";
 const Header = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const login: boolean = isLoginAccount();
     const user: UserModel | null = getUserFromLocalStorage();
+    const cart = useSelector((state: RootState) => state.cart.items);
 
     const [isChatOpen, setIsChatOpen] = useState(false);
 
@@ -97,7 +100,7 @@ const Header = () => {
                     </Tooltip>
                     <Tooltip title="giỏ hàng">
                         <IconButton>
-                            <Badge badgeContent={4} color="primary">
+                            <Badge badgeContent={cart.length} color="primary">
                                 <ShoppingCartIcon />
                             </Badge>
                         </IconButton>

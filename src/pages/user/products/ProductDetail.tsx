@@ -15,6 +15,9 @@ import { getProductById, getProductsForUser } from "../../../services/product.se
 import ListImage from "../../../components/user/list/list-image";
 import { PageResponse } from "../../../dtos/responses/page.response";
 import { ProductUserResponse } from "../../../dtos/responses/products/productUser-response";
+import { useDispatch } from "react-redux";
+import { updateCartState } from "../../../redux/reducers/cart.reducer";
+import { addToCartLocalStorage } from "../../../utils/cart.handle";
 
 const SizeColorBox = ({ text, onClick, selected }: { text: string | number, onClick(): void, selected: boolean }) => {
     return (
@@ -43,13 +46,14 @@ const ProductDetail = () => {
     const [productResponse, setProductResponse] = useState<ProductModel>();
     const [productImages, setProductImages] = useState<ProductImageModel[]>([]);
     const [productDetails, setProductDetails] = useState<ProductDetailModel[]>([]);
-    const [productDetail, setProductDetail] = useState<ProductUserResponse>();
+    const [productUserResponse, setProductUserResponse] = useState<ProductUserResponse>();
     const [colors, setColors] = useState<ColorModel[]>([]);
     const [sizes, setSizes] = useState<SizeModel[]>([]);
     const [selectedColor, setSelectedColor] = useState<ColorModel | null>(null);
     const [selectedSize, setSelectedSize] = useState<SizeModel | null>(null);
     const [buyQuantity, setBuyQuantity] = useState<number>(1);
     const [availableQuantity, setAvailableQuantity] = useState<number>(0);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         (async () => {
@@ -68,7 +72,7 @@ const ProductDetail = () => {
                     }
                 ]);
 
-                setProductDetail(responseProductById.data.data[0]);
+                setProductUserResponse(responseProductById.data.data[0]);
 
                 console.log(responseProductById.data.data);
 
@@ -122,6 +126,28 @@ const ProductDetail = () => {
         }
     }
 
+    const addProductToCart = () => {
+        if (!selectedColor || !selectedSize) {
+            alert('Vui lòng chọn màu sắc và kích thước');
+            return;
+        }
+        if (buyQuantity > availableQuantity) {
+            alert('Số lượng sản phẩm không đủ');
+            return;
+        }
+        const productDetail = getProductDetailByColorIdAndSizeId();
+        if (productDetail) {
+            addToCartLocalStorage({
+                productDetail: productDetail,
+                quantity: buyQuantity,
+                priceFinal: productUserResponse?.priceFinal ?? 0 
+            })
+            setAvailableQuantity(availableQuantity - buyQuantity);
+            setBuyQuantity(1);
+        }
+        dispatch(updateCartState())
+    }
+
     return (
         <Container >
             <Box
@@ -138,13 +164,15 @@ const ProductDetail = () => {
                     <Typography variant="h6">{productResponse?.provider?.providerName}</Typography>
                     <Box sx={{ display: 'flex', gap: '25px' }}>
                         {
-                            productDetail?.priceFinal == productDetail?.product.price ?
-                                <Typography variant="h5" sx={{ color: 'red', fontWeight: '700', }}>{productResponse?.price}</Typography>
+                            productUserResponse?.priceFinal == productUserResponse?.product.price ?
+                                <>
+                                    <Typography variant="h5" sx={{ color: 'red', fontWeight: '700', }}>{productResponse?.price}</Typography>
+                                </>
                                 : <>
-                                    <Typography variant="h5" sx={{ color: 'red', fontWeight: '700', }}>{productDetail?.priceFinal}</Typography>
+                                    <Typography variant="h5" sx={{ color: 'red', fontWeight: '700', }}>{productUserResponse?.priceFinal}</Typography>
                                     <Typography variant="h5"
                                         sx={{ color: 'gray', fontWeight: '400', textDecoration: 'line-through' }}>
-                                        {productDetail?.product?.price}
+                                        {productUserResponse?.product?.price}
                                     </Typography>
                                 </>
                         }
@@ -195,6 +223,7 @@ const ProductDetail = () => {
                                 height: '48px',
                             }}
                             color="warning"
+                            onClick={addProductToCart}
                         > <LocalMallIcon sx={{ mr: 1 }} /> Thêm vào giỏ hàng</Button>
                         <Button
                             variant="contained"

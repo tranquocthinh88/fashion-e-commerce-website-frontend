@@ -12,11 +12,14 @@ import { ProductResponse } from "../../../dtos/responses/products/product.respon
 import { getProductById } from "../../../services/product.service";
 import { ProductModel } from "../../../models/product.model";
 import { ProductDetailModel } from "../../../models/product-detail.model";
+import { addToCartLocalStorage } from "../../../utils/cart.handle";
+import { updateCartState } from "../../../redux/reducers/cart.reducer";
+import { useDispatch } from "react-redux";
 
 type Props = {
     open: boolean;
     handleClose: () => void;
-    product: ProductUserResponse;
+    productUserResponse: ProductUserResponse;
 }
 
 
@@ -43,10 +46,9 @@ const SizeColorBox = ({ text, onClick, selected }: { text: string | number, onCl
     );
 };
 
-const DiaLogAddToCart = ({ open, handleClose, product }: Props) => {
+const DiaLogAddToCart = ({ open, handleClose, productUserResponse }: Props) => {
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('lg'));
-
     const [colors, setColors] = useState<ColorModel[]>([]);
     const [sizes, setSizes] = useState<SizeModel[]>([]);
     const [selectedColor, setSelectedColor] = useState<ColorModel | null>(null);
@@ -55,11 +57,12 @@ const DiaLogAddToCart = ({ open, handleClose, product }: Props) => {
     const [availableQuantity, setAvailableQuantity] = useState<number>(0);
     const [productResponse, setProductResponse] = useState<ProductModel>();
     const [productDetails, setProductDetails] = useState<ProductDetailModel[]>([]);
+    const dispatch = useDispatch();
 
     useEffect(() => {
         (async () => {
             try {
-                const response: ResponseSuccess<ProductResponse> = await getProductById(product.product.id ?? '');
+                const response: ResponseSuccess<ProductResponse> = await getProductById(productUserResponse.product.id ?? '');
 
                 setProductResponse(response.data.product);
                 setProductDetails(response.data.productDetail ?? []);
@@ -113,6 +116,30 @@ const DiaLogAddToCart = ({ open, handleClose, product }: Props) => {
         }
     }
 
+    const addProductToCart = () => {
+        if (!selectedColor || !selectedSize) {
+            alert('Vui lòng chọn màu sắc và kích thước');
+            return;
+        }
+
+        if (buyQuantity <= 0) {
+            alert('Số lượng phải lớn hơn 0');
+            return;
+        }
+
+        const productDetail = getProductDetailByColorIdAndSizeId();
+        if (productDetail) {
+            addToCartLocalStorage({
+                productDetail: productDetail,
+                quantity: buyQuantity,
+                priceFinal: productUserResponse?.priceFinal ?? 0 
+            })
+            setAvailableQuantity(availableQuantity - buyQuantity);
+            setBuyQuantity(1);
+        }
+        dispatch(updateCartState())
+    }
+
     return (
         <Dialog
             fullScreen={fullScreen}
@@ -130,7 +157,7 @@ const DiaLogAddToCart = ({ open, handleClose, product }: Props) => {
             <DialogContent>
                 <Box sx={{ display: "flex", flexDirection: "row" }}>
                     <Box sx={{ width: "40%", background: "gray", height: 400, resizeMode: 'contain' }}>
-                        <img src={product.product?.thumbnail} alt="product" style={{ width: "100%", height: "100%" }} />
+                        <img src={productUserResponse.product?.thumbnail} alt="product" style={{ width: "100%", height: "100%" }} />
                     </Box>
                     <Box sx={{ width: "60%", display: "flex", flexDirection: "column", ml: 2 }}> {/* Chi tiết*/}
                         <Typography
@@ -145,12 +172,12 @@ const DiaLogAddToCart = ({ open, handleClose, product }: Props) => {
                                 whiteSpace: 'normal',
                                 fontSize: 20
                             }}
-                        >{product?.product?.productName}</Typography>
+                        >{productUserResponse?.product?.productName}</Typography>
                         <Typography
                             sx={{
                                 fontSize: 14
                             }}
-                        >Thương hiệu: {product.product?.provider?.providerName}</Typography>
+                        >Thương hiệu: {productUserResponse.product?.provider?.providerName}</Typography>
                         <Box sx={{
                             background: "#e4e4e4",
                             p: 1, display: 'flex',
@@ -163,11 +190,11 @@ const DiaLogAddToCart = ({ open, handleClose, product }: Props) => {
                                     fontSize: 18
                                 }}
                             >Giá: </Typography>
-                            <Typography variant="h5" sx={{ color: 'red', fontWeight: '600', }}>{product.priceFinal}</Typography>
-                            {product.priceFinal != product.product.price &&
+                            <Typography variant="h5" sx={{ color: 'red', fontWeight: '600', }}>{productUserResponse.priceFinal}</Typography>
+                            {productUserResponse.priceFinal != productUserResponse.product.price &&
                                 <Typography variant="h5"
                                     sx={{ color: 'gray', fontWeight: '300', textDecoration: 'line-through' }}>
-                                    {product.product?.price}
+                                    {productUserResponse.product?.price}
                                 </Typography>
                             }
                         </Box>
@@ -213,12 +240,14 @@ const DiaLogAddToCart = ({ open, handleClose, product }: Props) => {
                                         background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
                                         color: 'white',
                                     },
-                                }} variant="contained">Thêm vào giỏ hàng
+                                }} variant="contained"
+                                onClick={addProductToCart}
+                                >Thêm vào giỏ hàng
                                     <AddShoppingCartIcon sx={{ ml: 1 }} />
                                 </Button>
                             </Box>
                         </Box>
-                        <Link to={`/products/${product.product.id}`}
+                        <Link to={`/products/${productUserResponse.product.id}`}
                             style={{ textDecoration: 'none', color: 'blue', marginTop: '8px', display: 'block' }}>
                             Xem chi tiết sản phẩm</Link>
                     </Box>

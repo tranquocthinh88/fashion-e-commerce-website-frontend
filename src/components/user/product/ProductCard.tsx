@@ -95,7 +95,7 @@ const ProductCard = ({ product }: Props) => {
                         <DiaLogAddToCart
                             open={openDialogAddToCart}
                             handleClose={handleCloseDialogAddToCart}
-                            product={product}
+                            productUserResponse={product}
                         />}
                 </Box>
             </CardContent>
