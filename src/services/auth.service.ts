@@ -1,6 +1,7 @@
 import { apiUrl } from "../configs/api-url";
 import requestConfig, { ContentType, Method } from "../configs/axios.config";
 import { connect } from "../configs/websocket";
+import { ResetPasswordDto } from "../dtos/requests/auth/reset.password.dto";
 import { LoginRequestDto } from "../dtos/requests/login.dto"
 import { RegisterRequestDto } from "../dtos/requests/register.dto";
 import { VerifyEmailDto } from "../dtos/requests/verify.dto";
@@ -83,4 +84,46 @@ export const removeLocalStorage = () => {
 
 export const loginWithSocial = (provider: string) => {
     window.location.href = `${apiUrl}/oauth2/authorization/${provider}`;
+}
+
+export const sendVerificationEmail = async (email: string): Promise<ResponseSuccess<string>> => {
+    try {
+        const response = await requestConfig(
+            `auth/send-verification-email`,
+            Method.POST,
+            email,
+            ContentType.TEXT_PLAIN
+        );
+        return response.data;
+    } catch (error) {
+        return Promise.reject(error);
+    }
+}
+
+export const verifyEmailOtp = async (verifyEmailDto: VerifyEmailDto): Promise<ResponseSuccess<string>> => {
+    try {
+        const response = await requestConfig(
+            `auth/verify-email-otp-reset-password`,
+            Method.POST,
+            verifyEmailDto,
+            ContentType.JSON
+        );
+        return response.data;
+    } catch (error) {
+        return Promise.reject(error);
+    }
+}
+
+export const resetPassword = async (resetPasswordDto: ResetPasswordDto): Promise<ResponseSuccess<string>> => {
+    try {
+        const response = await requestConfig(
+            `auth/reset-password`,
+            Method.POST,
+            resetPasswordDto,
+            ContentType.JSON
+        );
+        return response.data;
+    } catch (error) {
+        return Promise.reject(error);
+    }
 }

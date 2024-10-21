@@ -130,6 +130,7 @@ const Login = () => {
                             component="button"
                             variant="body2"
                             color="#1976D2"
+                            onClick={() => navigate("/forgot-password")}
                         >
                             Quên mật khẩu?
                         </Link>

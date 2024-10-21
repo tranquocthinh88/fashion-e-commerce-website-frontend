@@ -18,6 +18,7 @@ import ProtectRouter from "./ProtectRoutes";
 import { Role } from "../models/user.model";
 import LoginSuccsess from "../pages/user/auth/LoginSuccess";
 import UserDetail from "../pages/user/user/UserDetail";
+import Forgotpassword from "../pages/user/auth/ForgotPassword";
 
 const adminRoutes = [
   {
@@ -57,6 +58,10 @@ const publicRoutes = [
   {
     path: '/auth/login-success',
     element: <LoginSuccsess></LoginSuccsess>
+  },
+  {
+    path: "/forgot-password",
+    element: <UserLayout><Forgotpassword /></UserLayout>
   },
   {
     path: "/register",
