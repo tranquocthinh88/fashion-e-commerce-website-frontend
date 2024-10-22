@@ -1,3 +1,3 @@
-export const convertPrice = (price: number = 0) => {
+export const ConvertPrice = (price: number) => {
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(price);
 }

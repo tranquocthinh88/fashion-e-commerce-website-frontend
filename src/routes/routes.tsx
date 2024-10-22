@@ -19,6 +19,7 @@ import { Role } from "../models/user.model";
 import LoginSuccsess from "../pages/user/auth/LoginSuccess";
 import UserDetail from "../pages/user/user/UserDetail";
 import Forgotpassword from "../pages/user/auth/ForgotPassword";
+import Cart from "../pages/user/cart/Cart";
 
 const adminRoutes = [
   {
@@ -68,9 +69,10 @@ const publicRoutes = [
     element: <Register />
   },
   {
-    path: "/admin/dashboard",
-    element: <AdminLayout><Dashboard /></AdminLayout>
+    path: "/cart",
+    element: <UserLayout><Cart /></UserLayout>
   },
+  
   {
     path: "/admin/products",
     element: <AdminLayout><Product /></AdminLayout>
@@ -106,8 +108,3 @@ export const router = createBrowserRouter([
   ...userRoutes,
   ...publicRoutes
 ]);
-
-// export const router1 = createBrowserRouter([
-  
-  
-// ])

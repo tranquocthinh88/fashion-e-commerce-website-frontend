@@ -48,3 +48,18 @@ const pushItemCart = (item: CartItemModel) => {
     cart.push(item)
     localStorage.setItem('cart', JSON.stringify(cart))
 }
+
+export const updateQuantityProduct = (item: CartItemModel) => {
+    const cart = getCartLocalStorage();
+    const filter = cart.filter((cartItem: CartItemModel) => cartItem.productDetail.id === item.productDetail.id);
+    if(filter.length > 0) {
+        filter[0].quantity = item.quantity;
+        localStorage.setItem('cart', JSON.stringify(cart));
+    }
+}
+
+export const removeProductFromCart = (item: CartItemModel) => {
+    const cart = getCartLocalStorage();
+    const newCart = cart.filter(cartItem => cartItem.productDetail.id !== item.productDetail.id)
+    localStorage.setItem('cart', JSON.stringify(newCart))
+}
