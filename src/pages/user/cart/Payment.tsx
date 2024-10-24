@@ -45,6 +45,8 @@ import { updateCartState } from "../../../redux/reducers/cart.reducer";
 import { useFormik } from "formik";
 import * as yup from 'yup';
 import CustomTextField from "../../../components/common/TextFieldCustom";
+import { getUserVoucherByUserId } from "../../../services/user-voucher.service";
+import { UserVoucherModel } from "../../../models/user.voucher.model";
 
 const Payment = () => {
 
@@ -69,6 +71,7 @@ const Payment = () => {
     const [openAlert, setOpenAlert] = useState({ show: false, status: '', message: '' });
     const navigate = useNavigate();
     const dispatch = useDispatch();
+    const [userVoucher, setUserVoucher] = useState<UserVoucherModel[]>([]);
 
     const showAlert = (status: string, message: string) => {
         setOpenAlert({ show: true, status, message });
@@ -161,11 +164,19 @@ const Payment = () => {
             try {
                 const responseVoucher: ResponseSuccess<VoucherModel[]> = await getAllVouchers();
                 setVouchers(responseVoucher.data);
+
+                const responseUserVoucher = await getUserVoucherByUserId(user?.id ?? 0);
+
+                setUserVoucher(responseUserVoucher.data);
             } catch (error) {
                 console.log("Lỗi : ", error);
             }
         })();
     }, []);
+
+    useEffect(() => {
+        console.log("User voucher (sau khi cập nhật): ", userVoucher);
+    }, [userVoucher]);
 
     const [open, setOpen] = useState(false);
     const handleClickOpenDiscount = () => {
@@ -485,19 +496,31 @@ const Payment = () => {
                                 </Button>
                                 <Dialog onClose={handleClose} open={open} sx={{ '& .MuiDialog-paper': { width: '30%' } }} >
                                     <DialogTitle>Danh sách mã giảm giá</DialogTitle>
-                                    <List sx={{ pt: 0 }} >
-                                        {vouchers.map((item, index) => (
-                                            <ListItem component="div" key={index} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                                                <Box>
-                                                    <Typography variant="h6" sx={{ fontSize: 16 }}>{item.name}</Typography>
-                                                    <Typography sx={{ fontSize: 12 }}>Giảm tối đa {ConvertPrice(item.maxDiscountAmount)}</Typography>
-                                                    <Typography sx={{ fontSize: 12 }}>Cho đơn tối thiểu {ConvertPrice(item.minOrderAmount)}</Typography>
-                                                </Box>
-                                                <Button variant="outlined" color="primary" onClick={() => handleSelectVoucher(item)}>
-                                                    Áp dụng
-                                                </Button>
-                                            </ListItem>
-                                        ))}
+                                    <List sx={{ pt: 0 }}>
+                                        {vouchers.map((item, index) => {
+                                            const isUsed = userVoucher.some(uv => uv.voucher.id === item.id && uv.isUsed);
+
+                                            return (
+                                                <ListItem component="div" key={index} sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                                    <Box>
+                                                        <Typography variant="h6" sx={{ fontSize: 16 }}>{item.name}</Typography>
+                                                        <Typography sx={{ fontSize: 12 }}>Giảm tối đa {ConvertPrice(item.maxDiscountAmount)}</Typography>
+                                                        <Typography sx={{ fontSize: 12 }}>Cho đơn tối thiểu {ConvertPrice(item.minOrderAmount)}</Typography>
+                                                        {isUsed && (
+                                                            <Typography sx={{ fontSize: 12, color: 'green' }}>Đã sử dụng</Typography>
+                                                        )}
+                                                    </Box>
+                                                    <Button
+                                                        variant="outlined"
+                                                        color="primary"
+                                                        onClick={() => handleSelectVoucher(item)}
+                                                        disabled={isUsed} 
+                                                    >
+                                                        Áp dụng
+                                                    </Button>
+                                                </ListItem>
+                                            );
+                                        })}
                                         {error && <Typography color="error">{error}</Typography>}
                                     </List>
                                 </Dialog>
