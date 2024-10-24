@@ -6,7 +6,6 @@ import {
     InputLabel,
     MenuItem,
     Select,
-    TextField,
     Typography,
     RadioGroup,
     FormControlLabel,
@@ -37,7 +36,7 @@ import { ResponseSuccess } from "../../../dtos/responses/response.success";
 import { VoucherModel, VoucherType } from "../../../models/voucher.model";
 import { applyVoucherOrder, applyVoucherShip, getAllVouchers } from "../../../services/voucher.service";
 import { applyVoucherOrderDto, applyVoucherShipDto } from "../../../dtos/requests/orders/voucher.dto";
-import { OrderModel, PaymentMethod } from "../../../models/order.model";
+import { PaymentMethod } from "../../../models/order.model";
 import { createOrder } from "../../../services/order.service";
 import { OrderDto } from "../../../dtos/requests/orders/order.dto";
 import { useNavigate } from "react-router-dom";
@@ -97,9 +96,7 @@ const Payment = () => {
                         phone_code: provider.phone_code,
                         districts: provider.districts,
                     }));
-
                     setProvinces(provinces);
-                    console.log("Tỉnh thành: ", provinces);
                 } else {
                     console.error("Dữ liệu trả về không hợp lệ.");
                 }
@@ -148,7 +145,7 @@ const Payment = () => {
 
                 const fee = await calculateShippingFee(shippingDto);
                 setFee(fee);
-                console.log("Phí vận chuyển: ", fee);
+                formilCreateOrder.setFieldValue('deliveryFee', fee);
             } catch (error) {
                 console.log("Tính phí vận chuyển lỗi: ", error);
             }
@@ -164,8 +161,6 @@ const Payment = () => {
             try {
                 const responseVoucher: ResponseSuccess<VoucherModel[]> = await getAllVouchers();
                 setVouchers(responseVoucher.data);
-                console.log("Voucher: ", responseVoucher.data);
-
             } catch (error) {
                 console.log("Lỗi : ", error);
             }
@@ -195,7 +190,6 @@ const Payment = () => {
             }
             handleCalDiscount(voucher);
             setOpen(false);
-            console.log("Voucher đã chọn: ", voucher.id);
         } catch (error) {
             console.log("Lỗi khi chọn mã giảm giá: ", error);
         }
@@ -217,14 +211,12 @@ const Payment = () => {
             if (voucher.voucherType === VoucherType.FOR_PRODUCT) {
                 const responseVoucherOrder = await applyVoucherOrder(applyOrderDto);
                 setDiscountOrder(Number(responseVoucherOrder.data));
-                console.log("Số tiền giảm đơn hàng: ", discountOrder);
             }
 
 
             if (voucher.voucherType === VoucherType.FOR_DELIVERY) {
                 const responseVoucherShip = await applyVoucherShip(applyShipDto);
                 setDiscountShip(Number(responseVoucherShip.data));
-                console.log("Số tiền giảm ship: ", discountShip);
             }
 
         } catch (error) {
@@ -232,58 +224,21 @@ const Payment = () => {
         }
     }
 
-    const handleSubmitOrder = async () => {
-        try {
-            const orderDto: OrderDto = {
-                email: user?.email ?? '',
-                paymentMethod: paymentMethod,
-                note: '',
-                phoneNumber: user?.phone ?? '',
-                buyerName: user?.username ?? '',
-                deliveryMethod: deliveryMethod,
-                deliveryFee: fee,
-                address: {
-                    city: selectedProvince,
-                    district: selectedDistrict,
-                    street: selectedWard,
-                },
-                addressDetail: '',
-                productsOrderDtos: cart.map((cartItem: CartItemModel) => ({
-                    productDetailId: cartItem.productDetail.id ?? '',
-                    quantity: cartItem.quantity ?? 0,
-                })),
-                vouchers: [selectedVoucherForProduct, selectedVoucherForDelivery].filter(Boolean)
-            }
-
-            console.log("Giá trị truyền đi: ", orderDto);
-
-            const response: ResponseSuccess<OrderModel> = await createOrder(orderDto);
-            console.log("Đơn hàng đã tạo: ", response.data);
-            showAlert('success', 'Đơn hàng đã được tạo thành công.');
-            localStorage.removeItem('cart');
-            dispatch(updateCartState());
-            setTimeout(() => {
-                navigate('/cart');
-            }, 2000);
-        } catch (error) {
-            console.log("Lỗi khi tạo đơn hàng: ", error);
-        }
-    }
-
-
     const validationOrderSchema = yup.object({
         email: yup.string().email('Email không hợp lệ').required('Vui lòng nhập email'),
         paymentMethod: yup.string().required('Vui lòng chọn phương thức thanh toán'),
         note: yup.string(),
-        phone: yup.string()
+        phoneNumber: yup.string()
             .required("Vui lòng nhập số điện thoại")
             .matches(/^0[0-9]{9}$/, "Số điện thoại không hợp lệ"),
-        username: yup.string().required('Vui lòng nhập họ và tên'),
+        buyerName: yup.string().required('Vui lòng nhập họ và tên'),
         deliveryMethod: yup.string().required('Vui lòng chọn phương thức vận chuyển'),
         deliveryFee: yup.number().required('Vui lòng chọn phí vận chuyển'),
-        city: yup.string().required('Vui lòng chọn tỉnh/thành phố'),
-        district: yup.string().required('Vui lòng chọn quận/huyện'),
-        street: yup.string().required('Vui lòng chọn phường/xã'),
+        address: yup.object({
+            city: yup.string().required('Vui lòng chọn tỉnh/thành phố'),
+            district: yup.string().required('Vui lòng chọn quận/huyện'),
+            street: yup.string().required('Vui lòng chọn phường/xã'),
+        }),
         addressDetail: yup.string().required('Vui lòng nhập địa chỉ chi tiết'),
         productsOrderDtos: yup.array().of(yup.object({
             productDetailId: yup.string().required('Vui lòng chọn sản phẩm'),
@@ -296,11 +251,11 @@ const Payment = () => {
     const formilCreateOrder = useFormik({
         initialValues: {
             email: user?.email ?? '',
-            paymentMethod: PaymentMethod.COD,
+            paymentMethod: paymentMethod,
             note: '',
             phoneNumber: user?.phone ?? '',
             buyerName: user?.username ?? '',
-            deliveryMethod: DeliveryMethod.ECONOMY,
+            deliveryMethod: deliveryMethod,
             deliveryFee: fee,
             address: {
                 city: selectedProvince,
@@ -316,16 +271,29 @@ const Payment = () => {
         },
         validationSchema: validationOrderSchema,
         onSubmit: async (values: OrderDto) => {
-            console.log("Đã nhận sự kiện");
-            const valueOrderDto: OrderDto = values;
-            console.log("Thông tin: ", valueOrderDto);
             try {
-                await createOrder(valueOrderDto);
+                await createOrder(values);
+                showAlert('success', 'Đơn hàng đã được tạo thành công.');
+                localStorage.removeItem('cart');
+                dispatch(updateCartState());
+                setTimeout(() => {
+                    navigate('/cart');
+                }, 2000);
             } catch (error) {
                 setError("Mua hàng thất bại");
+                showAlert('error', 'Đã có lỗi xảy ra. Vui lòng thử lại sau.');
             }
         },
     })
+
+    const handleSubmitOrder1 = () => {
+
+        formilCreateOrder.setFieldValue('address.city', selectedProvince);
+        formilCreateOrder.setFieldValue('address.district', selectedDistrict);
+        formilCreateOrder.setFieldValue('address.street', selectedWard);
+
+        formilCreateOrder.handleSubmit();
+    }
 
     return (
         <Container maxWidth="lg">
@@ -409,8 +377,10 @@ const Payment = () => {
                         </Typography>
                         <FormControl component="fieldset">
                             <RadioGroup
-                                value={deliveryMethod}
-                                onChange={(e) => setDeliveryMethod(e.target.value as DeliveryMethod)}
+                                value={formilCreateOrder.values.deliveryMethod}
+                                onChange={(e) => {
+                                    formilCreateOrder.setFieldValue('deliveryMethod', e.target.value);
+                                }}
                             >
                                 <FormControlLabel
                                     value={DeliveryMethod.ECONOMY}
@@ -435,8 +405,10 @@ const Payment = () => {
                         </Typography>
                         <FormControl component="fieldset">
                             <RadioGroup
-                                value={paymentMethod}
-                                onChange={(e) => setPaymentMethod(e.target.value as PaymentMethod)}
+                                value={formilCreateOrder.values.paymentMethod}
+                                onChange={(e) => {
+                                    formilCreateOrder.setFieldValue('paymentMethod', e.target.value);
+                                }}
                             >
                                 <FormControlLabel
                                     value={PaymentMethod.COD}
@@ -575,18 +547,14 @@ const Payment = () => {
                         <Button variant="contained" color="warning" onClick={() => { navigate('/') }}>
                             Quay về giỏ hàng
                         </Button>
-                        <Button variant="contained" color="success" onClick={handleSubmitOrder}>
+                        <Button
+                            type="submit"
+                            variant="contained"
+                            color="success"
+                            onClick={handleSubmitOrder1}
+                        >
                             Hoàn tất đơn hàng
                         </Button>
-                        {/* <form onSubmit={formilCreateOrder.handleSubmit}>
-                            <Button
-                                type="submit"
-                                variant="contained"
-                                color="success"
-                            >
-                                Hoàn tất đơn hàng
-                            </Button>
-                        </form> */}
                     </Box>
 
                     <Snackbar

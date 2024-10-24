@@ -17,7 +17,7 @@ const Cart = () => {
     useEffect(() => {
         let total = 0;
         cart.forEach((cartItem: CartItemModel) => {
-            total += (cartItem.productDetail.product?.price ?? 0) * (cartItem.quantity ?? 0);
+            total += (cartItem.priceFinal?? 0) * (cartItem.quantity ?? 0);
         });
         setTotalMoney(total);
     }, [cart]);
