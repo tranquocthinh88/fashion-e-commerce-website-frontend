@@ -20,6 +20,7 @@ import LoginSuccsess from "../pages/user/auth/LoginSuccess";
 import UserDetail from "../pages/user/user/UserDetail";
 import Forgotpassword from "../pages/user/auth/ForgotPassword";
 import Cart from "../pages/user/cart/Cart";
+import Payment from "../pages/user/cart/Payment";
 
 const adminRoutes = [
   {
@@ -71,6 +72,10 @@ const publicRoutes = [
   {
     path: "/cart",
     element: <UserLayout><Cart /></UserLayout>
+  },
+  {
+    path: "/payment",
+    element: <UserLayout><Payment /></UserLayout>
   },
   
   {

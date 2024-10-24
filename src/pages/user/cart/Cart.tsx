@@ -6,11 +6,13 @@ import { useEffect, useState } from "react";
 import { CartItemModel } from "../../../models/cart.model";
 import CartItem from "./CartItem";
 import { ConvertPrice } from "../../../utils/convert.price";
+import { useNavigate } from "react-router-dom";
 
 const Cart = () => {
 
     const cart = useSelector((state: RootState) => state.cart.items);
     const [totalMoney, setTotalMoney] = useState<number>(0);
+    const navigate = useNavigate();
 
     useEffect(() => {
         let total = 0;
@@ -31,7 +33,7 @@ const Cart = () => {
                 </Box>
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', mb: 2 }}>
                     <Typography sx={{ fontWeight: 600, mr: '30px', color: 'red' }}>Tổng thanh toán: {ConvertPrice(totalMoney)}</Typography>
-                    <Button color="success" variant="contained" >Thanh toán</Button>
+                    <Button color="success" variant="contained" onClick={()=> {navigate("/payment")}}>Thanh toán</Button>
                 </Box>
             </> : <CartEmpty />}
             <Box>
