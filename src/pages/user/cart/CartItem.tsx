@@ -57,9 +57,6 @@ const CartItem = ({ item }: Props) => {
                     />
                 </Grid>
                 <Grid size={3} >
-                    <Box>
-
-                    </Box>
                     <Typography sx={{
                         minHeight: '48px',
                         display: '-webkit-box',

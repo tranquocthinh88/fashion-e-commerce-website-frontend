@@ -187,25 +187,36 @@ const Payment = () => {
     const handleClose = () => {
         setOpen(false);
     };
-
     const handleSelectVoucher = (voucher: VoucherModel) => {
         try {
             if (voucher.minOrderAmount > totalMoney) {
                 setError("Đơn hàng không đủ điều kiện để sử dụng mã giảm giá.");
                 return;
             }
+
+            const updatedVouchers = [...(formilCreateOrder.values.vouchers || [])];
+
             if (voucher.voucherType === VoucherType.FOR_PRODUCT) {
                 setSelectedVoucherForProduct(voucher.id);
+                if (!updatedVouchers.includes(voucher.id)) {
+                    updatedVouchers.push(voucher.id);
+                }
             }
             if (voucher.voucherType === VoucherType.FOR_DELIVERY) {
                 setSelectedVoucherForDelivery(voucher.id);
+                if (!updatedVouchers.includes(voucher.id)) {
+                    updatedVouchers.push(voucher.id);
+                }
             }
+
+            formilCreateOrder.setFieldValue('vouchers', updatedVouchers);
+
             handleCalDiscount(voucher);
             setOpen(false);
         } catch (error) {
             console.log("Lỗi khi chọn mã giảm giá: ", error);
         }
-    }
+    };
 
     const handleCalDiscount = async (voucher: VoucherModel) => {
         try {
@@ -225,16 +236,14 @@ const Payment = () => {
                 setDiscountOrder(Number(responseVoucherOrder.data));
             }
 
-
             if (voucher.voucherType === VoucherType.FOR_DELIVERY) {
                 const responseVoucherShip = await applyVoucherShip(applyShipDto);
                 setDiscountShip(Number(responseVoucherShip.data));
             }
-
         } catch (error) {
             console.log("Lỗi áp dụng mã khuyến mãi: ", error);
         }
-    }
+    };
 
     const validationOrderSchema = yup.object({
         email: yup.string().email('Email không hợp lệ').required('Vui lòng nhập email'),
@@ -279,11 +288,13 @@ const Payment = () => {
                 productDetailId: cartItem.productDetail.id ?? '',
                 quantity: cartItem.quantity ?? 0,
             })),
-            vouchers: [selectedVoucherForProduct, selectedVoucherForDelivery].filter(Boolean)
+            vouchers: [selectedVoucherForProduct, selectedVoucherForDelivery].filter(Boolean) || [],
         },
         validationSchema: validationOrderSchema,
         onSubmit: async (values: OrderDto) => {
             try {
+                console.log("Form values: ", values);
+                
                 const response: ResponseSuccess<OrderModel> = await createOrder(values);
                 const order: OrderModel = response.data;
                 if (order.paymentMethod === PaymentMethod.CC) {
@@ -318,7 +329,7 @@ const Payment = () => {
         formilCreateOrder.setFieldValue('address.city', selectedProvince);
         formilCreateOrder.setFieldValue('address.district', selectedDistrict);
         formilCreateOrder.setFieldValue('address.street', selectedWard);
-
+        
         formilCreateOrder.handleSubmit();
     }
 
