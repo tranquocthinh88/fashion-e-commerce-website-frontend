@@ -315,7 +315,7 @@ const Payment = () => {
                 localStorage.removeItem('cart');
                 dispatch(updateCartState());
                 setTimeout(() => {
-                    navigate('/cart');
+                    navigate(`/user/${values.email}/orders`);
                 }, 2000);
             } catch (error) {
                 setError("Mua hàng thất bại");
@@ -324,11 +324,11 @@ const Payment = () => {
         },
     })
 
-    const handleSubmitOrder1 = () => {
+    const handleSubmitOrder1 = async () => {
 
-        formilCreateOrder.setFieldValue('address.city', selectedProvince);
-        formilCreateOrder.setFieldValue('address.district', selectedDistrict);
-        formilCreateOrder.setFieldValue('address.street', selectedWard);
+        await formilCreateOrder.setFieldValue('address.city', selectedProvince);
+        await formilCreateOrder.setFieldValue('address.district', selectedDistrict);
+        await formilCreateOrder.setFieldValue('address.street', selectedWard);
         
         formilCreateOrder.handleSubmit();
     }

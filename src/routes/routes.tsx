@@ -22,7 +22,6 @@ import Forgotpassword from "../pages/user/auth/ForgotPassword";
 import Cart from "../pages/user/cart/Cart";
 import Payment from "../pages/user/cart/Payment";
 import PaymentSuccess from "../pages/user/cart/PaymentSuccess";
-// import PaymentSuccess from "../pages/user/cart/PaymentSuccess";
 
 const adminRoutes = [
   {
@@ -37,9 +36,9 @@ const userRoutes = [
     element: <ProtectRouter role={Role.ROLE_USER}><UserLayout><RoomChat /></UserLayout></ProtectRouter>,
   },
   {
-    path: '/user/:email',
+    path: '/user/:email/:tab?',
     element: <ProtectRouter role={Role.ROLE_USER}><UserLayout><UserDetail /></UserLayout></ProtectRouter>,
-  }
+  },
 ];
 
 const publicRoutes = [
