@@ -36,7 +36,7 @@ import { ResponseSuccess } from "../../../dtos/responses/response.success";
 import { VoucherModel, VoucherType } from "../../../models/voucher.model";
 import { applyVoucherOrder, applyVoucherShip, getAllVouchers } from "../../../services/voucher.service";
 import { applyVoucherOrderDto, applyVoucherShipDto } from "../../../dtos/requests/orders/voucher.dto";
-import { PaymentMethod } from "../../../models/order.model";
+import { OrderModel, PaymentMethod } from "../../../models/order.model";
 import { createOrder } from "../../../services/order.service";
 import { OrderDto } from "../../../dtos/requests/orders/order.dto";
 import { useNavigate } from "react-router-dom";
@@ -47,6 +47,7 @@ import * as yup from 'yup';
 import CustomTextField from "../../../components/common/TextFieldCustom";
 import { getUserVoucherByUserId } from "../../../services/user-voucher.service";
 import { UserVoucherModel } from "../../../models/user.voucher.model";
+import { getVnpPaymentUrl } from "../../../services/payment.service";
 
 const Payment = () => {
 
@@ -283,7 +284,22 @@ const Payment = () => {
         validationSchema: validationOrderSchema,
         onSubmit: async (values: OrderDto) => {
             try {
-                await createOrder(values);
+                const response: ResponseSuccess<OrderModel> = await createOrder(values);
+                const order: OrderModel = response.data;
+                if (order.paymentMethod === PaymentMethod.CC) {
+                    alert('Đã đặt hàng thành công, vui lòng chuyển tiền qua đây: ');
+
+                    try {
+                        const response = await getVnpPaymentUrl(order.discountPrice.valueOf());
+                        const paymentUrl: string = response.data; // Dữ liệu trả về là URL thanh toán
+
+                        console.log(paymentUrl);
+                        window.location.href = paymentUrl; // Chuyển hướng đến trang thanh toán
+                    } catch (error) {
+                        console.error('Error getting payment URL:', error);
+                    }
+                }
+
                 showAlert('success', 'Đơn hàng đã được tạo thành công.');
                 localStorage.removeItem('cart');
                 dispatch(updateCartState());
@@ -514,7 +530,7 @@ const Payment = () => {
                                                         variant="outlined"
                                                         color="primary"
                                                         onClick={() => handleSelectVoucher(item)}
-                                                        disabled={isUsed} 
+                                                        disabled={isUsed}
                                                     >
                                                         Áp dụng
                                                     </Button>

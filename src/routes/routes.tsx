@@ -21,6 +21,8 @@ import UserDetail from "../pages/user/user/UserDetail";
 import Forgotpassword from "../pages/user/auth/ForgotPassword";
 import Cart from "../pages/user/cart/Cart";
 import Payment from "../pages/user/cart/Payment";
+import PaymentSuccess from "../pages/user/cart/PaymentSuccess";
+// import PaymentSuccess from "../pages/user/cart/PaymentSuccess";
 
 const adminRoutes = [
   {
@@ -77,7 +79,10 @@ const publicRoutes = [
     path: "/payment",
     element: <UserLayout><Payment /></UserLayout>
   },
-  
+  {
+    path: '/payments-success',
+    element: <UserLayout><PaymentSuccess /></UserLayout>
+  },
   {
     path: "/admin/products",
     element: <AdminLayout><Product /></AdminLayout>
