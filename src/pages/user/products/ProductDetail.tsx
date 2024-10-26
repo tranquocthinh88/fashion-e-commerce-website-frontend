@@ -74,9 +74,6 @@ const ProductDetail = () => {
 
                 setProductUserResponse(responseProductById.data.data[0]);
 
-                console.log(responseProductById.data.data);
-
-
                 let uniqueColors: ColorModel[] = [];
                 response.data.productDetail?.forEach((productDetail: ProductDetailModel) => {
                     const filter: ColorModel[] = uniqueColors.filter(

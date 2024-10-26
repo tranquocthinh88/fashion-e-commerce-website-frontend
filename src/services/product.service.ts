@@ -146,7 +146,7 @@ export const getProductsForUser = async (pageNo: number = 1, pageSize: number = 
 }
 
 
-export const getProductById = async (productId: number = -1): Promise<ResponseSuccess<ProductResponse>> => {
+export const getProductById = async (productId: string): Promise<ResponseSuccess<ProductResponse>> => {
     try {
         const response = await requestConfig(
             `products/${productId}`,

@@ -98,7 +98,7 @@ const Header = () => {
                             </Badge>
                         </IconButton>
                     </Tooltip>
-                    <Tooltip title="giỏ hàng">
+                    <Tooltip title="giỏ hàng" onClick={()=> {navigate("/cart")}}>
                         <IconButton>
                             <Badge badgeContent={cart.length} color="primary">
                                 <ShoppingCartIcon />

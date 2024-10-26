@@ -9,15 +9,17 @@ interface CustomTextFieldProps {
   type: string;
   formik?: FormikProps<any>;
   width?: string;
+  multiline?: boolean;
   [key: string]: any;
 }
 
-const CustomTextField = ({ label, name, type, formik , width = '100%',}: CustomTextFieldProps) => {
+const CustomTextField = ({ label, name, type, formik , width = '100%', multiline}: CustomTextFieldProps) => {
   return (
     <TextField
       label={label}
       name={name}
       type={type}
+      multiline={multiline}
       placeholder={`Nhập ${label.toLowerCase()}`} // Hiển thị placeholder tùy theo label
       value={formik?.values[name]} // Sử dụng formik để liên kết giá trị
       onChange={formik?.handleChange} // Xử lý sự kiện thay đổi
@@ -27,7 +29,7 @@ const CustomTextField = ({ label, name, type, formik , width = '100%',}: CustomT
       sx={{
         width: width, // Điều chỉnh chiều rộng
         '& .MuiInputBase-root': {
-          height: 40, // Điều chỉnh chiều cao
+          height: 'auto', // Điều chỉnh chiều cao
         },
       }}
       InputProps={{
