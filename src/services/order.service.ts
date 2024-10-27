@@ -22,3 +22,42 @@ export const createOrder = async (orderDto: OrderDto): Promise<ResponseSuccess<O
     }
 
 }
+
+export const updateOrderStatusPending = async (orderId: string): Promise<ResponseSuccess<OrderModel>> => {
+    try {
+        console.log("Đã gọi API cập nhật trạng thái đơn hàng");
+        
+        const response = await requestConfig(
+            `orders/user/update/pending/${orderId}`,
+            Method.PUT,
+            {},
+            ContentType.JSON,
+            true
+        );
+        console.log("API cập nhật trạng thái đơn hàng thành công");
+        
+        return response.data;
+    } catch (error) {
+        return Promise.reject(error);
+    }
+}
+
+export const revokeQuantityByOrderId = async (orderId: string): Promise<ResponseSuccess<OrderModel>> => {
+    try {
+        console.log("Đã gọi API hủy số lượng sản phẩm");
+        
+        const response = await requestConfig(
+            `orders/user/revoke/${orderId}`,
+            Method.PUT,
+            {},
+            ContentType.JSON,
+            true
+        );
+        console.log("API hủy số lượng sản phẩm thành công");
+        
+        return response.data;
+    } catch (error) {
+        return Promise.reject(error);
+    }
+}
+

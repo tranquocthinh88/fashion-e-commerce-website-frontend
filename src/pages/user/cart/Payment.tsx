@@ -294,14 +294,16 @@ const Payment = () => {
         onSubmit: async (values: OrderDto) => {
             try {
                 console.log("Form values: ", values);
-                
+
                 const response: ResponseSuccess<OrderModel> = await createOrder(values);
                 const order: OrderModel = response.data;
                 if (order.paymentMethod === PaymentMethod.CC) {
                     alert('Đã đặt hàng thành công, vui lòng chuyển tiền qua đây: ');
 
                     try {
-                        const response = await getVnpPaymentUrl(order.discountPrice.valueOf());
+                        const orderId = order.id;
+                        const response = await getVnpPaymentUrl(order.discountPrice.valueOf(), "NCB", orderId);
+
                         const paymentUrl: string = response.data; // Dữ liệu trả về là URL thanh toán
 
                         console.log(paymentUrl);
@@ -310,10 +312,12 @@ const Payment = () => {
                         console.error('Error getting payment URL:', error);
                     }
                 }
+                else {
+                    localStorage.removeItem('cart');
+                    dispatch(updateCartState());
+                }
 
                 showAlert('success', 'Đơn hàng đã được tạo thành công.');
-                localStorage.removeItem('cart');
-                dispatch(updateCartState());
                 setTimeout(() => {
                     navigate(`/user/${values.email}/orders`);
                 }, 2000);
@@ -329,7 +333,7 @@ const Payment = () => {
         await formilCreateOrder.setFieldValue('address.city', selectedProvince);
         await formilCreateOrder.setFieldValue('address.district', selectedDistrict);
         await formilCreateOrder.setFieldValue('address.street', selectedWard);
-        
+
         formilCreateOrder.handleSubmit();
     }
 
