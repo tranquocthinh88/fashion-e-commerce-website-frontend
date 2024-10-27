@@ -61,3 +61,21 @@ export const revokeQuantityByOrderId = async (orderId: string): Promise<Response
     }
 }
 
+export const getOrdersByUser = async (email: string): Promise<ResponseSuccess<OrderModel[]>> => {
+    try {
+        console.log("Đã gọi API lấy danh sách đơn hàng");
+        
+        const response = await requestConfig(
+            `orders/user/${email}`,
+            Method.GET,
+            [],
+            ContentType.JSON,
+            true
+        );
+        console.log("API lấy danh sách đơn hàng thành công");
+        
+        return response.data;
+    } catch (error) {
+        return Promise.reject(error);
+    }
+}
