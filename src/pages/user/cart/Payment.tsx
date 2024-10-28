@@ -285,7 +285,7 @@ const Payment = () => {
             },
             addressDetail: '',
             productsOrderDtos: cart.map((cartItem: CartItemModel) => ({
-                productDetailId: cartItem.productDetail.id ?? '',
+                productDetailId: cartItem.productDetail?.id ?? '',
                 quantity: cartItem.quantity ?? 0,
             })),
             vouchers: [selectedVoucherForProduct, selectedVoucherForDelivery].filter(Boolean) || [],
@@ -493,8 +493,8 @@ const Payment = () => {
                                             <Grid item xs={3}>
                                                 <Box display="flex" justifyContent="center">
                                                     <img
-                                                        src={cartItem.productDetail.product?.thumbnail}
-                                                        alt={cartItem.productDetail.product?.productName}
+                                                        src={cartItem.productDetail?.product?.thumbnail}
+                                                        alt={cartItem.productDetail?.product?.productName}
                                                         style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }} // Hình ảnh căn giữa và có góc bo tròn
                                                     />
                                                 </Box>
@@ -503,7 +503,7 @@ const Payment = () => {
                                             {/* Cột chứa thông tin sản phẩm */}
                                             <Grid item xs={6}>
                                                 <Typography variant="subtitle1" fontWeight="bold">
-                                                    {cartItem.productDetail.product?.productName}
+                                                    {cartItem.productDetail?.product?.productName}
                                                 </Typography>
                                                 <Typography variant="body2" color="textSecondary">
                                                     Số lượng: {cartItem.quantity}

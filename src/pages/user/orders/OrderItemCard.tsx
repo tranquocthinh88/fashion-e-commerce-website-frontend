@@ -1,4 +1,4 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Input, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { CartItemModel } from "../../../models/cart.model";
@@ -13,7 +13,7 @@ type Props = {
     item: CartItemModel,
 }
 
-const CartItem = ({ item }: Props) => {
+const OrderItemCard = ({ item }: Props) => {
     const navigate = useNavigate();
     const [quantity, setQuantity] = useState<number>(item.quantity);
     const dispatch = useDispatch();
@@ -37,7 +37,7 @@ const CartItem = ({ item }: Props) => {
             ":hover": {
                 backgroundColor: '#f0f0f0',
             }
-        }} onClick={() => (navigate("/products/" + item.productDetail.product?.id))}>
+        }}>
             <Grid
                 container
                 sx={{
@@ -80,7 +80,7 @@ const CartItem = ({ item }: Props) => {
                     <Typography>{ConvertPrice(item.priceFinal)}</Typography>
                 </Grid>
                 <Grid size={2} >
-                    <QuantityProduct cartItem={item} quantity={quantity} setQuantity={setQuantityProp} maxValue={item.productDetail?.quantity ?? 0} />
+                    <Input type="number" value={quantity} disabled/>
                 </Grid>
                 <Grid size={2} >
                     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -88,11 +88,11 @@ const CartItem = ({ item }: Props) => {
                     </Box>
                 </Grid>
                 <Grid size={1} >
-                    <Button variant="contained" color="warning" onClick={handleDeleleProductOutCart} >Xóa</Button>
+                    <Button variant="contained" color="warning" onClick={handleDeleleProductOutCart} >Đánh giá</Button>
                 </Grid>
             </Grid>
         </Box>
     )
 }
 
-export default CartItem;
+export default OrderItemCard;

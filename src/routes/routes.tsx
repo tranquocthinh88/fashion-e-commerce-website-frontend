@@ -22,6 +22,7 @@ import Forgotpassword from "../pages/user/auth/ForgotPassword";
 import Cart from "../pages/user/cart/Cart";
 import Payment from "../pages/user/cart/Payment";
 import PaymentSuccess from "../pages/user/cart/PaymentSuccess";
+import OrderDetails from "../pages/user/orders/OrderDetails";
 
 const adminRoutes = [
   {
@@ -39,6 +40,10 @@ const userRoutes = [
     path: '/user/:email/:tab?',
     element: <ProtectRouter role={Role.ROLE_USER}><UserLayout><UserDetail /></UserLayout></ProtectRouter>,
   },
+  {
+    path: '/order-details/:id',
+    element: <ProtectRouter role={Role.ROLE_USER}><UserLayout><OrderDetails /></UserLayout></ProtectRouter>,
+  }
 ];
 
 const publicRoutes = [

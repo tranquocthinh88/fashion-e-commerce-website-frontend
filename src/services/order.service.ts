@@ -1,6 +1,7 @@
 import requestConfig, { ContentType, Method } from "../configs/axios.config";
 import { OrderDto } from "../dtos/requests/orders/order.dto";
 import { ResponseSuccess } from "../dtos/responses/response.success";
+import { OrderDetailsModel } from "../models/order.details.model";
 import { OrderModel } from "../models/order.model";
 
 export const createOrder = async (orderDto: OrderDto): Promise<ResponseSuccess<OrderModel>> => {
@@ -66,7 +67,7 @@ export const getOrdersByUser = async (email: string): Promise<ResponseSuccess<Or
         console.log("Đã gọi API lấy danh sách đơn hàng");
         
         const response = await requestConfig(
-            `orders/user/${email}`,
+            `orders/user/${email}/all`,
             Method.GET,
             [],
             ContentType.JSON,
@@ -74,6 +75,37 @@ export const getOrdersByUser = async (email: string): Promise<ResponseSuccess<Or
         );
         console.log("API lấy danh sách đơn hàng thành công");
         
+        return response.data;
+    } catch (error) {
+        return Promise.reject(error);
+    }
+}
+
+
+export const getOrderDetailsByOrderId = async (orderId: string): Promise<ResponseSuccess<OrderDetailsModel[]>> => {
+    try {
+        const response = await requestConfig(
+            `order-details/${orderId}`,
+            Method.GET,
+            [],
+            ContentType.JSON,
+            true
+        );
+        return response.data;
+    } catch (error) {
+        return Promise.reject(error);
+    }
+}
+
+export const getOrderById = async (orderId: string): Promise<ResponseSuccess<OrderModel>> => {
+    try {
+        const response = await requestConfig(
+            `orders/user/${orderId}`,
+            Method.GET,
+            [],
+            ContentType.JSON,
+            true
+        );
         return response.data;
     } catch (error) {
         return Promise.reject(error);
