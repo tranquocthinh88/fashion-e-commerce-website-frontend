@@ -3,16 +3,21 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 type Props = {
-    productId: number,
+    productId: string,
     productName: string,
     productPrice: number,
-    fNavigate: (id: number) => void;
+    fNavigate: (id: string) => void;
     thumbnail: string;
 
 }
 
 const ProductCardAdmin = ({ productId, productName, productPrice, fNavigate, thumbnail }: Props) => {
     const isMobile = useMediaQuery('(max-width:600px)');
+    // const navigate = useNavigate(); // Sử dụng useNavigate
+
+    // const handleEditClick = () => {
+    //     navigate(`/admin/products/${productId}`); // Điều hướng đến trang chi tiết sản phẩm
+    // }
     return (
         <Card sx={{ maxWidth: 345 }}>
             <CardMedia

@@ -1,4 +1,5 @@
 import requestConfig, { ContentType, Method } from "../configs/axios.config";
+import { ProductUpdateDto } from "../dtos/requests/admin/product-update.dto";
 import { PageResponse } from "../dtos/responses/page.response";
 import { ProductResponse } from "../dtos/responses/products/product.response";
 import { ProductUserResponse } from "../dtos/responses/products/productUser-response";
@@ -14,14 +15,14 @@ export const getProductsDiscount = async (pageNo: number = 1, pageSize: number =
         field: string;
         order: string;
     }[] = []): Promise<ResponseSuccess<PageResponse<ProductUserResponse[]>>> => {
-    let sortResult : string = 'sort=""';
-    let searchResult : string = 'search=""';
-    
-    if(search.length > 0){
+    let sortResult: string = 'sort=""';
+    let searchResult: string = 'search=""';
+
+    if (search.length > 0) {
         searchResult = search.map(s => `search=${s.field}${s.operator}${s.value}`).join('&');
     }
-    
-    if(sort.length > 0){
+
+    if (sort.length > 0) {
         sortResult = sort.map(s => `sort=${s.field}:${s.order}`).join('&');
     }
 
@@ -48,14 +49,14 @@ export const getProductsNewCreatedAt = async (pageNo: number = 1, pageSize: numb
         field: string;
         order: string;
     }[] = []): Promise<ResponseSuccess<PageResponse<ProductUserResponse[]>>> => {
-    let sortResult : string = 'sort=""';
-    let searchResult : string = 'search=""';
-    
-    if(search.length > 0){
+    let sortResult: string = 'sort=""';
+    let searchResult: string = 'search=""';
+
+    if (search.length > 0) {
         searchResult = search.map(s => `search=${s.field}${s.operator}${s.value}`).join('&');
     }
-    
-    if(sort.length > 0){
+
+    if (sort.length > 0) {
         sortResult = sort.map(s => `sort=${s.field}:${s.order}`).join('&');
     }
 
@@ -67,7 +68,7 @@ export const getProductsNewCreatedAt = async (pageNo: number = 1, pageSize: numb
             ContentType.JSON
         );
         console.log("Data new: ", response.data);
-        
+
         return response.data;
     } catch (error) {
         return Promise.reject(error);
@@ -84,14 +85,14 @@ export const getProductsSold = async (pageNo: number = 1, pageSize: number = 20,
         field: string;
         order: string;
     }[] = []): Promise<ResponseSuccess<PageResponse<ProductUserResponse[]>>> => {
-    let sortResult : string = 'sort=""';
-    let searchResult : string = 'search=""';
-    
-    if(search.length > 0){
+    let sortResult: string = 'sort=""';
+    let searchResult: string = 'search=""';
+
+    if (search.length > 0) {
         searchResult = search.map(s => `search=${s.field}${s.operator}${s.value}`).join('&');
     }
-    
-    if(sort.length > 0){
+
+    if (sort.length > 0) {
         sortResult = sort.map(s => `sort=${s.field}:${s.order}`).join('&');
     }
 
@@ -103,7 +104,7 @@ export const getProductsSold = async (pageNo: number = 1, pageSize: number = 20,
             ContentType.JSON
         );
         console.log("Data sold: ", response.data);
-        
+
         return response.data;
     } catch (error) {
         return Promise.reject(error);
@@ -120,14 +121,14 @@ export const getProductsForUser = async (pageNo: number = 1, pageSize: number = 
         field: string;
         order: string;
     }[] = []): Promise<ResponseSuccess<PageResponse<ProductUserResponse[]>>> => {
-    let sortResult : string = 'sort=""';
-    let searchResult : string = 'search=""';
-    
-    if(search.length > 0){
+    let sortResult: string = 'sort=""';
+    let searchResult: string = 'search=""';
+
+    if (search.length > 0) {
         searchResult = search.map(s => `search=${s.field}${s.operator}${s.value}`).join('&');
     }
-    
-    if(sort.length > 0){
+
+    if (sort.length > 0) {
         sortResult = sort.map(s => `sort=${s.field}:${s.order}`).join('&');
     }
 
@@ -138,7 +139,7 @@ export const getProductsForUser = async (pageNo: number = 1, pageSize: number = 
             [],
             ContentType.JSON
         );
-        
+
         return response.data;
     } catch (error) {
         return Promise.reject(error);
@@ -152,7 +153,8 @@ export const getProductById = async (productId: string): Promise<ResponseSuccess
             `products/${productId}`,
             Method.GET,
             [],
-            ContentType.JSON
+            ContentType.JSON,
+            true
         );
         return response.data;
     } catch (error) {
@@ -181,7 +183,53 @@ export const getAllProducts = async (): Promise<ResponseSuccess<ProductModel[]>>
             'products',
             Method.GET,
             [],
+            ContentType.JSON,
+        );
+        return response.data;
+    } catch (error) {
+        return Promise.reject(error);
+    }
+}
+export const getPageProducts = async (pageNo: number = 1, pageSize: number = 40, search: {
+    field: string;
+    operator: string;
+    value: string;
+}[] = [],
+    sort: {
+        field: string;
+        order: string;
+    }[] = []): Promise<ResponseSuccess<PageResponse<ProductUserResponse[]>>> => {
+    let sortResult: string = 'sort=""';
+    let searchResult: string = 'search=""';
+
+    if (search.length > 0) {
+        searchResult = search.map(s => `search=${s.field}${s.operator}${s.value}`).join('&');
+    }
+
+    if (sort.length > 0) {
+        sortResult = sort.map(s => `sort=${s.field}:${s.order}`).join('&');
+    }
+
+    try {
+        const response = await requestConfig(
+            `products/page-product?pageNo=${pageNo}&pageSize=${pageSize}&${sortResult}&${searchResult}`,
+            Method.GET,
+            [],
             ContentType.JSON
+        );
+        return response.data;
+    } catch (error) {
+        return Promise.reject(error);
+    }
+}
+export const updateProduct = async (id: number, productDto: ProductUpdateDto): Promise<ResponseSuccess<ProductModel>> => {
+    try {
+        const response = await requestConfig(
+            `products/${id}`,
+            Method.PUT,
+            productDto,
+            ContentType.JSON,
+            true
         );
         return response.data;
     } catch (error) {

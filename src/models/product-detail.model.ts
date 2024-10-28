@@ -8,4 +8,5 @@ export type ProductDetailModel = {
     color: ColorModel;
     size: SizeModel;
     quantity?: number;
+    weight: number; 
 }

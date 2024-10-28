@@ -33,6 +33,7 @@ const CartItem = ({ item }: Props) => {
             border: '1px solid #f0f0f0',
             mb: 1,
             maxHeight: '98px',
+            minHeight: '98px',
             borderRadius: '4px',
             ":hover": {
                 backgroundColor: '#f0f0f0',
@@ -57,9 +58,6 @@ const CartItem = ({ item }: Props) => {
                     />
                 </Grid>
                 <Grid size={3} >
-                    <Box>
-
-                    </Box>
                     <Typography sx={{
                         minHeight: '48px',
                         display: '-webkit-box',

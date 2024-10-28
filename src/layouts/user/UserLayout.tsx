@@ -8,14 +8,18 @@ type UserLayoutProps = {
     children: ReactNode;
 }
 
-const UserLayout = ({ children}: UserLayoutProps) => {
+const UserLayout = ({ children }: UserLayoutProps) => {
     const location = useLocation();
     return (
         <Box>
             <Header></Header>
             <Typography> {"Trang chủ" + location.pathname}</Typography>
-            <Box sx={{ padding: 2 }}>{children}</Box>
-            <Footer></Footer>
+            <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+                <Box sx={{ flexGrow: 1, padding: 2 }}>{children}</Box>
+                <Box sx={{ width: "100%"}}>
+                    <Footer />
+                </Box>
+            </Box>
         </Box>
     )
 }

@@ -22,6 +22,7 @@ import Forgotpassword from "../pages/user/auth/ForgotPassword";
 import Cart from "../pages/user/cart/Cart";
 import Payment from "../pages/user/cart/Payment";
 import PaymentSuccess from "../pages/user/cart/PaymentSuccess";
+import UpdateProduct from "../pages/admin/products/UpdateProduct";
 // import PaymentSuccess from "../pages/user/cart/PaymentSuccess";
 
 const adminRoutes = [
@@ -29,6 +30,10 @@ const adminRoutes = [
     path: "/admin/dashboard",
     element: <ProtectRouter role={Role.ROLE_ADMIN}> <AdminLayout><Dashboard /></AdminLayout></ProtectRouter>
   },
+  {
+    path: '/admin/products/update/:id',
+    element: <ProtectRouter role={Role.ROLE_ADMIN}> <AdminLayout><UpdateProduct /></AdminLayout></ProtectRouter>
+},
 ];
 
 const userRoutes = [
@@ -40,6 +45,7 @@ const userRoutes = [
     path: '/user/:email',
     element: <ProtectRouter role={Role.ROLE_USER}><UserLayout><UserDetail /></UserLayout></ProtectRouter>,
   }
+  
 ];
 
 const publicRoutes = [
@@ -111,6 +117,7 @@ const publicRoutes = [
     path: "/admin/statistics/best-sellers",
     element: <AdminLayout><BestSeller /></AdminLayout>
   },
+  
 ];
 
 export const router = createBrowserRouter([
