@@ -3,7 +3,6 @@ import requestConfig, { ContentType, Method } from "../configs/axios.config";
 import { ProductDetailDto } from "../dtos/requests/admin/product-detail.dto";
 import { ResponseSuccess } from "../dtos/responses/response.success";
 import { ProductDetailModel } from "../models/product-detail.model";
-import { UpdateProductDetailDto } from '../dtos/requests/admin/product-update.dto';
 
 export const createProductDetail = async (productDetailDto: ProductDetailDto): Promise<ResponseSuccess<ProductDetailModel>> => {
     try {
@@ -33,7 +32,7 @@ export const removeProductDetail = async (id: number): Promise<ResponseSuccess<s
         return Promise.reject(error);
     }
 }
-export const updateProductDetail = async (id: number, updateProductDetailDto: UpdateProductDetailDto): Promise<ResponseSuccess<string>> => {
+export const updateProductDetail = async (id: number, updateProductDetailDto: ProductDetailDto ): Promise<ResponseSuccess<string>> => {
     try {
         const response = await requestConfig(
             `product-details/${id}`,

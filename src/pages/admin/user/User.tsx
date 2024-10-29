@@ -7,31 +7,62 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import { bodyAdminColor, newOrderGradient } from "../../../theme";
 import SearchIcon from '@mui/icons-material/Search';
-
-function createData(
-    id: string,
-    username: string,
-    email: string,
-    totalPrice: number = 0
-) {
-    return { id, username, email, totalPrice };
-}
-
-const rows = [
-    createData('001', 'Frozen yoghurt', 'tranthinh@gmail.com'),
-    createData('002', 'Ice cream sandwich', 'tranthinh@gmail.com'),
-    createData('003', 'Eclair', 'tranthinh@gmail.com'),
-    createData('004', 'Cupcake', 'tranthinh@gmail.com'),
-    createData('005', 'Gingerbread', 'tranthinh@gmail.com'),
-    createData('006', 'Gingerbread', 'tranthinh@gmail.com'),
-    createData('007', 'Gingerbread', 'tranthinh@gmail.com'),
-    createData('008', 'Gingerbread', 'tranthinh@gmail.com'),
-    createData('009', 'Gingerbread', 'tranthinh@gmail.com'),
-    createData('010', 'Gingerbread', 'tranthinh@gmail.com'),
-];
+import { useEffect, useState } from "react";
+import { UserModel } from "../../../models/user.model";
+import { getAllUsers } from "../../../services/user.service";
 
 const User = () => {
-    
+    const [users, setUsers] = useState<UserModel[]>([]);
+    const [searchKeyword, setSearchKeyword] = useState<string>("");
+
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                const response = await getAllUsers();
+                setUsers(response.data);
+            } catch (error) {
+                console.error("Failed to fetch users", error);
+            }
+        };
+
+        fetchUsers();
+    }, []);
+    const fetchUsers = async (keyword: string = "") => {
+        try {
+            const trimmedKeyword = keyword.trim();
+            const response = await getAllUsers();
+            const filteredUsers = response.data
+                .filter(user => user.role === 'ROLE_USER') // Lọc người dùng có vai trò là "user"
+                .filter(user => user.username.toLowerCase().includes(trimmedKeyword.toLowerCase()))
+                .map((user, index) => ({ ...user, id: (index + 1)})); // Cập nhật ID của người dùng
+            setUsers(filteredUsers);
+        } catch (error) {
+            console.error("Failed to fetch users", error);
+        }
+    };
+
+    useEffect(() => {
+        fetchUsers();
+    }, []);
+
+    const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const keyword = event.target.value;
+        setSearchKeyword(keyword);
+        if (keyword.trim() === "") {
+            fetchUsers();
+        }
+    };
+
+    const handleSearchClick = () => {
+        fetchUsers(searchKeyword);
+    };
+
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
+        if (event.key === 'Enter') {
+            event.preventDefault();
+            handleSearchClick();
+        }
+    };
     return (
         <Box sx={{ background: bodyAdminColor, width: '100%', height: '100%' }}>
             <Box sx={{ fontSize: 30, fontWeight: 'bold', ml: 2 }}>Người dùng</Box>
@@ -43,32 +74,40 @@ const User = () => {
                     multiline
                     variant="standard"
                     sx={{ width: 300 }}
+                    onChange={handleSearchChange}
+                    onKeyDown={handleKeyDown}
                 />
-                <Button type="button" aria-label="search" sx={{ mt: 2 }}><SearchIcon sx={{ color: 'black' }} /></Button>
+                <Button type="button" aria-label="search" sx={{ mt: 2 }} onClick={handleSearchClick}>
+                    <SearchIcon sx={{ color: 'black' }} />
+                </Button>
             </Box>
             <Box sx={{ width: '100%', height: '100%', mt: 2 }}>
                 <TableContainer sx={{ background: newOrderGradient, height: 520 }}>
                     <Table sx={{ minWidth: 650 }} aria-label="simple table" >
                         <TableHead >
-                            <TableRow className="sticky-header" sx={{ position: 'sticky', top: 0, zIndex: 2}}>
+                            <TableRow className="sticky-header" sx={{ position: 'sticky', top: 0, zIndex: 2 }}>
                                 <TableCell>ID</TableCell>
                                 <TableCell>Username</TableCell>
                                 <TableCell>Email</TableCell>
-                                <TableCell>Total Price</TableCell>
+                                <TableCell>Phone</TableCell>
+                                <TableCell>Ngày đăng kí</TableCell>
+                                <TableCell>Tổng hóa đơn</TableCell>
+                                <TableCell>Tổng tiền</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {rows.map((row) => (
+                            {users.map((user) => (
                                 <TableRow
-                                    key={row.id}
+                                    key={user.id}
                                     sx={{ '&:last-child td, &:last-child th': { border: 0 }, position: 'relative' }}
                                 >
                                     <TableCell component="th" scope="row">
-                                        {row.id}
+                                        {user.id}
                                     </TableCell>
-                                    <TableCell>{row.username}</TableCell>
-                                    <TableCell>{row.email}</TableCell>
-                                    <TableCell>{row.totalPrice}</TableCell>
+                                    <TableCell>{user.username}</TableCell>
+                                    <TableCell>{user.email}</TableCell>
+                                    <TableCell>{user.phone}</TableCell>
+                                    <TableCell>{new Date(user.createdAt ?? '').toLocaleDateString()}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>

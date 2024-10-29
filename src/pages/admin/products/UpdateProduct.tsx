@@ -40,7 +40,7 @@ import { ProductDetailModel } from "../../../models/product-detail.model";
 import { createProductDetail, removeProductDetail, updateProductDetail } from "../../../services/product-detail.service";
 import { ProductResponse } from "../../../dtos/responses/products/product.response";
 import { ProductPriceModel } from "../../../models/product-price.model";
-import { createProductPrice, deleteProductPrice, getAllProductPricesByProductId } from "../../../services/product-price.service";
+import { createProductPrice, deleteProductPrice } from "../../../services/product-price.service";
 import { ProductDto } from "../../../dtos/requests/admin/product.dto";
 import { ProductPriceDto } from "../../../dtos/requests/admin/product-price.dto";
 import { ProductDetailDto } from "../../../dtos/requests/admin/product-detail.dto";
@@ -157,7 +157,7 @@ const UpdateProduct = () => {
                     description: values.description || "",
                     status: values.status || Status.ACTIVE,
                     thumbnail: urls[thumbnail],
-                    brandId: String(values.brandId) || ""
+                    brandId: String(values.brandId) || "",
                 });
                 setOpenBackdrop(false);
                 setOpenAlert(
@@ -295,7 +295,6 @@ const UpdateProduct = () => {
                 const responseCategory: ResponseSuccess<CategoryModel[]> = await getAllCategories();
                 setCategories(responseCategory.data);
                 console.log(responseCategory.data);
-                
                 const responseSizes: ResponseSuccess<SizeModel[]> = await getAllSizes();
                 setSizes(responseSizes.data);
                 const responseColors: ResponseSuccess<ColorModel[]> = await getAllColors();
@@ -328,22 +327,52 @@ const UpdateProduct = () => {
         }
     }
 
-    const addProductDetail = () => {
-        formikProductDetail.handleSubmit();
-    }
-    const handleUpdateProductDetail = async () => {
-        // Tạo object UpdateProductDetailDto với các thông tin cần thiết
-        // const updateProductDetailDto = {
-        //     quantity: quantity // số lượng được nhập từ form
-        // };
-        // try {
-        //     // Gọi API để cập nhật chi tiết sản phẩm
-        //     const response = await updateProductDetail(Number(id), updateProductDetailDto);
-        //     console.log('Cập nhật thành công:', response);
-        //     // Thực hiện các thao tác khác nếu cần (ví dụ: load lại danh sách chi tiết sản phẩm)
-        // } catch (error) {
-        //     console.error('Lỗi khi cập nhật:', error);
-        // }
+    // const addProductDetail = () => {
+    //     formikProductDetail.handleSubmit();
+    // }
+    const addProductDetail = async () => {
+        const existingProductDetail = productDetail.find(
+            (detail) =>
+                detail.color.id === formikProductDetail.values.colorId &&
+                detail.size.id === formikProductDetail.values.sizeId
+        );
+    
+        if (existingProductDetail) {
+            // Update the quantity of the existing product detail
+            const updatedQuantity = (existingProductDetail.quantity ?? 0) + (formikProductDetail.values.quantity ?? 0);
+            try {
+                setOpenBackdrop(true);
+                console.log("Updating product detail with ID:", existingProductDetail.id);
+                await updateProductDetail(Number(existingProductDetail.id), {
+                    ...existingProductDetail,
+                    quantity: updatedQuantity,
+                });
+                setProductDetail((prev) =>
+                    prev.map((detail) =>
+                        detail.id === existingProductDetail.id
+                            ? { ...detail, quantity: updatedQuantity }
+                            : detail
+                    )
+                );
+                setOpenBackdrop(false);
+                setOpenAlert({
+                    show: true,
+                    status: 'success',
+                    message: 'Cập nhật thành công',
+                });
+            } catch (error) {
+                setOpenBackdrop(false);
+                setOpenAlert({
+                    show: true,
+                    status: 'error',
+                    message: 'Cập nhật thất bại',
+                });
+                console.log(error);
+            }
+        } else {
+            // Create a new product detail
+            formikProductDetail.handleSubmit();
+        }
     };
 
     const handleSubmit = () => {
@@ -708,7 +737,6 @@ const UpdateProduct = () => {
             </Box>
             <Box sx={{ p: 2, pl: 3 }}>
                 <Button variant="contained" onClick={addProductDetail}>Thêm</Button>
-                <Button variant="contained" onClick={handleUpdateProductDetail}>Cập nhật</Button>
             </Box>
 
             {/* Product detail */}

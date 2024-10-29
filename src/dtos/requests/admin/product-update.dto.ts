@@ -10,7 +10,3 @@ export type ProductUpdateDto = {
     status: Status;
     brandId: string
 }
-
-export type UpdateProductDetailDto = {
-    quantity: number,
-}
