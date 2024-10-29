@@ -9,3 +9,15 @@ export type CommentModel = {
     user: UserModel;
     product: ProductModel;
 }
+
+export type CommentMediaModel = {
+    id: string;
+    path: string;
+    mediaType: MediaType;
+    comment: CommentModel;
+}
+
+export enum MediaType {
+    IMAGE = "IMAGE",
+    VIDEO = "VIDEO",
+}

@@ -51,7 +51,8 @@ const ProductCard = ({ product }: Props) => {
             <CardContent sx={{ background: "white" }}>
                 <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                     <Typography sx={{ fontSize: 12 }}>Đã bán: {product.product?.buyQuantity}</Typography>
-                    <Rating sx={{ pb: "3px" }} size="small" name="rating-read" value={5} readOnly />
+                    {/* <Rating sx={{ pb: "3px" }} size="small" name="rating-read" value={product.product.avgRating} readOnly /> */}
+                    <Rating sx={{ pb: "3px" }} size="small" name="half-rating-read" value={product.product.avgRating} precision={0.5} readOnly />
                 </Box>
                 <Typography gutterBottom
                     sx={{

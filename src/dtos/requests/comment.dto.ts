@@ -1,6 +1,6 @@
 export type CommentDto = {
     email: string;
-    textContent: string;
+    content: string;
     rating: number;
     productId: string;
     medias?: File[];

@@ -49,10 +49,15 @@ export const DialogFeedback = ({ open, onClose, item }: Props) => {
                 formData.append(`media`, file, file.name);
             });
 
+            (values.medias || []).forEach((file) => {
+                formData.append('media', file, file.name);
+            });
+
             try {
-                const response = await createComment(formData);
+                await createComment(formData);
                 resetForm();
                 setMedias([]);
+                formik.setFieldValue('medias', []);
             } catch (error) {
                 console.log(error);
             }
@@ -60,8 +65,9 @@ export const DialogFeedback = ({ open, onClose, item }: Props) => {
     });
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files ? Array.from(event.target.files) : [];
-        formik.setFieldValue('medias', files); // Cập nhật medias trong Formik
+        formik.setFieldValue('medias', files); 
     };
+
     return (
         <React.Fragment>
             <Dialog
