@@ -1,31 +1,21 @@
 import { Box, Button, Input, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { CartItemModel } from "../../../models/cart.model";
-import QuantityProduct from "../../../components/user/product/QuantityProduct";
 import Grid from '@mui/material/Grid2';
 import { ConvertPrice } from "../../../utils/convert.price";
-import { useDispatch } from "react-redux";
-import { updateCartState } from "../../../redux/reducers/cart.reducer";
-import { removeProductFromCart } from "../../../utils/cart.handle";
+import DialogFeedback from "../../../components/user/dialogs/DialogFeedback";
 
 type Props = {
     item: CartItemModel,
 }
 
 const OrderItemCard = ({ item }: Props) => {
-    const navigate = useNavigate();
-    const [quantity, setQuantity] = useState<number>(item.quantity);
-    const dispatch = useDispatch();
+    const [quantity] = useState<number>(item.quantity);
+    const [openDialogFeedback, setOpenDialogFeedback] = useState(false);
 
-    const setQuantityProp = (quantity: number) => {
-        setQuantity(quantity);
+    const handleCloseDialogFeedback = () => {
+        setOpenDialogFeedback(false);
     }
-    const handleDeleleProductOutCart = (e: React.MouseEvent) => {
-        e.stopPropagation(); // Để tránh kích hoạt điều hướng khi nhấn nút "Xóa"
-        removeProductFromCart(item);
-        dispatch(updateCartState());
-    };
 
     return (
         <Box sx={{
@@ -80,7 +70,7 @@ const OrderItemCard = ({ item }: Props) => {
                     <Typography>{ConvertPrice(item.priceFinal)}</Typography>
                 </Grid>
                 <Grid size={2} >
-                    <Input type="number" value={quantity} disabled/>
+                    <Input type="number" value={quantity} disabled />
                 </Grid>
                 <Grid size={2} >
                     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -88,7 +78,16 @@ const OrderItemCard = ({ item }: Props) => {
                     </Box>
                 </Grid>
                 <Grid size={1} >
-                    <Button variant="contained" color="warning" onClick={handleDeleleProductOutCart} >Đánh giá</Button>
+                    <Button variant="contained" color="warning" onClick={() => setOpenDialogFeedback(true)} >Đánh giá</Button>
+                    {
+                        openDialogFeedback && 
+                        <DialogFeedback
+                            open={openDialogFeedback}
+                            onClose={handleCloseDialogFeedback}
+                            item={item}
+                        />
+                    }
+
                 </Grid>
             </Grid>
         </Box>

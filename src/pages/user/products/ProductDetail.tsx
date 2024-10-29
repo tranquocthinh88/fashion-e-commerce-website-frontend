@@ -1,4 +1,4 @@
-import { Box, Button, Container, Rating, Typography } from "@mui/material"
+import { Avatar, Box, Button, Container, Rating, Typography } from "@mui/material"
 import { useEffect, useState } from "react";
 import { ProductModel } from "../../../models/product.model";
 import { useParams } from "react-router-dom";
@@ -40,7 +40,6 @@ const SizeColorBox = ({ text, onClick, selected }: { text: string | number, onCl
         </Box>
     )
 }
-
 const ProductDetail = () => {
     const { id } = useParams();
     const [productResponse, setProductResponse] = useState<ProductModel>();
@@ -137,7 +136,7 @@ const ProductDetail = () => {
             addToCartLocalStorage({
                 productDetail: productDetail,
                 quantity: buyQuantity,
-                priceFinal: productUserResponse?.priceFinal ?? 0 
+                priceFinal: productUserResponse?.priceFinal ?? 0
             })
             setAvailableQuantity(availableQuantity - buyQuantity);
             setBuyQuantity(1);
@@ -243,16 +242,31 @@ const ProductDetail = () => {
                 </Box>
                 <Box>
                     <Typography variant="h6">ĐÁNH GIÁ SẢN PHẨM</Typography>
-                    <Box>
-
+                    <Box sx={{ borderBottom: '1px solid #cccccc' }}>
+                        <Typography>Tổng số đánh giá: 15</Typography>
+                        <Typography>Đánh giá trung bình: 4.5/5</Typography>
+                        <Rating name="half-rating-read" value={3.8} precision={0.5} readOnly />
                     </Box>
-                    <Box>
-
+                    <Box sx={{display: 'flex', borderBottom: '1px solid #cccccc', gap: 2, p: '4px'}}>
+                        <Box>
+                            <Avatar alt="" src={''} />
+                        </Box>
+                        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                            <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2px',}}>
+                                <Typography sx={{fontSize: '14px'}}>Thịnh</Typography>
+                                <Typography sx={{fontSize: '14px'}}>28/10/2024</Typography>
+                            </Box>
+                            <Box>
+                                <Rating size="small" name="read-only" value={3} readOnly />
+                            </Box>
+                            <Typography>Sản phẩm đẹp Sản phẩm đẹp Sản phẩm đẹp Sản phẩm đẹp Sản phẩm đẹp Sản phẩm đẹp Sản phẩm đẹp Sản phẩm đẹp Sản phẩm đẹp Sản phẩm đẹp Sản phẩm đẹp Sản phẩm đẹp Sản phẩm đẹp Sản phẩm đẹp Sản phẩm đẹp Sản phẩm đẹp Sản phẩm đẹp Sản phẩm đẹp </Typography>
+                            <Box>
+                                <img src={'https://images2.thanhnien.vn/528068263637045248/2024/1/25/e093e9cfc9027d6a142358d24d2ee350-65a11ac2af785880-17061562929701875684912.jpg'} alt="Comment Image" width={150} height={150} />
+                                <video src={'https://cdn.pixabay.com/video/2016/05/01/2946-164933125_tiny.mp4'} width={150} height={150} controls></video>
+                            </Box>
+                        </Box>
                     </Box>
                 </Box>
-            </Box>
-            <Box>
-
             </Box>
         </Container>
     )

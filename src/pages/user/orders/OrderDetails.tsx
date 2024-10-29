@@ -3,7 +3,6 @@ import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { OrderDetailsModel } from "../../../models/order.details.model";
 import { getOrderById, getOrderDetailsByOrderId } from "../../../services/order.service";
-import CartItem from "../cart/CartItem";
 import { CartItemModel } from "../../../models/cart.model";
 import { OrderModel } from "../../../models/order.model";
 import { ConvertPrice } from "../../../utils/convert.price";
