@@ -23,6 +23,7 @@ const Header = () => {
     const login: boolean = isLoginAccount();
     const user: UserModel | null = getUserFromLocalStorage();
     const cart = useSelector((state: RootState) => state.cart.items);
+    const notifications = useSelector((state: RootState) => state.notification.items);
 
     const [isChatOpen, setIsChatOpen] = useState(false);
 
@@ -30,14 +31,24 @@ const Header = () => {
         setIsChatOpen(!isChatOpen);
     }
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const [anchorE2, setAnchorE2] = useState<null | HTMLElement>(null);
     const openMenu = Boolean(anchorEl);
+    const openMenu2 = Boolean(anchorE2);
 
     const handleClose = () => {
         setAnchorEl(null);
     };
+
+    const handleClose2 = () => {
+        setAnchorE2(null);
+    };
     const handleClickAvatar = (event: React.MouseEvent<HTMLButtonElement>) => {
         setAnchorEl(event.currentTarget);
-    }; 
+    };
+
+    const handleClickNotify = (event: React.MouseEvent<HTMLButtonElement>) => {
+        setAnchorE2(event.currentTarget);
+    };
     const handleLogout = async () => {
         const token: LoginResponse | null = getToken();
         if (token) {
@@ -98,7 +109,7 @@ const Header = () => {
                             </Badge>
                         </IconButton>
                     </Tooltip>
-                    <Tooltip title="giỏ hàng" onClick={()=> {navigate("/cart")}}>
+                    <Tooltip title="giỏ hàng" onClick={() => { navigate("/cart") }}>
                         <IconButton>
                             <Badge badgeContent={cart.length} color="primary">
                                 <ShoppingCartIcon />
@@ -106,12 +117,29 @@ const Header = () => {
                         </IconButton>
                     </Tooltip>
                     <Tooltip title="thông báo">
-                        <IconButton>
-                            <Badge badgeContent={4} color="primary">
-                                <Notifications />
+                        <IconButton onClick={handleClickNotify}>
+                            <Badge badgeContent={notifications.length} color="primary">
+                                <Notifications fontSize="small" />
                             </Badge>
                         </IconButton>
                     </Tooltip>
+                    <Menu
+                    id="basic-menu"
+                    anchorEl={anchorE2}
+                    open={openMenu2}
+                    onClose={handleClose2}
+                    MenuListProps={{
+                        'aria-labelledby': 'basic-button',
+                    }}
+                >
+                    {notifications.map((notification) => (
+                        <MenuItem key={notification.id} onClick={() => {
+                            handleClose2();
+                        }}>{notification.content}</MenuItem>
+                    ))
+
+                    }
+                </Menu>
                     {login ? <>
                         <Tooltip title={user ? user.username : "tài khoản"}>
                             <IconButton onClick={handleClickAvatar}>
@@ -133,7 +161,7 @@ const Header = () => {
                                 'aria-labelledby': 'basic-button',
                             }}
                         >
-                            <MenuItem onClick={()=> {
+                            <MenuItem onClick={() => {
                                 window.location.href = `/user/${user?.email}`;
                             }}>Quản lý tài khoản</MenuItem>
                             <MenuItem onClick={handleLogout}>Đăng xuất</MenuItem>
