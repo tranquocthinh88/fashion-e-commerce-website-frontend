@@ -184,6 +184,7 @@ export const getAllProducts = async (): Promise<ResponseSuccess<ProductModel[]>>
             Method.GET,
             [],
             ContentType.JSON,
+            true
         );
         return response.data;
     } catch (error) {

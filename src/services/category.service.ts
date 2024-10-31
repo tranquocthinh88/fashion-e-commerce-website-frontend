@@ -23,7 +23,8 @@ export const getAllCategories = async (): Promise<ResponseSuccess<CategoryModel[
             'categories',
             Method.GET,
             [],
-            ContentType.JSON
+            ContentType.JSON,
+            true
         );
         return response.data;
     } catch (error) {

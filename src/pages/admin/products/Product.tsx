@@ -50,10 +50,12 @@ const Product = () => {
         }
     }
     const [products, setProducts] = useState<ProductUserResponse[]>([]);
+
     useEffect(() => {
         handleNavigate(pageNoState, search);
     }, [pageNoState, search]);
-    const [filterOption, setFilterOption] = useState(); // State cho Select
+
+    const [filterOption, setFilterOption] = useState<string>('ALL'); // State cho Select
 
     const handleNavigate = (pageNoState: number, searchParams: any[]) => {
         let appendSearch: string = "";
@@ -111,17 +113,25 @@ const Product = () => {
     useEffect(() => {
         (async () => {
             try {
-                const response: ResponseSuccess<PageResponse<ProductUserResponse[]>> = await getPageProducts(pageNoState, 40);
+                const response: ResponseSuccess<PageResponse<ProductUserResponse[]>> = await getPageProducts(pageNoState, 15, search);
                 setProducts(response.data.data);
                 setTotalPage(response.data.totalPage);
             } catch (e) {
                 console.log(e);
             }
         })();
-    }, []);
+    }, [pageNoState, search]);
 
     const handleSelectChange = (event: any) => {
-        setFilterOption(event.target.value); // Cập nhật state khi chọn option
+        // setFilterOption(event.target.value); // Cập nhật state khi chọn option
+        const selectedCategory = event.target.value;
+        setFilterOption(selectedCategory); // Cập nhật state khi chọn option
+        setCategoryName(selectedCategory); // Cập nhật categoryName
+        if (selectedCategory !== "ALL") {
+            setSearch([{ field: "categoryName", value: selectedCategory, operator: "-" }]);
+        } else {
+            setSearch([]);
+        }
     };
 
     const handleChange = (_event: React.ChangeEvent<unknown>, value: number) => {
@@ -146,22 +156,22 @@ const Product = () => {
                 <Box sx={{ display: 'flex', flexDirection: 'row' }}>
                     <Box sx={{ fontSize: 17, fontWeight: 'bold', mt: 0.5, ml: 2, whiteSpace: 'nowrap' }}>Lọc sản phẩm</Box>
                     <Select
-                        value={filterOption} // Giá trị của Select
+                        value={filterOption ?? 'ALL'} // Giá trị của Select
                         onChange={handleSelectChange} // Hàm xử lý khi chọn
                         sx={{ width: 150, height: 38, ml: 2 }}
                     >
-                        <MenuItem value="Shirt" sx={{ color: 'red' }}>Áo</MenuItem>
-                        <MenuItem value="Pants" sx={{ color: 'red' }}>Quần</MenuItem>
-                        <MenuItem value="Hat" sx={{ color: 'red' }}>Nón</MenuItem>
-                        <MenuItem value="Shoes" sx={{ color: 'red' }}>Giày</MenuItem>
-                        <MenuItem value="Handbag" sx={{ color: 'red' }}>Túi xách</MenuItem>
-                        <MenuItem value="Belt" sx={{ color: 'red' }}>Thắt lưng</MenuItem>
-                        <MenuItem value="Wallet" sx={{ color: 'red' }}>Ví</MenuItem>
-                        <MenuItem value="Sandal" sx={{ color: 'red' }}>Dép</MenuItem>
+                        <MenuItem value="ALL">Tất cả</MenuItem>
+                        {categories.map((category) => (
+                            <MenuItem key={category.id} value={category.categoryName} sx={{ color: 'red' }}>
+                                {category.categoryName}
+                            </MenuItem>
+                        ))}
                     </Select>
                 </Box>
-                <Box sx={{ display: 'flex', flexDirection: 'row', width: "25%"}}>
-                    <SearchInput placeHolder={"Nhập tên sản phẩm"} handleSearch={handleSearch} />
+                <Box sx={{ display: 'flex', flexDirection: 'row', width: "25%" }}>
+                    <SearchInput placeHolder={"Nhập tên sản phẩm"}
+                        handleSearch={handleSearch}
+                    />
                 </Box>
             </Box>
             <Box sx={{
