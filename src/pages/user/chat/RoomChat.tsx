@@ -178,7 +178,7 @@ const RoomChat = () => {
             boxShadow: 3,
             borderRadius: 2,
             p: 2,
-            zIndex: 1000,
+            zIndex: 1300,
             display: 'flex',
             flexDirection: 'column',
         }}>

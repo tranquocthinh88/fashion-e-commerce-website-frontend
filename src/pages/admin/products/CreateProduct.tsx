@@ -125,8 +125,6 @@ const CreateProduct = () => {
         },
     });
 
-
-
     const formikProductDetail = useFormik({
         initialValues: {
             productId: '', // or any default value

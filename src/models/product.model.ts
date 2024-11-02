@@ -1,12 +1,16 @@
+import { BrandModel } from "./brand.model"
+import { CategoryModel } from "./category.model"
 import { Status } from "./enum/status.enum"
 import { ProviderModel } from "./provider.model"
 
 export type ProductModel = {
+    brand: BrandModel
+    productStatus: any
     id?: string,
     productName?: string,
     price?: number,
     status?: Status,
-    categoryId?: number
+    category?: CategoryModel
     provider?: ProviderModel
     description?: string
     avgRating?: number

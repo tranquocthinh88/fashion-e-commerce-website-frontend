@@ -18,3 +18,31 @@ export const createProductDetail = async (productDetailDto: ProductDetailDto): P
         return Promise.reject(error);
     }
 }
+export const removeProductDetail = async (id: number): Promise<ResponseSuccess<string>> => {
+    try {
+        const response = await requestConfig(
+            `product-details/${id}`,
+            Method.DELETE,
+            [],
+            ContentType.JSON,
+            true
+        );
+        return response.data;
+    } catch (error) {
+        return Promise.reject(error);
+    }
+}
+export const updateProductDetail = async (id: number, updateProductDetailDto: ProductDetailDto ): Promise<ResponseSuccess<string>> => {
+    try {
+        const response = await requestConfig(
+            `product-details/${id}`,
+            Method.PATCH,
+            updateProductDetailDto,
+            ContentType.JSON,
+            true
+        );
+        return response.data;
+    } catch (error) {
+        return Promise.reject(error);
+    }
+}

@@ -85,3 +85,16 @@ export const changePassword = async (changePasswordDto: ChangePasswordDto) : Pro
         return Promise.reject(error);
     }
 }
+export const getAllUsers = async (): Promise<ResponseSuccess<UserModel[]>> => {
+    try {
+        const response = await requestConfig(
+            'users',
+            Method.GET,
+            [],
+            ContentType.JSON
+        );
+        return response.data;
+    } catch (error) {
+        return Promise.reject(error);
+    }
+}
