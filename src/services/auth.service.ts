@@ -16,14 +16,6 @@ export const login = async (loginRequestDto: LoginRequestDto): Promise<ResponseS
             loginRequestDto,
             ContentType.JSON,
         );
-        console.log(response.data);
-
-        connect(() => {
-            console.log('WebSocket connected!');
-        }, () => {
-            console.log('WebSocket connection error');
-        });
-        
         return response.data;
     } catch (error) {
         return Promise.reject(error);

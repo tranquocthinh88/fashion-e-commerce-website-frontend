@@ -1,4 +1,4 @@
-import { Box, Button, Container, Rating, Typography } from "@mui/material"
+import { Avatar, Box, Button, Container, Pagination, Rating, Stack, Typography } from "@mui/material"
 import { useEffect, useState } from "react";
 import { ProductModel } from "../../../models/product.model";
 import { useParams } from "react-router-dom";
@@ -18,6 +18,9 @@ import { ProductUserResponse } from "../../../dtos/responses/products/productUse
 import { useDispatch } from "react-redux";
 import { updateCartState } from "../../../redux/reducers/cart.reducer";
 import { addToCartLocalStorage } from "../../../utils/cart.handle";
+import { getAllCommentById } from "../../../services/comment.service";
+import { CommentResponse } from "../../../dtos/responses/user/comment.response";
+import { connect, disconnect, subscribe } from "../../../configs/websocket";
 
 const SizeColorBox = ({ text, onClick, selected }: { text: string | number, onClick(): void, selected: boolean }) => {
     return (
@@ -40,7 +43,6 @@ const SizeColorBox = ({ text, onClick, selected }: { text: string | number, onCl
         </Box>
     )
 }
-
 const ProductDetail = () => {
     const { id } = useParams();
     const [productResponse, setProductResponse] = useState<ProductModel>();
@@ -54,6 +56,9 @@ const ProductDetail = () => {
     const [buyQuantity, setBuyQuantity] = useState<number>(1);
     const [availableQuantity, setAvailableQuantity] = useState<number>(0);
     const dispatch = useDispatch();
+    const [comments, setComments] = useState<CommentResponse[]>([]);
+    const [totalPage, setTotalPage] = useState<number>(0);
+    const [pageNo, setPageNo] = useState<number>(1);
 
     useEffect(() => {
         (async () => {
@@ -137,13 +142,63 @@ const ProductDetail = () => {
             addToCartLocalStorage({
                 productDetail: productDetail,
                 quantity: buyQuantity,
-                priceFinal: productUserResponse?.priceFinal ?? 0 
+                priceFinal: productUserResponse?.priceFinal ?? 0
             })
             setAvailableQuantity(availableQuantity - buyQuantity);
             setBuyQuantity(1);
         }
         dispatch(updateCartState())
     }
+
+    const handleChange = (_event: React.ChangeEvent<unknown>, value: number) => {
+        setPageNo(value);
+    };
+    useEffect(() => {
+        const fetchComments = async () => {
+            const response = await getAllCommentById(pageNo, 10, id);
+            setComments(response.data.data);
+            setTotalPage(response.data.totalPage);
+            setPageNo(response.data.pageNo);
+        };
+
+        fetchComments();
+
+        const onConnected = () => {
+            console.log("Connected to WebSocket server for product detail");
+            subscribe(`/topic/product/${id}`, onMessageReceived);
+        };
+
+        const onError = () => {
+            console.log("Error connecting to WebSocket server");
+        };
+
+        const onMessageReceived = (message: any) => {
+            const newComment = JSON.parse(message.body);
+            setComments((prevComments) => [newComment, ...prevComments]);
+            // Update productUserResponse if needed
+            setProductUserResponse((prevResponse) => {
+                if (!prevResponse) return prevResponse;
+                return {
+                    ...prevResponse,
+                    product: {
+                        ...prevResponse.product,
+                        numberOfRating: (prevResponse.product.numberOfRating ?? 0) + 1,
+                        avgRating: Number((calculateNewAvgRating(prevResponse.product.avgRating ?? 0, newComment.comment.rating, prevResponse.product.numberOfRating ?? 0)).toFixed(1))
+                    }
+                };
+            });
+        };
+
+        connect(onConnected, onError);
+
+        return () => {
+            disconnect();
+        };
+    }, [id, pageNo]);
+
+    const calculateNewAvgRating = (currentAvg: number, newRating: number, totalRatings: number) => {
+        return ((currentAvg * totalRatings) + newRating) / (totalRatings + 1);
+    };
 
     return (
         <Container >
@@ -173,14 +228,15 @@ const ProductDetail = () => {
                                     </Typography>
                                 </>
                         }
-
-
-
                     </Box>
-                    {productResponse?.avgRating ? <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2, alignItems: 'center' }}> <Rating name="read-only" value={productResponse?.avgRating} readOnly />
-                        <Typography>{productResponse.numberOfRating + ' đánh giá'}</Typography>
-                    </Box> :
-                        <Typography>Chưa có đánh giá</Typography>}
+                    {productUserResponse ? (
+                        <Box sx={{ display: 'flex', flexDirection: 'row', gap: 2, alignItems: 'center' }}>
+                            <Rating name="half-rating-read" value={productUserResponse.product.avgRating ?? 0} precision={0.5} readOnly />
+                            <Typography>{productUserResponse.product.numberOfRating ? `${productUserResponse.product.numberOfRating} đánh giá` : 'Chưa có đánh giá'}</Typography>
+                        </Box>
+                    ) : (
+                        <Typography>Đang tải đánh giá...</Typography>
+                    )}
                     <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, borderTop: 2, pt: 2, borderColor: '#f6f6f6' }}>
                         <Box sx={{ display: 'flex', gap: 1, }}>
                             <Typography >Chọn màu sắc: </Typography>
@@ -243,16 +299,61 @@ const ProductDetail = () => {
                 </Box>
                 <Box>
                     <Typography variant="h6">ĐÁNH GIÁ SẢN PHẨM</Typography>
-                    <Box>
-
+                    <Box sx={{ borderBottom: '1px solid #cccccc' }}>
+                        <Typography>Tổng số đánh giá: {productUserResponse?.product.numberOfRating}</Typography>
+                        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                            <Typography>Đánh giá trung bình: {productUserResponse?.product.avgRating ?? '0'}/5</Typography>
+                            {productUserResponse?.product.avgRating ? (
+                                <Rating
+                                    name="half-rating-read"
+                                    value={productUserResponse.product.avgRating}
+                                    precision={0.5}
+                                    readOnly
+                                />
+                            ) : (
+                                <Typography>Chưa có đánh giá</Typography>
+                            )}
+                        </Box>
                     </Box>
-                    <Box>
+                    {comments.map((comment: CommentResponse, commentIndex) => (
+                        <Box key={comment.comment.id ?? commentIndex} sx={{ display: 'flex', borderBottom: '1px solid #cccccc', p: '5px 15px' }}>
+                            <Box sx={{ mr: 2 }}>
+                                <Avatar alt="" src={comment.comment.user.avatarUrl} />
+                            </Box>
+                            <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                                <Box sx={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                                    <Typography sx={{ fontSize: '14px' }}>{comment.comment.user.username}</Typography>
+                                    <Typography sx={{ fontSize: '14px' }}>
+                                        {new Date(comment.comment.commentDate ?? '').toLocaleDateString()} {new Date(comment.comment.commentDate ?? '').toLocaleTimeString()}
+                                    </Typography>
+                                </Box>
+                                <Box>
+                                    <Rating size="small" name="read-only" value={comment.comment.rating} readOnly />
+                                </Box>
+                                <Typography>{comment.comment.textContent}</Typography>
+                                <Box sx={{ display: 'flex' }}>
+                                    {comment.commentMedia?.map((media, mediaIndex) => (
+                                        <Box key={media.id ?? mediaIndex}>
+                                            {media.mediaType === 'IMAGE' ? (
+                                                <img src={media.path} alt="Comment Image" style={{ width: 150, height: 150, border: '1px solid #cccccc', marginLeft: 1 }} />
+                                            ) : (
+                                                <video src={media.path} style={{ width: 150, height: 150, border: '1px solid #cccccc', marginLeft: 1 }} controls />
+                                            )}
+                                        </Box>
+                                    ))}
+                                </Box>
+                            </Box>
+                        </Box>
+                    ))}
 
+                    <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
+                        <Stack spacing={2}>
+                            <Pagination count={totalPage} page={pageNo} variant="outlined" shape="rounded" onChange={handleChange} />
+                        </Stack>
                     </Box>
+
+
                 </Box>
-            </Box>
-            <Box>
-
             </Box>
         </Container>
     )

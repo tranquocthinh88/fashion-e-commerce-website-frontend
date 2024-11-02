@@ -1,31 +1,21 @@
-import { Box, Button, Typography } from "@mui/material";
-import { useNavigate } from "react-router-dom";
+import { Box, Button, Input, Typography } from "@mui/material";
 import { useState } from "react";
 import { CartItemModel } from "../../../models/cart.model";
-import QuantityProduct from "../../../components/user/product/QuantityProduct";
 import Grid from '@mui/material/Grid2';
 import { ConvertPrice } from "../../../utils/convert.price";
-import { useDispatch } from "react-redux";
-import { updateCartState } from "../../../redux/reducers/cart.reducer";
-import { removeProductFromCart } from "../../../utils/cart.handle";
+import DialogFeedback from "../../../components/user/dialogs/DialogFeedback";
 
 type Props = {
     item: CartItemModel,
 }
 
-const CartItem = ({ item }: Props) => {
-    const navigate = useNavigate();
-    const [quantity, setQuantity] = useState<number>(item.quantity);
-    const dispatch = useDispatch();
+const OrderItemCard = ({ item }: Props) => {
+    const [quantity] = useState<number>(item.quantity);
+    const [openDialogFeedback, setOpenDialogFeedback] = useState(false);
 
-    const setQuantityProp = (quantity: number) => {
-        setQuantity(quantity);
+    const handleCloseDialogFeedback = () => {
+        setOpenDialogFeedback(false);
     }
-    const handleDeleleProductOutCart = (e: React.MouseEvent) => {
-        e.stopPropagation(); // Để tránh kích hoạt điều hướng khi nhấn nút "Xóa"
-        removeProductFromCart(item);
-        dispatch(updateCartState());
-    };
 
     return (
         <Box sx={{
@@ -37,7 +27,7 @@ const CartItem = ({ item }: Props) => {
             ":hover": {
                 backgroundColor: '#f0f0f0',
             }
-        }} onClick={() => (navigate("/products/" + item.productDetail.product?.id))}>
+        }}>
             <Grid
                 container
                 sx={{
@@ -80,7 +70,7 @@ const CartItem = ({ item }: Props) => {
                     <Typography>{ConvertPrice(item.priceFinal)}</Typography>
                 </Grid>
                 <Grid size={2} >
-                    <QuantityProduct cartItem={item} quantity={quantity} setQuantity={setQuantityProp} maxValue={item.productDetail?.quantity ?? 0} />
+                    <Input type="number" value={quantity} disabled />
                 </Grid>
                 <Grid size={2} >
                     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
@@ -88,11 +78,20 @@ const CartItem = ({ item }: Props) => {
                     </Box>
                 </Grid>
                 <Grid size={1} >
-                    <Button variant="contained" color="warning" onClick={handleDeleleProductOutCart} >Xóa</Button>
+                    <Button variant="contained" color="warning" onClick={() => setOpenDialogFeedback(true)} >Đánh giá</Button>
+                    {
+                        openDialogFeedback && 
+                        <DialogFeedback
+                            open={openDialogFeedback}
+                            onClose={handleCloseDialogFeedback}
+                            item={item}
+                        />
+                    }
+
                 </Grid>
             </Grid>
         </Box>
     )
 }
 
-export default CartItem;
+export default OrderItemCard;
