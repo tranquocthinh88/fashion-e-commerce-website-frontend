@@ -187,25 +187,36 @@ const Payment = () => {
     const handleClose = () => {
         setOpen(false);
     };
-
     const handleSelectVoucher = (voucher: VoucherModel) => {
         try {
             if (voucher.minOrderAmount > totalMoney) {
                 setError("Đơn hàng không đủ điều kiện để sử dụng mã giảm giá.");
                 return;
             }
+
+            const updatedVouchers = [...(formilCreateOrder.values.vouchers || [])];
+
             if (voucher.voucherType === VoucherType.FOR_PRODUCT) {
                 setSelectedVoucherForProduct(voucher.id);
+                if (!updatedVouchers.includes(voucher.id)) {
+                    updatedVouchers.push(voucher.id);
+                }
             }
             if (voucher.voucherType === VoucherType.FOR_DELIVERY) {
                 setSelectedVoucherForDelivery(voucher.id);
+                if (!updatedVouchers.includes(voucher.id)) {
+                    updatedVouchers.push(voucher.id);
+                }
             }
+
+            formilCreateOrder.setFieldValue('vouchers', updatedVouchers);
+
             handleCalDiscount(voucher);
             setOpen(false);
         } catch (error) {
             console.log("Lỗi khi chọn mã giảm giá: ", error);
         }
-    }
+    };
 
     const handleCalDiscount = async (voucher: VoucherModel) => {
         try {
@@ -225,16 +236,14 @@ const Payment = () => {
                 setDiscountOrder(Number(responseVoucherOrder.data));
             }
 
-
             if (voucher.voucherType === VoucherType.FOR_DELIVERY) {
                 const responseVoucherShip = await applyVoucherShip(applyShipDto);
                 setDiscountShip(Number(responseVoucherShip.data));
             }
-
         } catch (error) {
             console.log("Lỗi áp dụng mã khuyến mãi: ", error);
         }
-    }
+    };
 
     const validationOrderSchema = yup.object({
         email: yup.string().email('Email không hợp lệ').required('Vui lòng nhập email'),
@@ -276,21 +285,25 @@ const Payment = () => {
             },
             addressDetail: '',
             productsOrderDtos: cart.map((cartItem: CartItemModel) => ({
-                productDetailId: cartItem.productDetail.id ?? '',
+                productDetailId: cartItem.productDetail?.id ?? '',
                 quantity: cartItem.quantity ?? 0,
             })),
-            vouchers: [selectedVoucherForProduct, selectedVoucherForDelivery].filter(Boolean)
+            vouchers: [selectedVoucherForProduct, selectedVoucherForDelivery].filter(Boolean) || [],
         },
         validationSchema: validationOrderSchema,
         onSubmit: async (values: OrderDto) => {
             try {
+                console.log("Form values: ", values);
+
                 const response: ResponseSuccess<OrderModel> = await createOrder(values);
                 const order: OrderModel = response.data;
                 if (order.paymentMethod === PaymentMethod.CC) {
                     alert('Đã đặt hàng thành công, vui lòng chuyển tiền qua đây: ');
 
                     try {
-                        const response = await getVnpPaymentUrl(order.discountPrice.valueOf());
+                        const orderId = order.id;
+                        const response = await getVnpPaymentUrl(order.discountPrice.valueOf(), "NCB", orderId);
+
                         const paymentUrl: string = response.data; // Dữ liệu trả về là URL thanh toán
 
                         console.log(paymentUrl);
@@ -299,12 +312,14 @@ const Payment = () => {
                         console.error('Error getting payment URL:', error);
                     }
                 }
+                else {
+                    localStorage.removeItem('cart');
+                    dispatch(updateCartState());
+                }
 
                 showAlert('success', 'Đơn hàng đã được tạo thành công.');
-                localStorage.removeItem('cart');
-                dispatch(updateCartState());
                 setTimeout(() => {
-                    navigate('/cart');
+                    navigate(`/user/${values.email}/orders`);
                 }, 2000);
             } catch (error) {
                 setError("Mua hàng thất bại");
@@ -313,11 +328,11 @@ const Payment = () => {
         },
     })
 
-    const handleSubmitOrder1 = () => {
+    const handleSubmitOrder1 = async () => {
 
-        formilCreateOrder.setFieldValue('address.city', selectedProvince);
-        formilCreateOrder.setFieldValue('address.district', selectedDistrict);
-        formilCreateOrder.setFieldValue('address.street', selectedWard);
+        await formilCreateOrder.setFieldValue('address.city', selectedProvince);
+        await formilCreateOrder.setFieldValue('address.district', selectedDistrict);
+        await formilCreateOrder.setFieldValue('address.street', selectedWard);
 
         formilCreateOrder.handleSubmit();
     }
@@ -478,8 +493,8 @@ const Payment = () => {
                                             <Grid item xs={3}>
                                                 <Box display="flex" justifyContent="center">
                                                     <img
-                                                        src={cartItem.productDetail.product?.thumbnail}
-                                                        alt={cartItem.productDetail.product?.productName}
+                                                        src={cartItem.productDetail?.product?.thumbnail}
+                                                        alt={cartItem.productDetail?.product?.productName}
                                                         style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '8px' }} // Hình ảnh căn giữa và có góc bo tròn
                                                     />
                                                 </Box>
@@ -488,7 +503,7 @@ const Payment = () => {
                                             {/* Cột chứa thông tin sản phẩm */}
                                             <Grid item xs={6}>
                                                 <Typography variant="subtitle1" fontWeight="bold">
-                                                    {cartItem.productDetail.product?.productName}
+                                                    {cartItem.productDetail?.product?.productName}
                                                 </Typography>
                                                 <Typography variant="body2" color="textSecondary">
                                                     Số lượng: {cartItem.quantity}

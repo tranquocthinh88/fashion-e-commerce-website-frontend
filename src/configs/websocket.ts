@@ -50,44 +50,44 @@ import SockJS from 'sockjs-client';
 import Stomp from 'stompjs';
 
 let stompClient: any = null;
-let isConnected = false; // Theo dõi trạng thái kết nối
+let isConnected = false; 
 
 export const connect = (onConnected: () => void, onError: (error: any) => void) => {
     const socket = new SockJS('http://localhost:8080/ws');
     stompClient = Stomp.over(socket);
 
     stompClient.connect({}, (frame: any) => {
-        isConnected = true; // Cập nhật trạng thái kết nối thành công
+        isConnected = true;
         console.log('Connected: ' + frame);
-        onConnected(); // Thực hiện callback khi kết nối thành công
+        onConnected(); 
     }, (error: any) => {
-        onError(error); // Thực hiện callback khi có lỗi
+        onError(error); 
     });
 };
 
 export const disconnect = () => {
-    if (stompClient && isConnected) { // Kiểm tra xem stompClient có tồn tại và đã kết nối chưa
+    if (stompClient && isConnected) {
         stompClient.disconnect(() => {
             console.log("Disconnected");
-            isConnected = false; // Cập nhật trạng thái khi ngắt kết nối
+            isConnected = false; 
         });
     } else {
-        console.warn("Tried to disconnect but was not connected."); // Cảnh báo nếu chưa kết nối
+        console.warn("Tried to disconnect but was not connected.");
     }
 };
 
 export const sendMessage = (destination: string, message: any) => {
-    if (stompClient && isConnected) { // Kiểm tra xem stompClient có tồn tại và đã kết nối chưa
+    if (stompClient && isConnected) { 
         stompClient.send(destination, {}, JSON.stringify(message));
     } else {
-        throw new Error("Không thể gửi tin nhắn, chưa kết nối WebSocket."); // Thông báo lỗi khi chưa kết nối
+        throw new Error("Không thể gửi tin nhắn, chưa kết nối WebSocket."); 
     }
 };
 
 export const subscribe = (topic: string, callback: (message: any) => void) => {
-    if (stompClient && isConnected) { // Kiểm tra xem stompClient có tồn tại và đã kết nối chưa
+    if (stompClient && isConnected) { 
         stompClient.subscribe(topic, callback);
     } else {
-        console.warn("Tried to subscribe but was not connected."); // Cảnh báo nếu chưa kết nối
+        console.warn("Tried to subscribe but was not connected.");
     }
 };

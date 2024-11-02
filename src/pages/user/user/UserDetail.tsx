@@ -1,9 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Tabs, Tab, Box } from '@mui/material';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 import AccountInfoTab from '../../../components/user/user/AccountInfoTab';
 import OrderManagementTab from '../../../components/user/user/OrderManagementTab';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 const TabPanel = (props: { children?: React.ReactNode, index: number, value: number }) => {
     const { children, value, index, ...other } = props;
@@ -33,15 +34,25 @@ const a11yProps = (index: number) => {
 }
 
 const UserDetail = () => {
-    const [value, setValue] = useState(0);
-    const [openAlert, setOpenAlert] = useState({ show: false, status: '', message: '' });
-
-    const handleChange = (_: React.SyntheticEvent, newValue: number) => {
-        setValue(newValue);
-    };
+    const { email } = useParams<{ email: string }>();
+    const location = useLocation();
+    const navigate = useNavigate();
+    const [value, setValue] = React.useState(0);
+    const [openAlert, setOpenAlert] = React.useState({ show: false, status: '', message: '' });
 
     const showAlert = (status: string, message: string) => {
         setOpenAlert({ show: true, status, message });
+    };
+
+    useEffect(() => {
+        if (location.pathname.includes('/info')) setValue(0);
+        else if (location.pathname.includes('/orders')) setValue(1);
+    }, [location.pathname]);
+
+    // Điều chỉnh URL khi tab thay đổi
+    const handleChange = (_: React.SyntheticEvent, newValue: number) => {
+        setValue(newValue);
+        navigate(newValue === 0 ? `/user/${email}/info` : `/user/${email}/orders`);
     };
 
     return (
