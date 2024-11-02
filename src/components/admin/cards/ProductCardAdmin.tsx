@@ -8,10 +8,11 @@ type Props = {
     productPrice: number,
     fNavigate: (id: string) => void;
     thumbnail: string;
+    totalQuantity?: number;
 
 }
 
-const ProductCardAdmin = ({ productId, productName, productPrice, fNavigate, thumbnail }: Props) => {
+const ProductCardAdmin = ({ productId, productName, productPrice, fNavigate, thumbnail, totalQuantity }: Props) => {
     const isMobile = useMediaQuery('(max-width:600px)');
     // const navigate = useNavigate(); // Sử dụng useNavigate
 
@@ -22,12 +23,15 @@ const ProductCardAdmin = ({ productId, productName, productPrice, fNavigate, thu
         <Card sx={{ maxWidth: 345 }}>
             <CardMedia
                 component="img"
-                height={isMobile ? '150px': '200px'}
+                height={isMobile ? '150px' : '200px'}
                 image={thumbnail}
                 alt="green iguana"
             />
             <CardContent>
-                <Typography gutterBottom component="div" sx={{fontSize: '18px'}}>
+                <Typography sx={{ fontSize: '13px' }}>
+                    Tổng số sản phẩm {totalQuantity}
+                </Typography>
+                <Typography gutterBottom component="div" sx={{ fontSize: '18px' }}>
                     {productName}
                 </Typography>
                 <Typography color="text.secondary">

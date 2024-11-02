@@ -128,7 +128,7 @@ const Product = () => {
         setFilterOption(selectedCategory); // Cập nhật state khi chọn option
         setCategoryName(selectedCategory); // Cập nhật categoryName
         if (selectedCategory !== "ALL") {
-            setSearch([{ field: "categoryName", value: selectedCategory, operator: "-" }]);
+            setSearch([{ field: "category.categoryName", value: selectedCategory, operator: "-" }]);
         } else {
             setSearch([]);
         }
@@ -190,6 +190,7 @@ const Product = () => {
                                 productPrice={item.product.price ?? 0}
                                 fNavigate={fNavigate}
                                 thumbnail={item.product.thumbnail ?? ''}
+                                totalQuantity={item.product.totalQuantity ?? 0}
                             />
                         </Box>
                     </Box>
