@@ -17,6 +17,7 @@ import { getToken } from "../../services/token.service";
 import { logout, removeLocalStorage } from "../../services/auth.service";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/stores/store";
+import NotificationView from "../../components/common/NotificationView";
 const Header = () => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -124,22 +125,20 @@ const Header = () => {
                         </IconButton>
                     </Tooltip>
                     <Menu
-                    id="basic-menu"
-                    anchorEl={anchorE2}
-                    open={openMenu2}
-                    onClose={handleClose2}
-                    MenuListProps={{
-                        'aria-labelledby': 'basic-button',
-                    }}
-                >
-                    {notifications.map((notification) => (
-                        <MenuItem key={notification.id} onClick={() => {
-                            handleClose2();
-                        }}>{notification.content}</MenuItem>
-                    ))
-
-                    }
-                </Menu>
+                        id="basic-menu"
+                        anchorEl={anchorE2}
+                        open={openMenu2}
+                        onClose={handleClose2}
+                        MenuListProps={{
+                            'aria-labelledby': 'basic-button',
+                        }}
+                        sx={{ maxHeight: "50%" }}
+                    >
+                        {notifications.map((notification) => (
+                            <NotificationView key={notification.id} notification={notification} />
+                        ))
+                        }
+                    </Menu>
                     {login ? <>
                         <Tooltip title={user ? user.username : "tài khoản"}>
                             <IconButton onClick={handleClickAvatar}>

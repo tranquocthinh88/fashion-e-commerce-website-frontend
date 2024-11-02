@@ -42,12 +42,22 @@ const App = () => {
     };
 
     const onNotificationReceived = (message: Message) => {
-      const notification: NotificationModel = JSON.parse(message.body);
-      dispatch(addNotification(notification));
+      try {
+        const notification = JSON.parse(message.body);
+        console.log("Received notification:", notification);
+        dispatch(addNotification(notification));
+        if (user) {
+          getNotifications(user.id);
+        }
+      } catch (error) {
+        console.error("Failed to parse notification:", error);
+      }
     };
-
+  
     connect(onConnected, onError);
 
+    console.log("User: ", user);
+    
     if (user?.id) {
       getNotifications(user.id);
     }

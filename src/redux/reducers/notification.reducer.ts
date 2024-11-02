@@ -14,9 +14,11 @@ export const notificationSlice = createSlice({
     initialState,
     reducers: {
         addNotification: (state, action: PayloadAction<NotificationModel>) => {
+            console.log("Adding notification:", action.payload);
             state.items.push(action.payload);
         },
         setNotification: (state, actions) => {
+            console.log("Setting notifications:", actions.payload);
             state.items = actions.payload;
         },
         removeNotification: (state, actions) => {
@@ -24,7 +26,7 @@ export const notificationSlice = createSlice({
         },
         clearNotification: (state) => {
             state.items = [];
-        }
+        },
     }
 })
 
