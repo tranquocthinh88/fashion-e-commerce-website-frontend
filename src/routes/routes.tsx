@@ -22,6 +22,8 @@ import Forgotpassword from "../pages/user/auth/ForgotPassword";
 import Cart from "../pages/user/cart/Cart";
 import Payment from "../pages/user/cart/Payment";
 import PaymentSuccess from "../pages/user/cart/PaymentSuccess";
+import UpdateProduct from "../pages/admin/products/UpdateProduct";
+import OrderDetails from "../pages/user/orders/OrderDetails";
 
 const adminRoutes = [
   {

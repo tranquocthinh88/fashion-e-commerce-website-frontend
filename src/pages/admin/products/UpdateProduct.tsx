@@ -700,7 +700,7 @@ const UpdateProduct = () => {
                         error={formikProductDetail.touched.sizeId && Boolean(formikProductDetail.errors.sizeId)}
                     >
                         {sizes.map((size: SizeModel) => (
-                            <MenuItem key={size.id} value={size.id}>{size.textSize ?? size.numberSize}</MenuItem>
+                            <MenuItem key={size.id} value={size.id}>{size.numberSize ?? size.textSize}</MenuItem>
                         ))}
                     </Select>
                 </FormControl>

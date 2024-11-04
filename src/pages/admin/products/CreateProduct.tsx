@@ -517,8 +517,8 @@ const CreateProduct = () => {
                                     }
                                 }}>
                                     <TableCell >{colors.filter(color => productDetailDto.colorId === color.id)[0].colorName}</TableCell>
-                                    <TableCell >{sizes.filter(size => productDetailDto.sizeId === size.id)[0].numberSize ??
-                                        sizes.filter(size => productDetailDto.sizeId === size.id)[0].textSize
+                                    <TableCell >{sizes.filter(size => productDetailDto.sizeId === size.id)[0].textSize ??
+                                        sizes.filter(size => productDetailDto.sizeId === size.id)[0].numberSize
                                     }</TableCell>
                                     <TableCell>{productDetailDto.quantity}</TableCell>
                                     <TableCell>{productDetailDto.weight}</TableCell>
