@@ -1,4 +1,4 @@
-import { Card, CardActions, CardContent, CardMedia, Fab, Typography, useMediaQuery } from "@mui/material";
+import { Card, CardActions, CardContent, CardMedia, Fab, Tooltip, Typography, useMediaQuery } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 
@@ -9,16 +9,13 @@ type Props = {
     fNavigate: (id: string) => void;
     thumbnail: string;
     totalQuantity?: number;
-
 }
 
 const ProductCardAdmin = ({ productId, productName, productPrice, fNavigate, thumbnail, totalQuantity }: Props) => {
     const isMobile = useMediaQuery('(max-width:600px)');
-    // const navigate = useNavigate(); // Sử dụng useNavigate
 
-    // const handleEditClick = () => {
-    //     navigate(`/admin/products/${productId}`); // Điều hướng đến trang chi tiết sản phẩm
-    // }
+    const formattedPrice = `${productPrice.toLocaleString('vi-VN')}đ`;
+
     return (
         <Card sx={{ maxWidth: 345 }}>
             <CardMedia
@@ -31,11 +28,23 @@ const ProductCardAdmin = ({ productId, productName, productPrice, fNavigate, thu
                 <Typography sx={{ fontSize: '13px' }}>
                     Tổng số sản phẩm {totalQuantity}
                 </Typography>
-                <Typography gutterBottom component="div" sx={{ fontSize: '18px' }}>
-                    {productName}
-                </Typography>
+                <Tooltip title={productName} arrow>
+                    <Typography gutterBottom component="div"
+                        sx={{
+                            fontSize: '16px',
+                            display: '-webkit-box',
+                            WebkitLineClamp: 2,
+                            WebkitBoxOrient: 'vertical',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            height: '48px',
+                        }}
+                    >
+                        {productName}
+                    </Typography>
+                </Tooltip>
                 <Typography color="text.secondary">
-                    {productPrice}
+                    {formattedPrice}
                 </Typography>
             </CardContent>
             <CardActions sx={{

@@ -77,8 +77,9 @@ const validationProductDetailSchema = yup.object({
 });
 
 const validationProductPriceSchema = yup.object({
-    discount: yup.number().required("Vui lòng nhập phần trăm giảm giá").min(0.1, "Tối thiểu 0.1").max(1, "Tối đa 1"),
-    expiredDate: yup.date().required("Vui lòng nhập hạn giảm giá").min(new Date(), "Ngày hết hạn phải lớn hơn ngày hiện tại")
+    discount: yup.number().required("Vui lòng nhập phần trăm giảm giá").min(1, "Tối thiểu 1%").max(100, "Tối đa 100%"),
+    expiredDate: yup.date().required("Vui lòng nhập hạn giảm giá").min(new Date(), "Ngày hết hạn phải lớn hơn ngày và giờ bắt đầu giảm giá"),
+    issueDate: yup.date().required("Vui lòng nhập ngày bắt đầu giảm giá").min(new Date(), "Ngày bắt đầu phải lớn hơn ngày và giờ hiện tại")
 });
 
 
@@ -187,6 +188,7 @@ const UpdateProduct = () => {
         initialValues: {
             productId: Number(id),
             discount: 0,
+            issueDate: new Date(),
             expiredDate: new Date(),
             note: ""
         },
@@ -336,7 +338,7 @@ const UpdateProduct = () => {
                 detail.color.id === formikProductDetail.values.colorId &&
                 detail.size.id === formikProductDetail.values.sizeId
         );
-    
+
         if (existingProductDetail) {
             // Update the quantity of the existing product detail
             const updatedQuantity = (existingProductDetail.quantity ?? 0) + (formikProductDetail.values.quantity ?? 0);
@@ -806,7 +808,24 @@ const UpdateProduct = () => {
                 />
                 <TextField
                     sx={{ flex: 1 }}
-                    label="Ngày hết hạn"
+                    label="Ngày bắt đầu"
+                    type="datetime-local"
+                    name="issueDate"
+                    value={formikProductPrice.values.issueDate}
+                    onChange={formikProductPrice.handleChange}
+                    onBlur={formikProductPrice.handleBlur}
+                    error={formikProductPrice.touched.issueDate && Boolean(formikProductPrice.errors.issueDate)}
+                    helperText={formikProductPrice.touched.issueDate && formikProductPrice.errors.issueDate ? String(formikProductPrice.errors.issueDate) : undefined}
+                />
+            </Box>
+            <Box sx={{
+                p: 2, display: 'flex',
+                flexWrap: 'wrap',
+                gap: '20px'
+            }}>
+                <TextField
+                    sx={{ flex: 1 }}
+                    label="Ngày kết thúc"
                     type="datetime-local"
                     name="expiredDate"
                     value={formikProductPrice.values.expiredDate}
@@ -840,6 +859,7 @@ const UpdateProduct = () => {
                     <TableHead>
                         <TableRow>
                             <TableCell >Giảm giá</TableCell>
+                            <TableCell >Ngày bắt đầu</TableCell>
                             <TableCell >Ngày hết hạn</TableCell>
                             <TableCell >Ghi chú</TableCell>
                             <TableCell align="center">Thao tác</TableCell>
@@ -853,6 +873,7 @@ const UpdateProduct = () => {
                                 }
                             }}>
                                 <TableCell >{`${productPrice.discount * 100}%`}</TableCell>
+                                <TableCell >{productPrice.issueDate.toString()}</TableCell>
                                 <TableCell>{productPrice.expiredDate.toString()}</TableCell>
                                 <TableCell>{productPrice.note}</TableCell>
                                 <TableCell align="center">

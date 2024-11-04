@@ -4,5 +4,6 @@ export type ProductPriceModel = {
     discountedPrice: number;
     discountedAmount: number;
     expiredDate: Date;
+    issueDate: Date;
     note: string;
 }
