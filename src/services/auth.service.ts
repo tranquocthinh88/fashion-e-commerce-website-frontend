@@ -1,6 +1,5 @@
 import { apiUrl } from "../configs/api-url";
 import requestConfig, { ContentType, Method } from "../configs/axios.config";
-import { connect } from "../configs/websocket";
 import { ResetPasswordDto } from "../dtos/requests/auth/reset.password.dto";
 import { LoginRequestDto } from "../dtos/requests/login.dto"
 import { RegisterRequestDto } from "../dtos/requests/register.dto";
@@ -113,6 +112,20 @@ export const resetPassword = async (resetPasswordDto: ResetPasswordDto): Promise
             Method.POST,
             resetPasswordDto,
             ContentType.JSON
+        );
+        return response.data;
+    } catch (error) {
+        return Promise.reject(error);
+    }
+}
+
+export const refreshToken = async (refreshToken: string): Promise<ResponseSuccess<LoginResponse>> => {
+    try {
+        const response = await requestConfig(
+            `auth/refresh-token`,
+            Method.POST,
+            refreshToken,
+            ContentType.TEXT_PLAIN
         );
         return response.data;
     } catch (error) {

@@ -2,6 +2,7 @@ import axios from 'axios';
 import { apiUrl } from './api-url';
 import { LoginResponse } from '../dtos/responses/login.response';
 import { getToken } from '../services/token.service';
+import { refreshToken } from '../services/auth.service';
 
 export enum Method {
     GET = 'GET',
@@ -37,6 +38,27 @@ const requestConfig = <T>(endpoint: string, method: Method, data: T, contentType
             }, error => {
                 return Promise.reject(error);
             });
+
+            instance.interceptors.response.use(
+                response => response,
+                async error => {
+                    const originalRequest = error.config;
+                    if (error.response.status === 401 && !originalRequest._retry) {
+                        originalRequest._retry = true;
+                        const loginResponse = getToken();
+                        if (loginResponse && loginResponse.refreshToken) {
+                            try {
+                                const newAccessToken = await refreshToken(loginResponse.refreshToken);
+                                originalRequest.headers.Authorization = `Bearer ${newAccessToken}`;
+                                return instance(originalRequest); 
+                            } catch (refreshError) {
+                                return Promise.reject(refreshError);
+                            }
+                        }
+                    }
+                    return Promise.reject(error);
+                }
+            );
         }
     }
     return instance.request(
