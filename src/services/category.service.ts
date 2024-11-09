@@ -6,10 +6,11 @@ import {ResponseSuccess} from "../dtos/responses/response.success.ts";
 export const createCategory = async (categoryDto: CategoryDto): Promise<ResponseSuccess<CategoryModel>> => {
     try {
         const response = await requestConfig(
-            'categories',
+            `categories`,
             Method.POST,
             categoryDto,
-            ContentType.JSON
+            ContentType.JSON,
+            true
         );
         return response.data;
     } catch (error) {
@@ -20,7 +21,7 @@ export const createCategory = async (categoryDto: CategoryDto): Promise<Response
 export const getAllCategories = async (): Promise<ResponseSuccess<CategoryModel[]>> => {
     try {
         const response = await requestConfig(
-            'categories',
+            `categories`,
             Method.GET,
             [],
             ContentType.JSON,
@@ -34,10 +35,11 @@ export const getAllCategories = async (): Promise<ResponseSuccess<CategoryModel[
 export const updateCategory = async (id: number = -1, categoryDto : CategoryDto): Promise<ResponseSuccess<CategoryModel>> => {
     try {
         const response = await requestConfig(
-            'categories/' + id,
-            Method.PATCH,
+            `categories/${id}`,
+            Method.PUT,
             categoryDto,
-            ContentType.JSON
+            ContentType.JSON,
+            true
         );
         return response.data;
     } catch (error) {
@@ -47,10 +49,11 @@ export const updateCategory = async (id: number = -1, categoryDto : CategoryDto)
 export const deleteCategory = async (id: number = -1): Promise<ResponseSuccess<string>> => {
     try {
         const response = await requestConfig(
-            'categories/' + id,
+            `categories/${id}`,
             Method.DELETE,
             [],
-            ContentType.JSON
+            ContentType.JSON,
+            true
         );
         return response.data;
     } catch (error) {

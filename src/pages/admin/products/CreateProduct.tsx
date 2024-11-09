@@ -14,13 +14,15 @@ import { createProduct } from "../../../services/product.service";
 import { createProductDetail } from "../../../services/product-detail.service";
 import { ProductModel } from "../../../models/product.model";
 import { getAllProviders } from "../../../services/provider.service";
-import { getAllCategories } from "../../../services/category.service";
+import { createCategory, getAllCategories } from "../../../services/category.service";
 import { getAllSizes } from "../../../services/size.service";
 import { getAllColors } from "../../../services/color.service";
 import AlertCustom from "../../../components/common/AlertCustom";
 import ProductImage from "../../../components/admin/product/ProductImage";
 import { BrandModel } from "../../../models/brand.model";
 import { getAllBrands } from "../../../services/brand.service";
+import AddIcon from '@mui/icons-material/Add';
+import { useNavigate } from "react-router-dom";
 
 const VisuallyHiddenInput = styled('input')({
     clipPath: 'inset(50%)',
@@ -65,6 +67,15 @@ const CreateProduct = () => {
         message: ''
     });
     const [openBackdrop, setOpenBackdrop] = useState(false);
+
+    const navigate = useNavigate();
+
+    const [openCategoryDialog, setOpenCategoryDialog] = useState(false);
+    const [openProviderDialog, setOpenProviderDialog] = useState(false);
+    const [openBrandDialog, setOpenBrandDialog] = useState(false);
+    const [openColorDialog, setOpenColorDialog] = useState(false);
+    const [openSizeDialog, setOpenSizeDialog] = useState(false);
+
     const formik = useFormik({
         initialValues: {
             productName: '',
@@ -215,6 +226,72 @@ const CreateProduct = () => {
             }
         )
     }
+
+    // Handlers for opening dialogs
+    const handleOpenCategoryDialog = () => setOpenCategoryDialog(true);
+    const handleOpenProviderDialog = () => setOpenProviderDialog(true);
+    const handleOpenBrandDialog = () => setOpenBrandDialog(true);
+    const handleOpenColorDialog = () => setOpenColorDialog(true);
+    const handleOpenSizeDialog = () => setOpenSizeDialog(true);
+
+    // Handlers for closing dialogs
+    const handleCloseCategoryDialog = () => setOpenCategoryDialog(false);
+    // const handleCloseProviderDialog = () => setOpenProviderDialog(false);
+    // const handleCloseBrandDialog = () => setOpenBrandDialog(false);
+    // const handleCloseColorDialog = () => setOpenColorDialog(false);
+    // const handleCloseSizeDialog = () => setOpenSizeDialog(false);
+
+    // Handlers for adding new items
+    const handleAddCategory = async (categoryName: string) => {
+        try {
+            const response = await createCategory({ categoryName });
+            setCategories([...categories, response.data]);
+            handleCloseCategoryDialog();
+        } catch (error) {
+            console.error('Failed to add category', error);
+        }
+    };
+
+    // const handleAddProvider = async (providerName: string) => {
+    //     try {
+    //         const response = await createProvider({ providerName });
+    //         setProviders([...providers, response.data]);
+    //         handleCloseProviderDialog();
+    //     } catch (error) {
+    //         console.error('Failed to add provider', error);
+    //     }
+    // };
+
+    // const handleAddBrand = async (brandName: string) => {
+    //     try {
+    //         const response = await createBrand({ brandName });
+    //         setBrands([...brands, response.data]);
+    //         handleCloseBrandDialog();
+    //     } catch (error) {
+    //         console.error('Failed to add brand', error);
+    //     }
+    // };
+
+    // const handleAddColor = async (colorName: string) => {
+    //     try {
+    //         const response = await createColor({ colorName });
+    //         setColors([...colors, response.data]);
+    //         handleCloseColorDialog();
+    //     } catch (error) {
+    //         console.error('Failed to add color', error);
+    //     }
+    // };
+
+    // const handleAddSize = async (sizeName: string) => {
+    //     try {
+    //         const response = await createSize({ sizeName });
+    //         setSizes([...sizes, response.data]);
+    //         handleCloseSizeDialog();
+    //     } catch (error) {
+    //         console.error('Failed to add size', error);
+    //     }
+    // };
+
     return (
         <Box
             component="form"
@@ -308,7 +385,13 @@ const CreateProduct = () => {
                         {formik.touched.categoryId && formik.errors.categoryId && (
                             <Typography color="error">{formik.errors.categoryId}</Typography>
                         )}
+                        <Button sx={{ height: '30px', width: '100px' }} variant="contained" color="primary" startIcon={<AddIcon />}
+                            onClick={() => navigate('/admin/products/createProducts/categories')}
+                        >
+                            Thêm
+                        </Button>
                     </FormControl>
+
                     <FormControl sx={{
                         flexBasis: '200px',
                         display: 'flex',
@@ -332,6 +415,9 @@ const CreateProduct = () => {
                         {formik.touched.providerId && formik.errors.providerId && (
                             <Typography color="error">{formik.errors.providerId}</Typography>
                         )}
+                        <Button sx={{ height: '30px', width: '100px' }} variant="contained" color="primary" startIcon={<AddIcon />}>
+                            Thêm
+                        </Button>
                     </FormControl>
                 </Box>
                 <Box sx={{
@@ -363,6 +449,9 @@ const CreateProduct = () => {
                         {formik.touched.brandId && formik.errors.brandId && (
                             <Typography color="error">{formik.errors.brandId}</Typography>
                         )}
+                        <Button sx={{ height: '30px', width: '100px' }} variant="contained" color="primary" startIcon={<AddIcon />}>
+                            Thêm
+                        </Button>
                     </FormControl>
                 </Box>
                 <Box sx={{ p: 2, display: 'flex' }}>
@@ -441,6 +530,9 @@ const CreateProduct = () => {
                                 <MenuItem key={color.id} value={color.id}>{color.colorName}</MenuItem>
                             ))}
                         </Select>
+                        <Button sx={{ height: '30px', width: '100px' }} variant="contained" color="primary" startIcon={<AddIcon />}>
+                            Thêm
+                        </Button>
                     </FormControl>
                     <FormControl sx={{
                         flexBasis: '200px',
@@ -462,6 +554,9 @@ const CreateProduct = () => {
                                 <MenuItem key={size.id} value={size.id}>{size.textSize ?? size.numberSize}</MenuItem>
                             ))}
                         </Select>
+                        <Button sx={{ height: '30px', width: '100px' }} variant="contained" color="primary" startIcon={<AddIcon />}>
+                            Thêm
+                        </Button>
                     </FormControl>
                 </Box>
                 <Box sx={{

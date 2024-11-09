@@ -189,10 +189,9 @@ const Home = () => {
                 </Box>
             </Box>
             <Box sx={{position: 'fixed', right: '5%', bottom: '5%', zIndex: 100}}>
-                <Button variant="contained" sx={{display: 'flex', flexDirection: 'column', width: 30,}}>
+                <Button variant="contained" sx={{display: 'flex', flexDirection: 'column', width: 30,}} onClick={toggleChat}>
                     <img src="https://img.icons8.com/ios/452/robot-2.png" 
                     style={{width: 40, height: 40}} alt="Trợ lý AI" 
-                    onClick={toggleChat}
                     />
                     Chat</Button>
             </Box>

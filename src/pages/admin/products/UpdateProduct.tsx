@@ -571,7 +571,7 @@ const UpdateProduct = () => {
                     >
 
                         <MenuItem value={Status.ACTIVE}>Hoạt động</MenuItem>
-                        <MenuItem value={Status.INACTIVE}>Không hoạt động</MenuItem>
+                        <MenuItem value={Status.INACTIVE}>Ngưng hoạt động</MenuItem>
                     </Select>
                 </FormControl>
             </Box>

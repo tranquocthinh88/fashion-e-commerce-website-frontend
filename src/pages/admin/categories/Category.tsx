@@ -24,6 +24,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { Status } from "../../../models/enum/status.enum.ts";
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import AlertCustom from "../../../components/common/AlertCustom.tsx";
+import { Navigate, useNavigate } from "react-router-dom";
 
 const Category = () => {
     const [open, setOpen] = useState(false);
@@ -32,6 +33,7 @@ const Category = () => {
     const [categories, setCategories] = useState<CategoryModel[]>([]);
     const [category, setCategory] = useState<CategoryModel>({});
     const isMobile = useMediaQuery('(max-width:600px)');
+    const navigate = useNavigate();
     const [openAlert, setOpenAlert] = useState({
         show: false,
         status: '',
@@ -88,6 +90,11 @@ const Category = () => {
             }
         )
     }
+
+    const handleBackClick = () => {
+        navigate('/admin/products/createProducts');
+    };
+
     return (
         <Box sx={{ p: 2 }}>
             <Box sx={{ display: 'flex', width: '100%', justifyContent: 'flex-end', mb: 2 }}>
@@ -98,11 +105,18 @@ const Category = () => {
                     fontSize: 10
                 }} onClick={() => setOpen(true)}>Thêm loại sản phẩm <AddIcon /> </IconButtonGradient>
             </Box>
-
+            <Button
+                variant="contained"
+                color="secondary"
+                onClick={handleBackClick}
+                sx={{ mt: 2 }}
+            >
+                Trở Lại
+            </Button>
             {openUpdate && <DialogUpdateCategory showAlert={showAlert} updateCategory={updateCategory} open={openUpdate} handleClose={handleCloseUpdate} category={category} />}
             {openDelete && <DialogDeleteCategory showAlert={showAlert} open={openDelete} handleClose={handleCloseDelete} category={category} deleteCategory={deleteCategory} />}
             {open && <DialogCreateCategory showAlert={showAlert} addCategory={addCategory} open={open} handleClose={handleClose} />}
-            {openAlert.show && <AlertCustom alert={openAlert} colseAlert={colseAlert}/>}
+            {openAlert.show && <AlertCustom alert={openAlert} colseAlert={colseAlert} />}
             <TableContainer component={Paper}>
                 <Table size={isMobile ? 'small' : 'medium'} aria-label="a dense table">
                     <TableHead>
@@ -134,7 +148,7 @@ const Category = () => {
                                         }}><FiberManualRecordIcon fontSize="small" color="error" />Ngưng hoạt động</Box>}</TableCell>
                                 <TableCell align="center">
                                     <Button sx={{
-                                        width: '70px',
+                                        width: '80px',
                                         height: '20px',
                                         fontSize: '9px',
                                         fontWeight: 'bold',

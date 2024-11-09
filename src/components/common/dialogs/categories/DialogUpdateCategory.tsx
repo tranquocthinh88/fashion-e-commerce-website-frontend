@@ -27,9 +27,9 @@ const DialogUpdateCategory = ({open, handleClose, category, updateCategory, show
     const [status, setStatus] = useState(category?.status?.toString()
         ?? Status.ACTIVE.toString());
     const handleSubmit = async () => {
-        let newStatus: Status = Status.ACTIVE;
-        if (status === 'INACTIVE') {
-            newStatus = Status.INACTIVE;
+        let newStatus: Status = Status.INACTIVE;
+        if (status === 'ACTIVE') {
+            newStatus = Status.ACTIVE;
         }
         if (category?.categoryName !== categoryName || category?.status !== newStatus) {
             try {

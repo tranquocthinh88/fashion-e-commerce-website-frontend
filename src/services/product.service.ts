@@ -237,3 +237,18 @@ export const updateProduct = async (id: number, productDto: ProductUpdateDto): P
         return Promise.reject(error);
     }
 }
+
+export const updateProductStatus = async (productId: string, status: string): Promise<ResponseSuccess<string>> => {
+    try {
+        const response = await requestConfig(
+            `products/${productId}/status`,
+            Method.PUT,
+            { status },
+            ContentType.JSON,
+            true
+        );
+        return response.data;
+    } catch (error) {
+        return Promise.reject(error);
+    }
+};

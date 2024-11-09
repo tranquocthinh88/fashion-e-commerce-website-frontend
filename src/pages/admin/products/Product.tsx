@@ -1,6 +1,5 @@
-import { Box, Button, MenuItem, Pagination, Select, Stack, TextField, useMediaQuery } from "@mui/material";
+import { Box, Button, MenuItem, Pagination, Select, Stack, useMediaQuery } from "@mui/material";
 import { bodyAdminColor } from "../../../theme";
-import SearchIcon from '@mui/icons-material/Search';
 import { useLocation, useNavigate } from "react-router-dom";
 import ProductCardAdmin from "../../../components/admin/cards/ProductCardAdmin";
 import { useEffect, useState } from "react";
