@@ -10,6 +10,7 @@ import { UserModel } from "../../../models/user.model";
 import { getUserFromLocalStorage } from "../../../services/user.service";
 import { ResponseSuccess } from "../../../dtos/responses/response.success";
 import { MessageChatbotModel } from "../../../models/chatbot/messages.chatbot";
+import { setIn } from "formik";
 
 const ChatAI = () => {
     const [isOpen, setIsOpen] = useState(true);
@@ -34,6 +35,14 @@ const ChatAI = () => {
             chatbotId: 'chatbot-AI',
             messages: []
         }
+
+        setMessagesChatbotList(prev => [...prev, {
+            role: 'user',
+            content: inputMessage,
+            conversation: conversation,
+        }]);
+
+        setInputMessage("");
 
         const chatbotMessage = {
             model: 'gpt-4o',
