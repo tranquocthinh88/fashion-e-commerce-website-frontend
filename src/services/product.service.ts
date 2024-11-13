@@ -33,6 +33,8 @@ export const getProductsDiscount = async (pageNo: number = 1, pageSize: number =
             [],
             ContentType.JSON
         );
+        console.log("Data discount: ", response.data);
+        
         return response.data;
     } catch (error) {
         return Promise.reject(error);
@@ -238,12 +240,12 @@ export const updateProduct = async (id: number, productDto: ProductUpdateDto): P
     }
 }
 
-export const updateProductStatus = async (productId: string, status: string): Promise<ResponseSuccess<string>> => {
+export const updateProductStatus = async (productId: string): Promise<ResponseSuccess<string>> => {
     try {
         const response = await requestConfig(
-            `products/${productId}/status`,
+            `products/delete/${productId}`,
             Method.PUT,
-            { status },
+            null,
             ContentType.JSON,
             true
         );

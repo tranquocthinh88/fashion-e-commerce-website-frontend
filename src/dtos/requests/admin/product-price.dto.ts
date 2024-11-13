@@ -1,7 +1,7 @@
 export type ProductPriceDto = {
-    productId: number;
+    productId: string;
     discount: number;
     expiredDate: Date;
     issueDate: Date;
-    note: string;
+    note?: string;
 }

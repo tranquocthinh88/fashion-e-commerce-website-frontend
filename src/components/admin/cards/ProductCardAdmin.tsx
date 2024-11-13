@@ -33,8 +33,8 @@ const ProductCardAdmin = ({ productId, productName, productPrice, fNavigate, thu
 
     const handleConfirmDelete = async () => {
         try {
-            await updateProductStatus(productId, 'INACTIVE'); // Gọi API để cập nhật trạng thái sản phẩm
-            setProductStatus('INACTIVE'); // Cập nhật state để thay đổi giao diện
+            await updateProductStatus(productId); // Gọi API để cập nhật trạng thái sản phẩm
+            // setProductStatus('INACTIVE'); // Cập nhật state để thay đổi giao diện
             setIsDialogOpen(false);
         } catch (error) {
             console.error('Failed to update product status', error);
