@@ -70,12 +70,6 @@ const CreateProduct = () => {
 
     const navigate = useNavigate();
 
-    const [openCategoryDialog, setOpenCategoryDialog] = useState(false);
-    const [openProviderDialog, setOpenProviderDialog] = useState(false);
-    const [openBrandDialog, setOpenBrandDialog] = useState(false);
-    const [openColorDialog, setOpenColorDialog] = useState(false);
-    const [openSizeDialog, setOpenSizeDialog] = useState(false);
-
     const formik = useFormik({
         initialValues: {
             productName: '',
@@ -227,71 +221,6 @@ const CreateProduct = () => {
         )
     }
 
-    // Handlers for opening dialogs
-    const handleOpenCategoryDialog = () => setOpenCategoryDialog(true);
-    const handleOpenProviderDialog = () => setOpenProviderDialog(true);
-    const handleOpenBrandDialog = () => setOpenBrandDialog(true);
-    const handleOpenColorDialog = () => setOpenColorDialog(true);
-    const handleOpenSizeDialog = () => setOpenSizeDialog(true);
-
-    // Handlers for closing dialogs
-    const handleCloseCategoryDialog = () => setOpenCategoryDialog(false);
-    // const handleCloseProviderDialog = () => setOpenProviderDialog(false);
-    // const handleCloseBrandDialog = () => setOpenBrandDialog(false);
-    // const handleCloseColorDialog = () => setOpenColorDialog(false);
-    // const handleCloseSizeDialog = () => setOpenSizeDialog(false);
-
-    // Handlers for adding new items
-    const handleAddCategory = async (categoryName: string) => {
-        try {
-            const response = await createCategory({ categoryName });
-            setCategories([...categories, response.data]);
-            handleCloseCategoryDialog();
-        } catch (error) {
-            console.error('Failed to add category', error);
-        }
-    };
-
-    // const handleAddProvider = async (providerName: string) => {
-    //     try {
-    //         const response = await createProvider({ providerName });
-    //         setProviders([...providers, response.data]);
-    //         handleCloseProviderDialog();
-    //     } catch (error) {
-    //         console.error('Failed to add provider', error);
-    //     }
-    // };
-
-    // const handleAddBrand = async (brandName: string) => {
-    //     try {
-    //         const response = await createBrand({ brandName });
-    //         setBrands([...brands, response.data]);
-    //         handleCloseBrandDialog();
-    //     } catch (error) {
-    //         console.error('Failed to add brand', error);
-    //     }
-    // };
-
-    // const handleAddColor = async (colorName: string) => {
-    //     try {
-    //         const response = await createColor({ colorName });
-    //         setColors([...colors, response.data]);
-    //         handleCloseColorDialog();
-    //     } catch (error) {
-    //         console.error('Failed to add color', error);
-    //     }
-    // };
-
-    // const handleAddSize = async (sizeName: string) => {
-    //     try {
-    //         const response = await createSize({ sizeName });
-    //         setSizes([...sizes, response.data]);
-    //         handleCloseSizeDialog();
-    //     } catch (error) {
-    //         console.error('Failed to add size', error);
-    //     }
-    // };
-
     return (
         <Box
             component="form"
@@ -415,7 +344,8 @@ const CreateProduct = () => {
                         {formik.touched.providerId && formik.errors.providerId && (
                             <Typography color="error">{formik.errors.providerId}</Typography>
                         )}
-                        <Button sx={{ height: '30px', width: '100px' }} variant="contained" color="primary" startIcon={<AddIcon />}>
+                        <Button sx={{ height: '30px', width: '100px' }} variant="contained" color="primary" startIcon={<AddIcon />}
+                            onClick={() => navigate('/admin/products/createProducts/providers')}>
                             Thêm
                         </Button>
                     </FormControl>

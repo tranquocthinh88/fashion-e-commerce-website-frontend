@@ -24,7 +24,7 @@ import AddIcon from '@mui/icons-material/Add';
 import { Status } from "../../../models/enum/status.enum.ts";
 import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import AlertCustom from "../../../components/common/AlertCustom.tsx";
-import { Navigate, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const Category = () => {
     const [open, setOpen] = useState(false);

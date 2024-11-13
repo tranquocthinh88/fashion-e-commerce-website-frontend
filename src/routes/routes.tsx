@@ -25,6 +25,7 @@ import PaymentSuccess from "../pages/user/cart/PaymentSuccess";
 import UpdateProduct from "../pages/admin/products/UpdateProduct";
 import OrderDetails from "../pages/user/orders/OrderDetails";
 import Category from "../pages/admin/categories/Category";
+import Provider from "../pages/admin/providers/Provider";
 
 const adminRoutes = [
   {
@@ -38,6 +39,10 @@ const adminRoutes = [
   {
     path: '/admin/products/createProducts/categories',
     element: <ProtectRouter role={Role.ROLE_ADMIN}> <AdminLayout><Category /></AdminLayout></ProtectRouter>
+  },
+  {
+    path: '/admin/products/createProducts/providers',
+    element: <ProtectRouter role={Role.ROLE_ADMIN}> <AdminLayout><Provider /></AdminLayout></ProtectRouter>
   }
 ];
 
