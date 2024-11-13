@@ -6,7 +6,7 @@ import { ProductPriceModel } from "../models/product-price.model";
 export const getAllProductPricesByProductId = async (productId : string): Promise<ResponseSuccess<ProductPriceModel[]>> => {
     try {
         const response = await requestConfig(
-            `product-prices/${productId}`,
+            `productPrices/${productId}`,
             Method.GET,
             [],
             ContentType.JSON,
@@ -20,8 +20,10 @@ export const getAllProductPricesByProductId = async (productId : string): Promis
 
 export const createProductPrice = async (productPriceDto: ProductPriceDto): Promise<ResponseSuccess<ProductPriceModel>> => {
     try {
+        console.log("Giá trị gửi: ", productPriceDto);
+        
         const response = await requestConfig(
-            'product-prices',
+            'productPrices',
             Method.POST,
             productPriceDto,
             ContentType.JSON,
@@ -36,7 +38,7 @@ export const createProductPrice = async (productPriceDto: ProductPriceDto): Prom
 export const deleteProductPrice = async (id: number): Promise<ResponseSuccess<string>> => {
     try {
         const response = await requestConfig(
-            `product-prices/${id}`,
+            `productPrices/${id}`,
             Method.DELETE,
             [],
             ContentType.JSON,

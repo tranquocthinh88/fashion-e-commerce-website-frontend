@@ -90,7 +90,7 @@ const Header = () => {
                 <Box sx={{ width: "60%", pr: 20 }}>
                     <TextField
                         id="search"
-                        label="Search..."
+                        label="Nhập sản phẩm cần tìm..."
                         sx={{ width: "100%" }}
                     />
                 </Box>

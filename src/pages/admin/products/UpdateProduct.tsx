@@ -49,6 +49,7 @@ import { Status } from "../../../models/enum/status.enum";
 import ProductImage from "../../../components/admin/product/ProductImage";
 import { BrandModel } from "../../../models/brand.model";
 import { getAllBrands } from "../../../services/brand.service";
+import CustomTextField from "../../../components/common/TextFieldCustom";
 
 const VisuallyHiddenInput = styled('input')({
     clipPath: 'inset(50%)',
@@ -186,7 +187,7 @@ const UpdateProduct = () => {
 
     const formikProductPrice = useFormik({
         initialValues: {
-            productId: Number(id),
+            productId: id ?? '',
             discount: 0,
             issueDate: new Date(),
             expiredDate: new Date(),
@@ -194,6 +195,8 @@ const UpdateProduct = () => {
         },
         validationSchema: validationProductPriceSchema,
         onSubmit: async (values: ProductPriceDto, { resetForm }) => {
+            console.log("Giá trị ở 198: ", values);
+            
             try {
                 const response: ResponseSuccess<ProductPriceModel> = await createProductPrice(values);
                 setProductPrices(prev => [...prev, response.data]);
@@ -872,7 +875,7 @@ const UpdateProduct = () => {
                                     backgroundColor: 'secondary.main'
                                 }
                             }}>
-                                <TableCell >{`${productPrice.discount * 100}%`}</TableCell>
+                                <TableCell >{`${productPrice.discount}%`}</TableCell>
                                 <TableCell >{productPrice.issueDate.toString()}</TableCell>
                                 <TableCell>{productPrice.expiredDate.toString()}</TableCell>
                                 <TableCell>{productPrice.note}</TableCell>

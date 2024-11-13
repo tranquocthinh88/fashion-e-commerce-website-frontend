@@ -16,10 +16,6 @@ export const UserMenu = [
         href: '/brands'
     },
     {
-        title: 'Chi nhánh',
-        href: '/branchs'
-    },
-    {
         title: 'Giới thiệu',
         href: '/about'
     }
