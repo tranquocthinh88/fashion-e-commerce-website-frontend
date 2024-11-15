@@ -1,4 +1,4 @@
 export type BrandModel = {
-    id?: string,
+    id: string,
     brandName?: string
 }

@@ -26,6 +26,8 @@ import UpdateProduct from "../pages/admin/products/UpdateProduct";
 import OrderDetails from "../pages/user/orders/OrderDetails";
 import Category from "../pages/admin/categories/Category";
 import Provider from "../pages/admin/providers/Provider";
+import Color from "../pages/admin/colors/Color";
+import Brand from "../pages/admin/brands/Brand";
 
 const adminRoutes = [
   {
@@ -43,7 +45,15 @@ const adminRoutes = [
   {
     path: '/admin/products/createProducts/providers',
     element: <ProtectRouter role={Role.ROLE_ADMIN}> <AdminLayout><Provider /></AdminLayout></ProtectRouter>
-  }
+  },
+  {
+    path: '/admin/products/createProducts/colors',
+    element: <ProtectRouter role={Role.ROLE_ADMIN}> <AdminLayout><Color /></AdminLayout></ProtectRouter>
+  },
+  {
+    path: '/admin/products/createProducts/brands',
+    element: <ProtectRouter role={Role.ROLE_ADMIN}> <AdminLayout><Brand /></AdminLayout></ProtectRouter>
+  },
 ];
 
 const userRoutes = [

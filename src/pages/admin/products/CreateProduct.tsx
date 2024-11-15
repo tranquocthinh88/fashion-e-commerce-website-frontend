@@ -379,7 +379,8 @@ const CreateProduct = () => {
                         {formik.touched.brandId && formik.errors.brandId && (
                             <Typography color="error">{formik.errors.brandId}</Typography>
                         )}
-                        <Button sx={{ height: '30px', width: '100px' }} variant="contained" color="primary" startIcon={<AddIcon />}>
+                        <Button sx={{ height: '30px', width: '100px' }} variant="contained" color="primary" startIcon={<AddIcon />}
+                            onClick={() => navigate('/admin/products/createProducts/brands')}>
                             Thêm
                         </Button>
                     </FormControl>
@@ -460,7 +461,8 @@ const CreateProduct = () => {
                                 <MenuItem key={color.id} value={color.id}>{color.colorName}</MenuItem>
                             ))}
                         </Select>
-                        <Button sx={{ height: '30px', width: '100px' }} variant="contained" color="primary" startIcon={<AddIcon />}>
+                        <Button sx={{ height: '30px', width: '100px' }} variant="contained" color="primary" startIcon={<AddIcon />}
+                            onClick={() => navigate('/admin/products/createProducts/colors')}>
                             Thêm
                         </Button>
                     </FormControl>

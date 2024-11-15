@@ -1,32 +1,26 @@
-import { Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField } from "@mui/material";
-import { useState } from "react";
-import { ResponseSuccess } from "../../../../dtos/responses/response.success.ts";
-import { ProviderModel } from "../../../../models/provider.model.ts";
-import { create } from "../../../../services/provider.service.ts";
-import { Status } from "../../../../models/enum/status.enum.ts";
+import {Button, Dialog, DialogActions, DialogContent, DialogTitle, TextField} from "@mui/material";
+import {useState} from "react";
+import {ResponseSuccess} from "../../../../dtos/responses/response.success.ts";
+import { ColorModel } from "../../../../models/color.model.ts";
+import { createColor } from "../../../../services/color.service.ts";
+
 type Props = {
     open: boolean;
     handleClose: () => void;
-    addProvider: (provider: ProviderModel) => void;
+    addColor: (color: ColorModel) => void;
     showAlert: (status: string, message: string) => void
-
 }
-const DialogCreateProvider = ({ open, handleClose, addProvider, showAlert }: Props) => {
-    const [providerName, setProviderName] = useState('');
+
+const DialogCreateColor = ({open, handleClose, addColor, showAlert}: Props) => {
+    const [colorName, setColorName] = useState('');
     const [errorText, setErrorText] = useState('');
     const handleSubmit = async () => {
-        if (providerName === '') {
+        if (colorName === '') {
             setErrorText('Vui lòng điền vào trường này');
         } else {
             try {
-                const response: ResponseSuccess<ProviderModel> = await create({
-                    providerName,
-                    phoneNumber: '0975373560',
-                    email: '22222tranthinh88zz@gmail.com',
-                    addressId: 1,
-                    status: Status.ACTIVE
-                });
-                addProvider(response.data);
+                const response: ResponseSuccess<ColorModel> = await createColor({colorName});
+                addColor(response.data);
                 showAlert('success', 'Thêm thành công');
                 handleClose();
             } catch (error) {
@@ -43,14 +37,14 @@ const DialogCreateProvider = ({ open, handleClose, addProvider, showAlert }: Pro
                 component: 'form',
             }}
         >
-            <DialogTitle>Thêm nhà cung cấp</DialogTitle>
+            <DialogTitle>Thêm màu sắc</DialogTitle>
             <DialogContent>
                 <TextField
                     autoFocus
                     margin="dense"
-                    id="provider_name"
-                    name="provider_name"
-                    label="Tên nhà cung cấp"
+                    id="color_name"
+                    name="color_name"
+                    label="Tên màu sắc"
                     error={errorText !== ''}
                     helperText={errorText}
                     InputLabelProps={
@@ -62,7 +56,7 @@ const DialogCreateProvider = ({ open, handleClose, addProvider, showAlert }: Pro
                     fullWidth
                     variant="standard"
                     onChange={(e) => {
-                        setProviderName(e.target.value);
+                        setColorName(e.target.value);
                         setErrorText('');
                     }}
                 />
@@ -74,4 +68,4 @@ const DialogCreateProvider = ({ open, handleClose, addProvider, showAlert }: Pro
         </Dialog>
     )
 }
-export default DialogCreateProvider;
+export default DialogCreateColor;
