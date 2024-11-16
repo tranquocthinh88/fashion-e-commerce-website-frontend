@@ -3,10 +3,10 @@ import logo from '../../assets/logo.png';
 import '../admin/Header.scss';
 import { UserMenu } from "../common/Menu";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { thirdGradient } from "../../theme";
+import { secondaryGradient, thirdGradient } from "../../theme";
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import MailIcon from '@mui/icons-material/Mail';
-import { Height, Notifications } from "@mui/icons-material";
+import { Notifications } from "@mui/icons-material";
 import { useState } from "react";
 import RoomChat from "../../pages/user/chat/RoomChat";
 import ProtectRouter from "../../routes/ProtectRoutes";
@@ -190,7 +190,7 @@ const Header = () => {
                                 background: thirdGradient,
                                 color: 'white'
                             },
-                            // background: location.pathname.startsWith(item.href) ? primaryGradient : 'none',
+                            background: location.pathname.startsWith(item.href) ? secondaryGradient : 'none',
                             color: location.pathname.startsWith(item.href) ? 'black' : 'none',
                             textDecoration: 'none',
                             pl: 1, pr: 1,

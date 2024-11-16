@@ -1,15 +1,13 @@
-import { Box, Typography } from "@mui/material"
+import { Box } from "@mui/material"
 import Footer from "../admin/Footer"
 import { ReactNode } from "react";
 import Header from "./Header";
-import { useLocation } from "react-router-dom";
 
 type UserLayoutProps = {
     children: ReactNode;
 }
 
 const UserLayout = ({ children }: UserLayoutProps) => {
-    const location = useLocation();
     return (
         <Box>
             <Box
@@ -24,7 +22,6 @@ const UserLayout = ({ children }: UserLayoutProps) => {
                 }}
             >
                 <Header />
-                {/* <Typography> {"Trang chủ" + location.pathname}</Typography> */}
             </Box>
             <Box sx={{ display: "flex", flexDirection: "column", minHeight: "100vh", paddingTop: '150px' }}>
                 <Box sx={{ flexGrow: 1, paddingTop: '150px', paddingBottom: '150px', padding: 2 }}>

@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Container, Grid, Pagination, Rating, Stack, Typography } from "@mui/material"
+import { Avatar, Box, Button, Container, Pagination, Rating, Stack, Typography } from "@mui/material"
 import { useEffect, useState } from "react";
 import { ProductModel } from "../../../models/product.model";
 import { useParams } from "react-router-dom";

@@ -11,7 +11,7 @@ type Props = {
 
 const orderStatusMap: Record<OrderStatus, string> = {
     [OrderStatus.NOT_PROCESSED_YET]: "Giao dịch hủy bỏ",
-    [OrderStatus.PENDING]: "Người bán đang chuẩn bị chuẩn bị",
+    [OrderStatus.PENDING]: "Người bán đang chuẩn bị",
     [OrderStatus.PROCESSING]: "Đang xử lý",
     [OrderStatus.SHIPPING]: "Đang vận chuyển",
     [OrderStatus.DELIVERED]: "Đã giao",
@@ -20,10 +20,6 @@ const orderStatusMap: Record<OrderStatus, string> = {
 const OrderItem = ({ item }: Props) => {
     const navigate = useNavigate();
 
-    // Hàm xử lý xóa sản phẩm
-    const handleDeleleProductOutCart = () => {
-        // Thực hiện xóa sản phẩm ở đây
-    };
     const isCancelDisabled = (() => {
         const orderDate = new Date(item.orderDate); // Ngày tạo đơn hàng
         const now = new Date(); // Thời gian hiện tại
