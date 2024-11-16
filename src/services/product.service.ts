@@ -33,8 +33,6 @@ export const getProductsDiscount = async (pageNo: number = 1, pageSize: number =
             [],
             ContentType.JSON
         );
-        console.log("Data discount: ", response.data);
-        
         return response.data;
     } catch (error) {
         return Promise.reject(error);
@@ -69,8 +67,6 @@ export const getProductsNewCreatedAt = async (pageNo: number = 1, pageSize: numb
             [],
             ContentType.JSON
         );
-        console.log("Data new: ", response.data);
-
         return response.data;
     } catch (error) {
         return Promise.reject(error);
@@ -105,8 +101,6 @@ export const getProductsSold = async (pageNo: number = 1, pageSize: number = 20,
             [],
             ContentType.JSON
         );
-        console.log("Data sold: ", response.data);
-
         return response.data;
     } catch (error) {
         return Promise.reject(error);
@@ -141,7 +135,6 @@ export const getProductsForUser = async (pageNo: number = 1, pageSize: number = 
             [],
             ContentType.JSON
         );
-
         return response.data;
     } catch (error) {
         return Promise.reject(error);

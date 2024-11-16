@@ -12,8 +12,6 @@ export const getAllBrands = async (): Promise<ResponseSuccess<BrandModel[]>> => 
             [],
             ContentType.JSON
         );
-        console.log("dữ liệu: " , response.data);
-        
         return response.data;
     } catch (error) {
         return Promise.reject(error);
