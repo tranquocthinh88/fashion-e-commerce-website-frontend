@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Container, Pagination, Rating, Stack, Typography } from "@mui/material"
+import { Avatar, Box, Button, Container, Grid, Pagination, Rating, Stack, Typography } from "@mui/material"
 import { useEffect, useState } from "react";
 import { ProductModel } from "../../../models/product.model";
 import { useParams } from "react-router-dom";
@@ -21,6 +21,9 @@ import { addToCartLocalStorage } from "../../../utils/cart.handle";
 import { getAllCommentById } from "../../../services/comment.service";
 import { CommentResponse } from "../../../dtos/responses/user/comment.response";
 import { connect, disconnect, subscribe } from "../../../configs/websocket";
+import ProductCard from "../../../components/user/product/ProductCard";
+import CustomArrow from "../../../components/user/customs/CustomArrow ";
+import Slider from "react-slick";
 
 const SizeColorBox = ({ text, onClick, selected }: { text: string | number, onClick(): void, selected: boolean }) => {
     return (
@@ -59,6 +62,45 @@ const ProductDetail = () => {
     const [comments, setComments] = useState<CommentResponse[]>([]);
     const [totalPage, setTotalPage] = useState<number>(0);
     const [pageNo, setPageNo] = useState<number>(1);
+    const [relatedProducts, SetRelatedProducts] = useState<ProductUserResponse[]>([]);
+
+
+    const settings = {
+        dots: true, // Hiển thị nút chỉ báo trang
+        infinite: false, // Không cuộn vô hạn
+        speed: 500, // Tốc độ chuyển đổi slide
+        slidesToShow: 5, // Số lượng sản phẩm trên mỗi trang
+        slidesToScroll: 5, // Số sản phẩm khi cuộn mỗi lần
+        prevArrow: <CustomArrow type="prev" />,
+        nextArrow: <CustomArrow type="next" />,
+        initialSlide: 0,
+        responsive: [
+            {
+                breakpoint: 1024,
+                settings: {
+                    slidesToShow: 3,
+                    slidesToScroll: 3,
+                    infinite: true,
+                    dots: true
+                }
+            },
+            {
+                breakpoint: 600,
+                settings: {
+                    slidesToShow: 2,
+                    slidesToScroll: 2,
+                    initialSlide: 2
+                }
+            },
+            {
+                breakpoint: 480,
+                settings: {
+                    slidesToShow: 1,
+                    slidesToScroll: 1
+                }
+            }
+        ]
+    };
 
     useEffect(() => {
         (async () => {
@@ -199,6 +241,27 @@ const ProductDetail = () => {
     const calculateNewAvgRating = (currentAvg: number, newRating: number, totalRatings: number) => {
         return ((currentAvg * totalRatings) + newRating) / (totalRatings + 1);
     };
+
+    useEffect(() => {
+        if (productResponse?.category?.categoryName) {
+            (async () => {
+                try {
+                    const response: ResponseSuccess<PageResponse<ProductUserResponse[]>>
+                        = await getProductsForUser(1, 10, [{
+                            field: 'category.categoryName',
+                            operator: '-',
+                            value: productResponse.category?.categoryName ?? '',
+                        }], []);
+                    console.log("Sản phẩm liên quan: ", response.data.data);
+                    console.log("Sản phẩm hiện tại: ", productResponse);
+
+                    SetRelatedProducts(response.data.data);
+                } catch (error) {
+                    console.log(error);
+                }
+            })();
+        }
+    }, [productResponse?.category?.categoryName]);
 
     return (
         <Container >
@@ -351,8 +414,16 @@ const ProductDetail = () => {
                             <Pagination count={totalPage} page={pageNo} variant="outlined" shape="rounded" onChange={handleChange} />
                         </Stack>
                     </Box>
-
-
+                </Box>
+                <Box sx={{ mt: 2, mb: 2 }}>
+                    <Typography variant="h6">SẢN PHẨM LIÊN QUAN</Typography>
+                    <Slider {...settings}>
+                        {relatedProducts.map((relatedProduct: ProductUserResponse) => (
+                            <Box key={relatedProduct.product.id} sx={{ width: '100%', maxWidth: '250px', margin: '0 10px' }}>
+                                <ProductCard product={relatedProduct} />
+                            </Box>
+                        ))}
+                    </Slider>
                 </Box>
             </Box>
         </Container>

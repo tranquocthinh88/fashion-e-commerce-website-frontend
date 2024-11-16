@@ -6,7 +6,7 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { thirdGradient } from "../../theme";
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import MailIcon from '@mui/icons-material/Mail';
-import { Notifications } from "@mui/icons-material";
+import { Height, Notifications } from "@mui/icons-material";
 import { useState } from "react";
 import RoomChat from "../../pages/user/chat/RoomChat";
 import ProtectRouter from "../../routes/ProtectRoutes";
@@ -81,10 +81,10 @@ const Header = () => {
                 flexDirection: "row",
                 justifyContent: "space-between",
                 alignItems: "center",
-                pt: 2, pb: 2,
+                pt: 2,
             }}>
                 <Box sx={{ display: "flex", justifyContent: "center", width: "15%", }}>
-                    <img src={logo} alt="Logo" className="logo_shop-item" />
+                    <img style={{width: '40%', height: '40%'}} src={logo} alt="Logo" className="logo_shop-item" />
                 </Box>
 
                 <Box sx={{ width: "60%", pr: 20 }}>

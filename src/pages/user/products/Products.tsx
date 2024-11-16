@@ -68,13 +68,38 @@ const Products = () => {
 
     const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
-        if (name === "priceMin") setPriceMin(Number(value));
-        if (name === "priceMax") setPriceMax(Number(value));
+
+        if (value === "") {
+            if (name === "priceMin") setPriceMin(undefined);
+            if (name === "priceMax") setPriceMax(undefined);
+        } else {
+            if (name === "priceMin") setPriceMin(Number(value));
+            if (name === "priceMax") setPriceMax(Number(value));
+        }
     };
     return (
         <>
-            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', width: '100%' }}>
-                <Grid container spacing={2} sx={{ width: '32%', padding: 2 }}>
+            <Box
+                sx={{
+                    display: 'flex',
+                    width: '100%',
+                    minHeight: '100vh',
+                }}
+            >
+                {/* Bộ lọc */}
+                <Box
+                    sx={{
+                        width: '32%',
+                        position: 'fixed',
+                        top: 150,
+                        left: 0,
+                        padding: 2,
+                        zIndex: 1,
+                        height: `calc(100vh - 150px)`,
+                        paddingBottom: '150px',
+                        overflowY: 'auto',
+                    }}
+                >
                     <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 1 }}>Bộ lọc</Typography>
                     <Grid item xs={12}>
                         <Typography variant="h6" sx={{}}>Danh mục sản phẩm</Typography>
@@ -125,10 +150,27 @@ const Products = () => {
                             đến <Input name="priceMax" type="number" placeholder="Nhập giá sản phẩm" onChange={handlePriceChange} />
                         </FormControl>
                     </Grid>
-                </Grid>
-
-                {/* Grid container for products */}
-                <Grid container spacing={2} sx={{ width: '68%', padding: 2 }}>
+                    {/* </Grid> */}
+                </Box>
+                {/* Sản phẩm */}
+                {/* <Box
+                    sx={{
+                        marginLeft: '32%',
+                        width: '68%', 
+                        padding: 2,
+                        position: 'relative',
+                        minHeight: '100vh', 
+                    }}
+                > */}
+                <Box
+                    sx={{
+                        marginLeft: '32%',
+                        width: '68%',
+                        padding: 2,
+                        position: 'relative',
+                        minHeight: 'calc(100vh - 145px)', // Trừ chiều cao của footer
+                    }}
+                >
                     <Grid item xs={12}>
                         <Box sx={{ padding: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                             <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: 1 }}>{products?.length} sản phẩm</Typography>
@@ -172,9 +214,9 @@ const Products = () => {
                             <Pagination count={totalPage} page={pageNo} variant="outlined" shape="rounded" onChange={handleChange} />
                         </Stack>
                     </Box>
-                </Grid>
+                    {/* </Grid> */}
+                </Box>
             </Box>
-
         </>
     )
 }
