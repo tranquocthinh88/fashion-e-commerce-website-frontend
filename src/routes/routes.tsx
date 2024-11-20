@@ -28,6 +28,7 @@ import Category from "../pages/admin/categories/Category";
 import Provider from "../pages/admin/providers/Provider";
 import Color from "../pages/admin/colors/Color";
 import Brand from "../pages/admin/brands/Brand";
+import Size from "../pages/admin/sizes/Size";
 
 const adminRoutes = [
   {
@@ -53,6 +54,10 @@ const adminRoutes = [
   {
     path: '/admin/products/createProducts/brands',
     element: <ProtectRouter role={Role.ROLE_ADMIN}> <AdminLayout><Brand /></AdminLayout></ProtectRouter>
+  },
+  {
+    path: '/admin/products/createProducts/sizes',
+    element: <ProtectRouter role={Role.ROLE_ADMIN}> <AdminLayout><Size /></AdminLayout></ProtectRouter>
   },
 ];
 

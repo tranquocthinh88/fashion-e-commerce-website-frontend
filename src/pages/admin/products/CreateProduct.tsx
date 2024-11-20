@@ -486,7 +486,8 @@ const CreateProduct = () => {
                                 <MenuItem key={size.id} value={size.id}>{size.textSize ?? size.numberSize}</MenuItem>
                             ))}
                         </Select>
-                        <Button sx={{ height: '30px', width: '100px' }} variant="contained" color="primary" startIcon={<AddIcon />}>
+                        <Button sx={{ height: '30px', width: '100px' }} variant="contained" color="primary" startIcon={<AddIcon />}
+                            onClick={() => navigate('/admin/products/createProducts/sizes')}>
                             Thêm
                         </Button>
                     </FormControl>
