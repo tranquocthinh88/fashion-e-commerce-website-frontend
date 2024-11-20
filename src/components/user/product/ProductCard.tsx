@@ -33,25 +33,33 @@ const ProductCard = ({ product }: Props) => {
                 }
             }}
         >
-            {product.priceFinal != product.product.price  &&
+            {product.priceFinal != product.product.price &&
                 <Box sx={{
                     position: 'absolute',
                     top: 0, p: 1,
                     borderRadius: '0px 0px 5px 0px',
                     background: 'red',
+                    zIndex: 1
                 }}> <Typography sx={{
                     color: '#fff',
                     fontSize: '10px'
                 }}>Sale off {product.discount}%</Typography></Box>}
             <CardMedia
-                sx={{ height: 220, resizeMode: 'contain' }}
+                sx={{
+                    height: 220,
+                    objectFit: 'contain',
+                    transition: 'transform 0.3s ease-in-out',  
+                    '&:hover': {
+                        transform: 'scale(1.1)',
+                        cursor: 'pointer', 
+                    },
+                }}
                 image={product?.product?.thumbnail ?? ''}
                 component="img"
             />
             <CardContent sx={{ background: "white" }}>
                 <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                    <Typography sx={{ fontSize: 12 }}>Đã bán: {product.product?.buyQuantity}</Typography>
-                    {/* <Rating sx={{ pb: "3px" }} size="small" name="rating-read" value={product.product.avgRating} readOnly /> */}
+                    <Typography sx={{ fontSize: 12 }}>Đã bán: {product.product?.buyQuantity || 0}</Typography>
                     <Rating sx={{ pb: "3px" }} size="small" name="half-rating-read" value={product.product.avgRating} precision={0.5} readOnly />
                 </Box>
                 <Typography gutterBottom

@@ -14,6 +14,8 @@ type Props = {
     open: boolean;
     onClose: () => void;
     item: CartItemModel;
+    isEvaluate: boolean;
+    setIsEvaluate: (value: boolean) => void;
 }
 
 const validationFeedbackSchema = yup.object({
@@ -22,7 +24,7 @@ const validationFeedbackSchema = yup.object({
 });
 
 
-export const DialogFeedback = ({ open, onClose, item }: Props) => {
+export const DialogFeedback = ({ open, onClose, item, setIsEvaluate }: Props) => {
 
     const [medias, setMedias] = React.useState<File[]>([]);
     const user: UserModel | null = getUserFromLocalStorage();
@@ -58,6 +60,8 @@ export const DialogFeedback = ({ open, onClose, item }: Props) => {
                 resetForm();
                 setMedias([]);
                 formik.setFieldValue('medias', []);
+                setIsEvaluate(true);
+                onClose();
             } catch (error) {
                 console.log(error);
             }
@@ -94,7 +98,7 @@ export const DialogFeedback = ({ open, onClose, item }: Props) => {
                         />
                         <Box sx={{ pl: 1 }}>
                             <Typography>{item.productDetail.product?.productName}</Typography>
-                            <Typography>Loại sản phẩm: {item.productDetail.product?.categoryId}</Typography>
+                            <Typography>Loại sản phẩm: {item.productDetail.product?.category?.categoryName}</Typography>
                         </Box>
 
                     </Box>

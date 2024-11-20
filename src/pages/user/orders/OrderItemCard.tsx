@@ -7,14 +7,21 @@ import DialogFeedback from "../../../components/user/dialogs/DialogFeedback";
 
 type Props = {
     item: CartItemModel,
+    status: string
 }
 
-const OrderItemCard = ({ item }: Props) => {
+const OrderItemCard = ({ item, status }: Props) => {
     const [quantity] = useState<number>(item.quantity);
     const [openDialogFeedback, setOpenDialogFeedback] = useState(false);
+    const [isEvaluate, setIsEvaluate] = useState<boolean>(localStorage.getItem(`isEvaluate_${item.productDetail.product?.id}`) === "true");
 
     const handleCloseDialogFeedback = () => {
         setOpenDialogFeedback(false);
+    }
+
+    const handleSetIsEvaluate = (value: boolean) => {
+        setIsEvaluate(value);
+        localStorage.setItem(`isEvaluate_${item.productDetail.product?.id}`, value.toString());
     }
 
     return (
@@ -78,13 +85,33 @@ const OrderItemCard = ({ item }: Props) => {
                     </Box>
                 </Grid>
                 <Grid size={1} >
-                    <Button variant="contained" color="warning" onClick={() => setOpenDialogFeedback(true)} >Đánh giá</Button>
+                    {status === "DELIVERED" ? (
+                        isEvaluate ? (
+                            <Typography variant="subtitle1" color="success">
+                                Đã đánh giá
+                            </Typography>
+                        ) : (
+                            <Button
+                                variant="contained"
+                                color="warning"
+                                onClick={() => setOpenDialogFeedback(true)}
+                            >
+                                Đánh giá
+                            </Button>
+                        )
+                    ) : (
+                        <Typography variant="body1" color="warning">
+                            Chưa nhận hàng
+                        </Typography>
+                    )}
                     {
-                        openDialogFeedback && 
+                        openDialogFeedback &&
                         <DialogFeedback
                             open={openDialogFeedback}
                             onClose={handleCloseDialogFeedback}
                             item={item}
+                            isEvaluate={isEvaluate}
+                            setIsEvaluate={handleSetIsEvaluate}
                         />
                     }
 

@@ -3,11 +3,11 @@ import logo from '../../assets/logo.png';
 import '../admin/Header.scss';
 import { UserMenu } from "../common/Menu";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { thirdGradient } from "../../theme";
+import { secondaryGradient, thirdGradient } from "../../theme";
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import MailIcon from '@mui/icons-material/Mail';
 import { Notifications } from "@mui/icons-material";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import RoomChat from "../../pages/user/chat/RoomChat";
 import ProtectRouter from "../../routes/ProtectRoutes";
 import { Role, UserModel } from "../../models/user.model";
@@ -18,6 +18,11 @@ import { logout, removeLocalStorage } from "../../services/auth.service";
 import { useSelector } from "react-redux";
 import { RootState } from "../../redux/stores/store";
 import NotificationView from "../../components/common/NotificationView";
+import { getProductsForUser } from "../../services/product.service";
+import { ProductUserResponse } from "../../dtos/responses/products/productUser-response";
+import { ResponseSuccess } from "../../dtos/responses/response.success";
+import { PageResponse } from "../../dtos/responses/page.response";
+import { ConvertPrice } from "../../utils/convert.price";
 const Header = () => {
     const navigate = useNavigate();
     const location = useLocation();
@@ -73,6 +78,36 @@ const Header = () => {
     }
 
     const randomColor = user?.avatarUrl ? 'transparent' : getRandomColor();
+
+    const [search, setSearch] = useState<string>('');
+    const [searchResult, setSearchResult] = useState<ProductUserResponse[]>([]);
+
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            try {
+                const response: ResponseSuccess<PageResponse<ProductUserResponse[]>> = await getProductsForUser(1, 10, [{
+                    field: "productName",
+                    operator: ":",
+                    value: search
+                }], []);
+                console.log(response.data.data);
+
+                setSearchResult(response.data.data);
+            } catch (error) {
+                console.log(error);
+            }
+        };
+        if (search.trim() !== "") {
+            fetchProducts();
+        } else {
+            setSearchResult([]);
+        }
+    }, [search]);
+    const handleClick = () => {
+        setSearch('');
+        setSearchResult([]);
+    }
     return (
         <Box>
             <Box sx={{
@@ -81,18 +116,58 @@ const Header = () => {
                 flexDirection: "row",
                 justifyContent: "space-between",
                 alignItems: "center",
-                pt: 2, pb: 2,
+                pt: 2,
             }}>
                 <Box sx={{ display: "flex", justifyContent: "center", width: "15%", }}>
-                    <img src={logo} alt="Logo" className="logo_shop-item" />
+                    <img style={{ width: '40%', height: '40%' }} src={logo} alt="Logo" className="logo_shop-item" />
                 </Box>
 
-                <Box sx={{ width: "60%", pr: 20 }}>
+                <Box sx={{ width: "60%", pr: '10%', position: 'relative' }}>
                     <TextField
                         id="search"
                         label="Nhập sản phẩm cần tìm..."
                         sx={{ width: "100%" }}
+                        value={search}
+                        onChange={e => setSearch(e.target.value)}
                     />
+                    {
+                        searchResult.length > 0 && <Box
+                            sx={{
+                                position: 'absolute',
+                                width: '83%',
+                                top: '100%',
+                                left: 0,
+                                right: 0,
+                                backgroundColor: 'white',
+                                border: '1px solid #ccc',
+                                zIndex: 10,
+                                overflowY: 'auto',
+                            }}
+                        >
+                            {searchResult.map((product: ProductUserResponse) => (
+                                <Box
+                                    key={product.product.id}
+                                    sx={{
+                                        display: "flex",
+                                        gap: 2,
+                                        alignItems: "center",
+                                        borderBottom: '1px solid #eee',
+                                        pointerEvents: 'all', transition: 'transform 0.3s ease, background 0.3s ease',
+                                        ':hover': {
+                                            background: '#eee',
+                                            cursor: 'pointer', 
+                                            transform: 'scale(0.95)',
+                                        },
+                                    }}
+                                    onClick={() => { handleClick(); window.location.href = `/products/${product.product.id}`; }}
+                                >
+                                    <img src={product.product.thumbnail} alt={product.product.productName} style={{ width: "50px", height: "50px" }} />
+                                    <Typography sx={{ width: '78%', maxHeight: '40px' }}>{product.product.productName}</Typography>
+                                    <Typography sx={{ color: 'red' }}>{ConvertPrice(product.priceFinal)}</Typography>
+                                </Box>
+                            ))}
+                        </Box>
+                    }
                 </Box>
                 <Box sx={{
                     display: "flex",
@@ -175,31 +250,55 @@ const Header = () => {
                 </Box>
             </Box>
             <Container>
-                <Box sx={{
-                    display: 'flex',
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    backgroundColor: thirdGradient,
-                    width: '90%',
-                }}>
+                <Box
+                    sx={{
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        backgroundColor: thirdGradient,
+                        backdropFilter: 'blur(15px)',
+                        width: '60%',
+                        position: 'fixed',
+                        left: '20%',
+                        borderRadius: '12px',
+                        zIndex: 2,
+                        boxShadow: '0 6px 12px rgba(0, 0, 0, 0.15)',
+                        padding: '10px',
+                        gap: '12px',
+                    }}
+                >
                     {UserMenu.map((item: any, index: number) => (
-                        <ListItemButton key={index} component={Link} to={item.href} sx={{
-                            display: "flex",
-                            justifyContent: "center",
-                            ':hover': {
-                                background: thirdGradient,
-                                color: 'white'
-                            },
-                            // background: location.pathname.startsWith(item.href) ? primaryGradient : 'none',
-                            color: location.pathname.startsWith(item.href) ? 'black' : 'none',
-                            textDecoration: 'none',
-                            pl: 1, pr: 1,
-
-                        }}>
-                            <Typography>{item.title}</Typography>
+                        <ListItemButton
+                            key={index}
+                            component={Link}
+                            to={item.href}
+                            sx={{
+                                display: "flex",
+                                justifyContent: "center",
+                                alignItems: 'center',
+                                width: '100%',
+                                borderRadius: '8px',
+                                textDecoration: 'none',
+                                transition: 'all 0.3s ease',
+                                color: location.pathname.startsWith(item.href) ? 'black' : '#666',
+                                background: location.pathname.startsWith(item.href) ? secondaryGradient : 'transparent',
+                                boxShadow: location.pathname.startsWith(item.href)
+                                    ? '0 4px 8px rgba(0, 0, 0, 0.2)'
+                                    : 'none',
+                                ':hover': {
+                                    background: thirdGradient,
+                                    color: 'white',
+                                    boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+                                },
+                            }}
+                        >
+                            <Typography variant="body1" sx={{ fontWeight: 500 }}>
+                                {item.title}
+                            </Typography>
                         </ListItemButton>
                     ))}
                 </Box>
+
             </Container>
             {isChatOpen &&
                 <ProtectRouter role={Role.ROLE_USER}> <RoomChat /></ProtectRouter>

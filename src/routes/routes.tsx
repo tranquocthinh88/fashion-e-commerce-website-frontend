@@ -26,6 +26,7 @@ import UpdateProduct from "../pages/admin/products/UpdateProduct";
 import OrderDetails from "../pages/user/orders/OrderDetails";
 import Category from "../pages/admin/categories/Category";
 import Provider from "../pages/admin/providers/Provider";
+import Products from "../pages/user/products/products";
 import Color from "../pages/admin/colors/Color";
 import Brand from "../pages/admin/brands/Brand";
 import Size from "../pages/admin/sizes/Size";
@@ -73,7 +74,7 @@ const userRoutes = [
   {
     path: '/order-details/:id',
     element: <ProtectRouter role={Role.ROLE_USER}><UserLayout><OrderDetails /></UserLayout></ProtectRouter>,
-  }
+  },
 
 ];
 
@@ -86,6 +87,11 @@ const publicRoutes = [
     path: "/",
     element: <Navigate to="/home" />
   },
+  {
+    path: '/products',
+    element: <UserLayout><Products /></UserLayout>
+  }
+  ,
   {
     path: '/products/:id',
     element: <UserLayout><ProductDetail /></UserLayout>

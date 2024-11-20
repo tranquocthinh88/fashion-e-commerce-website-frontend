@@ -1,106 +1,25 @@
-// import { Box, IconButton, Input, Typography } from "@mui/material";
-// import CloseIcon from '@mui/icons-material/Close';
-// import SendIcon from '@mui/icons-material/Send';
-// import AttachFileIcon from '@mui/icons-material/AttachFile';
-// import ImageIcon from '@mui/icons-material/Image';
-// import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
-// import { useState } from "react";
-
-// const RoomChat = () => {
-
-//      const [isOpen, setIsOpen] = useState(true);
-
-//      const closeChat = () => {
-//          setIsOpen(false);
-//      }
-
-//      if (!isOpen) return null;
- 
-//     return (
-//         <Box sx={{
-//             position: 'fixed',
-//             bottom: 0,
-//             right: 20,
-//             width: 450,
-//             height: 500,
-//             backgroundColor: 'white',
-//             boxShadow: 3,
-//             borderRadius: 2,
-//             p: 2,
-//             zIndex: 1000,
-//             display: 'flex',
-//             flexDirection: 'column',
-//         }}>
-//             <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-//                 <Typography variant="h6" gutterBottom>Trao đổi với nhân viên</Typography>
-//                 <IconButton color="primary" size="small"  onClick={closeChat}>
-//                     <CloseIcon />
-//                 </IconButton>
-//             </Box>
-//             <Box sx={{
-//                 flexGrow: 1, 
-//                 overflowY: 'auto',
-//                 border: '1px solid #ddd',
-//                 p: 1,
-//             }}>
-//                 <Box>
-//                     <Box>
-//                         <Typography>Nhân viên: Chào bạn! Bạn cần hỗ trợ gì ạ?</Typography>
-//                     </Box>
-//                     <Box sx={{ display: 'flex', justifyContent: 'flex-end', }}>
-//                         <Typography>Người dùng: Tôi muốn hỏi về sản phẩm này.</Typography>
-//                     </Box> 
-//                 </Box>
-//             </Box>
-//             <Box sx={{ mt: 1 }}>
-//                 <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-//                     <Input placeholder="Nhập tin nhắn của bạn" fullWidth />
-//                     <IconButton color="primary" size="small">
-//                         <SendIcon />
-//                     </IconButton>
-//                 </Box>
-//                 <Box sx={{ mt: 1 }}>
-//                     <IconButton color="primary" size="small">
-//                         <AttachFileIcon />
-//                     </IconButton>
-//                     <IconButton color="primary" size="small">
-//                         <ImageIcon />
-//                     </IconButton> <IconButton color="primary" size="small">
-//                         <OndemandVideoIcon />
-//                     </IconButton>
-//                 </Box>
-//             </Box>
-//         </Box>
-//     )
-// }
-
-// export default RoomChat;
 import { Box, IconButton, Input, Typography, Snackbar, Alert } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import SendIcon from '@mui/icons-material/Send';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import ImageIcon from '@mui/icons-material/Image';
 import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
-import { useEffect, useState } from "react";
-import { connect, disconnect, sendMessage, subscribe } from "../../../configs/websocket"; // Đảm bảo rằng đường dẫn đúng
-
-// Định nghĩa kiểu dữ liệu cho message
-interface MessageModel {
-    sender: string;
-    content: string;
-}
-
-interface RoomChatProps {
-    senderId: string; // ID của người gửi
-    receiverId: string; // ID của người nhận
-}
+import { useEffect, useRef, useState } from "react";
+import { connect, disconnect, subscribe } from "../../../configs/websocket";
+import { getMessageByRoomId, send } from "../../../services/message.service";
+import { MessageModel } from "../../../models/message.model";
+import { UserModel } from "../../../models/user.model";
+import { getUserFromLocalStorage } from "../../../services/user.service";
 
 const RoomChat = () => {
+    const user: UserModel | null = getUserFromLocalStorage();
     const [isOpen, setIsOpen] = useState(true);
-    const [messages, setMessages] = useState<MessageModel[]>([]); // Lưu trữ tin nhắn
-    const [inputMessage, setInputMessage] = useState(""); // Tin nhắn đang nhập
-    const [errorMessage, setErrorMessage] = useState<string | null>(null); // Lưu trữ thông báo lỗi
-    const [isConnected, setIsConnected] = useState(false); // Theo dõi trạng thái kết nối WebSocket
+    const [messages, setMessages] = useState<MessageModel[]>([]);
+    const [inputMessage, setInputMessage] = useState("");
+    const [errorMessage, setErrorMessage] = useState<string | null>(null);
+    const [isConnected, setIsConnected] = useState(false);
+    const isAdmin = user?.email === 'admin@gmail.com';
+    const chatContainerRef = useRef<HTMLDivElement | null>(null);
 
     // Đóng chat
     const closeChat = () => {
@@ -111,52 +30,73 @@ const RoomChat = () => {
     useEffect(() => {
         const onConnected = () => {
             console.log("Connected to WebSocket");
-            setIsConnected(true); // Cập nhật trạng thái kết nối thành công
+            setIsConnected(true);
             subscribe("/topic/messages", (message) => {
-                const msg = JSON.parse(message.body); // Giả sử tin nhắn đến dưới dạng JSON
-                setMessages((prevMessages) => [...prevMessages, msg]); // Cập nhật tin nhắn
+                const msg = JSON.parse(message.body);
+                setMessages((prevMessages) => [...prevMessages, msg]);
+            });
+            subscribe("/user/queue/notifications", (notification) => {
+                const msg = JSON.parse(notification.body);
+                setMessages((prevMessages) => [...prevMessages, msg]);
             });
         };
 
         const onError = (error: any) => {
             console.error("Error connecting to WebSocket", error);
-            setErrorMessage("Kết nối WebSocket thất bại"); // Hiển thị thông báo lỗi
+            setErrorMessage("Kết nối WebSocket thất bại");
         };
 
         connect(onConnected, onError);
 
         return () => {
-            disconnect(); // Ngắt kết nối khi component unmount
-            setIsConnected(false); // Reset trạng thái kết nối khi ngắt kết nối
+            disconnect();
+            setIsConnected(false);
         };
     }, []);
 
-    // Gửi tin nhắn
-    const handleSendMessage = () => {
-        if (inputMessage.trim() === "") return; // Không gửi tin nhắn trống
-        
-        // Kiểm tra trạng thái kết nối trước khi gửi tin nhắn
+    useEffect(() => {
+        const fetchMessages = async () => {
+            // 
+            const roomId = user?.email
+                ? `admin@gmail.com_${user.email}` || `${user.email}_admin@gmail.com`
+                : 'unknown';
+            console.log("RoomId: ", roomId);
+
+            if (roomId) {
+                try {
+                    const response = await getMessageByRoomId(roomId);
+                    console.log("Messages: ", response.data);
+                    setMessages(response.data);
+                } catch (error) {
+                    console.error('Error fetching messages:', error);
+                }
+            }
+        };
+
+        fetchMessages();
+    }, []);
+
+    const handleSendMessage = async () => {
+        if (inputMessage.trim() === "") return;
+
         if (!isConnected) {
             setErrorMessage("Kết nối WebSocket chưa được thiết lập.");
             return;
         }
 
-        const message = {
-            sender: "trungthinh080602@gmail.com", // Sử dụng ID thực tế của người gửi
-            receiver: "admin@gmail.com", // Sử dụng ID thực tế của người nhận
+        const messageRequestDto = {
+            sender: isAdmin ? 'admin@gmail.com' : user?.email || 'unknown',
+            receiver: isAdmin ? user?.email || 'unknown' : 'admin@gmail.com',
             content: inputMessage,
-            // Thêm thông tin khác nếu cần
-        };
+            messageTime: new Date(),
+        }
 
-        console.log("Sending message", message);
-        
-        
         try {
-            sendMessage("/app/sendMessage", message); // Gửi đến server
-            setInputMessage(""); // Xóa ô input sau khi gửi
+            await send(messageRequestDto);
+            setInputMessage("");
         } catch (error) {
             console.error("Error sending message", error);
-            setErrorMessage("Gửi tin nhắn thất bại"); // Hiển thị thông báo lỗi
+            setErrorMessage("Gửi tin nhắn thất bại");
         }
     };
 
@@ -166,6 +106,20 @@ const RoomChat = () => {
     };
 
     if (!isOpen) return null;
+
+
+    const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
+        if (event.key === 'Enter') {
+            handleSendMessage();
+        }
+    };
+
+
+    useEffect(() => {
+        if (chatContainerRef.current) {
+            chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+        }
+    }, [messages]);
 
     return (
         <Box sx={{
@@ -188,26 +142,55 @@ const RoomChat = () => {
                     <CloseIcon />
                 </IconButton>
             </Box>
-            <Box sx={{
-                flexGrow: 1,
-                overflowY: 'auto',
-                border: '1px solid #ddd',
-                p: 1,
-            }}>
-                {/* Hiển thị tin nhắn */}
-                {messages.map((msg, index) => (
-                    <Box key={index}>
-                        <Typography>{msg.sender}: {msg.content}</Typography>
+            <Box
+                ref={chatContainerRef}
+                sx={{
+                    flexGrow: 1,
+                    overflowY: 'auto',
+                    border: '1px solid #ddd',
+                    p: 1,
+                    backgroundColor: '#99CCFF'
+                }}
+            >
+                {messages?.map((msg, index) => (
+                    <Box
+                        key={msg.id || index}
+                        sx={{
+                            display: 'flex',
+                            justifyContent: msg.sender === user?.email ? 'flex-end' : 'flex-start',
+                            width: '100%',
+                        }}
+                    >
+                        <Box
+                            sx={{
+                                backgroundColor: msg.sender === user?.email ? '#cce5ff' : '#f8d7da',
+                                padding: '10px',
+                                borderRadius: '5px',
+                                margin: '5px 0',
+                                maxWidth: '75%',
+                                wordWrap: 'break-word',
+                            }}
+                        >
+                            <Typography align={msg.sender === user?.email ? 'right' : 'left'}>
+                                {msg.content}
+                            </Typography>
+                            <Typography>
+                                {msg.messageTime ? msg.messageTime.toString() : ''}
+                            </Typography>
+
+                        </Box>
                     </Box>
                 ))}
+
+
             </Box>
             <Box sx={{ mt: 1 }}>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Input 
-                        placeholder="Nhập tin nhắn của bạn" 
-                        fullWidth 
-                        value={inputMessage} 
-                        onChange={(e) => setInputMessage(e.target.value)} 
+                <Box onKeyDown={handleKeyDown} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <Input
+                        placeholder="Nhập tin nhắn của bạn"
+                        fullWidth
+                        value={inputMessage}
+                        onChange={(e) => setInputMessage(e.target.value)}
                     />
                     <IconButton color="primary" size="small" onClick={handleSendMessage}>
                         <SendIcon />

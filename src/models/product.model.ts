@@ -6,7 +6,7 @@ import { ProviderModel } from "./provider.model"
 export type ProductModel = {
     brand: BrandModel
     productStatus: any
-    id?: string,
+    id: string,
     productName?: string,
     price?: number,
     status?: Status,
