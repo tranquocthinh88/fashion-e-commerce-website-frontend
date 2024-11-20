@@ -4,7 +4,7 @@ import SendIcon from '@mui/icons-material/Send';
 import AttachFileIcon from '@mui/icons-material/AttachFile';
 import ImageIcon from '@mui/icons-material/Image';
 import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { connect, disconnect, subscribe } from "../../../configs/websocket";
 import { getMessageByRoomId, send } from "../../../services/message.service";
 import { MessageModel } from "../../../models/message.model";
@@ -19,6 +19,7 @@ const RoomChat = () => {
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [isConnected, setIsConnected] = useState(false);
     const isAdmin = user?.email === 'admin@gmail.com';
+    const chatContainerRef = useRef<HTMLDivElement | null>(null);
 
     // Đóng chat
     const closeChat = () => {
@@ -113,6 +114,13 @@ const RoomChat = () => {
         }
     };
 
+
+    useEffect(() => {
+        if (chatContainerRef.current) {
+            chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+        }
+    }, [messages]);
+
     return (
         <Box sx={{
             position: 'fixed',
@@ -135,11 +143,13 @@ const RoomChat = () => {
                 </IconButton>
             </Box>
             <Box
+                ref={chatContainerRef}
                 sx={{
                     flexGrow: 1,
                     overflowY: 'auto',
                     border: '1px solid #ddd',
                     p: 1,
+                    backgroundColor: '#99CCFF'
                 }}
             >
                 {messages?.map((msg, index) => (
