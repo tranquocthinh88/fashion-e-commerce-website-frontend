@@ -1,20 +1,22 @@
-import { Button, Card, CardActions, CardContent, CardMedia, Dialog, DialogActions, DialogContent, DialogTitle, Fab, Switch, Tooltip, Typography, useMediaQuery } from "@mui/material";
+import { Box, Button, Card, CardActions, CardContent, CardMedia, Dialog, DialogActions, DialogContent, DialogTitle, Fab, Switch, Tooltip, Typography, useMediaQuery } from "@mui/material";
 import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import { useState } from "react";
 import { updateProductStatus } from "../../../services/product.service";
+import { ConvertPrice } from "../../../utils/convert.price";
 
 type Props = {
     productId: string,
     productName: string,
     productPrice: number,
+    productPriceFinal: number,
     fNavigate: (id: string) => void;
     thumbnail: string;
     totalQuantity?: number;
     status?: string;
 }
 
-const ProductCardAdmin = ({ productId, productName, productPrice, fNavigate, thumbnail, totalQuantity, status }: Props) => {
+const ProductCardAdmin = ({ productId, productName, productPrice, fNavigate, thumbnail, totalQuantity, status, productPriceFinal }: Props) => {
     const isMobile = useMediaQuery('(max-width:600px)');
 
     const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -69,9 +71,24 @@ const ProductCardAdmin = ({ productId, productName, productPrice, fNavigate, thu
                             {productName}
                         </Typography>
                     </Tooltip>
-                    <Typography color="text.secondary">
-                        {formattedPrice}
+                    <Typography variant="body2" color="text.secondary">
+                        Giá nhập: {ConvertPrice(productPrice)}
                     </Typography>
+                    <Box sx={{ display: 'flex', gap: "25px" }}>
+                        {
+                            productPrice == productPriceFinal ?
+                                <>
+                                    <Typography variant="body1" sx={{ color: 'red', fontWeight: '700', }}>{formattedPrice}</Typography>
+                                </>
+                                : <>
+                                    <Typography variant="body1" sx={{ color: 'red', fontWeight: '700', }}>{productPriceFinal.toLocaleString('vi-VN')}đ</Typography>
+                                    <Typography variant="body1"
+                                        sx={{ color: 'gray', fontWeight: '400', textDecoration: 'line-through' }}>
+                                        {formattedPrice}
+                                    </Typography>
+                                </>
+                        }
+                    </Box>
                 </CardContent>
                 <CardActions sx={{
                     justifyContent: 'flex-end',

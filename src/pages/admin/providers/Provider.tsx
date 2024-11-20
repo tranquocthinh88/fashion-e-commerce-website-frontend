@@ -10,7 +10,7 @@ import { ResponseSuccess } from "../../../dtos/responses/response.success";
 import { getAllProviders } from "../../../services/provider.service";
 import AlertCustom from "../../../components/common/AlertCustom";
 import DialogDeleteProvider from "../../../components/common/dialogs/providers/DialogDeleteProvider";
-import DialogUpdateProvider from "../../../components/common/dialogs/providers/DialogUpdateProvider";
+// import DialogUpdateProvider from "../../../components/common/dialogs/providers/DialogUpdateProvider";
 
 
 const Provider = () => {
@@ -99,7 +99,7 @@ const Provider = () => {
             </Box>
             {open && <DialogCreateProvider showAlert={showAlert} open={open} handleClose={handleClose} addProvider={addProvider} />}
             {openDelete && <DialogDeleteProvider showAlert={showAlert} open={openDelete} handleClose={handleCloseDelete} provider={provider} deleteProvider={deleteProvider} />}
-            {openUpdate && <DialogUpdateProvider showAlert={showAlert} updateProvider={updateProvider} open={openUpdate} handleClose={handleCloseUpdate} provider={provider} />}
+            {/* {openUpdate && <DialogUpdateProvider showAlert={showAlert} updateProvider={updateProvider} open={openUpdate} handleClose={handleCloseUpdate} provider={provider} />} */}
             {openAlert.show && <AlertCustom alert={openAlert} colseAlert={colseAlert} />}
             <TableContainer component={Paper}>
                 <Table size={isMobile ? 'small' : 'medium'} aria-label="a dense table">

@@ -187,6 +187,7 @@ const Product = () => {
                                 productId={item.product.id ?? ''}
                                 productName={item.product.productName ?? ''}
                                 productPrice={item.product.price ?? 0}
+                                productPriceFinal={item.priceFinal ?? 0}
                                 fNavigate={fNavigate}
                                 thumbnail={item.product.thumbnail ?? ''}
                                 totalQuantity={item.product.totalQuantity ?? 0}

@@ -1,4 +1,4 @@
-export type SizeType = {
-    NUMBER: 'NUMBER';
-    TEXT: 'TEXT';
+export enum SizeType {
+    NUMBER= 'NUMBER',
+    TEXT= 'TEXT'
 }

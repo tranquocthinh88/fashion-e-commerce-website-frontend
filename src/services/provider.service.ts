@@ -20,6 +20,8 @@ export const getAllProviders = async (): Promise<ResponseSuccess<ProviderModel[]
 }
 export const create = async (providerDto: ProviderDto): Promise<ResponseSuccess<ProviderModel>> => {
     try {
+        console.log('du lieu vao : ', providerDto);
+        
         const response = await requestConfig(
             `providers`,
             Method.POST,
@@ -27,6 +29,7 @@ export const create = async (providerDto: ProviderDto): Promise<ResponseSuccess<
             ContentType.JSON,
             true
         );
+        console.log('them provider: ',response.data); 
         return response.data;
     } catch (error) {
         return Promise.reject(error);
