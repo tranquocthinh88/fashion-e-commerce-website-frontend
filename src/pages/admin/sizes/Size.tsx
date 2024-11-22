@@ -35,6 +35,7 @@ const Size = () => {
         status: '',
         message: ''
     });
+
     const handleClose = () => {
         setOpen(false);
     }
@@ -101,7 +102,7 @@ const Size = () => {
             {openDelete && <DialogDeleteSize showAlert={showAlert} open={openDelete} handleClose={handleCloseDelete} size={size} deleteSize={deleteSize} />}
             {open && <DialogCreateSize showAlert={showAlert} addSize={addSize} open={open} handleClose={handleClose} />}
             {openAlert.show && <AlertCustom alert={openAlert} colseAlert={colseAlert} />}
-            <TableContainer component={Paper}>
+            <TableContainer component={Paper} sx={{ maxHeight: 400, overflowY: 'auto' }}>
                 <Table size={isMobile ? 'small' : 'medium'} aria-label="a dense table">
                     <TableHead>
                         <TableRow>
