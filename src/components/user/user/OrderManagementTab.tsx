@@ -33,6 +33,7 @@ const OrderManagementTab = () => {
                                 <TableCell>Trạng thái</TableCell>
                                 <TableCell>Phương thức thanh toán</TableCell>
                                 <TableCell>Thành tiền</TableCell>
+                                <TableCell>Ngày giao dự kiến</TableCell>
                                 <TableCell colSpan={2}>Hành động</TableCell>
                             </TableRow>
                         </TableHead>
@@ -44,9 +45,6 @@ const OrderManagementTab = () => {
                         </TableBody>
                     </Table>
                 </TableContainer>
-                {/* {orders.map((order, index) => (
-                    <OrderItem key={index} item={order} />
-                ))} */}
             </Box>
         </>
     );

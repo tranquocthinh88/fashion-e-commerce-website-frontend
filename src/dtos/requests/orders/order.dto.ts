@@ -1,3 +1,4 @@
+import { OrderStatus } from "../../../models/enum/order.status";
 import { PaymentMethod } from "../../../models/order.model";
 import { AddressDto } from "../address.dto";
 import { DeliveryMethod } from "./shipping.dto";
@@ -19,4 +20,8 @@ export type OrderDto = {
     addressDetail: string;
     productsOrderDtos: ProductsOrderDto[];
     vouchers?: number[];
+}
+
+export type OrderUpdateDto = {
+    orderStatus: OrderStatus,
 }

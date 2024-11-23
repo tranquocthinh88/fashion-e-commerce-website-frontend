@@ -8,6 +8,7 @@ export type ProductModel = {
     productStatus: any
     id: string,
     productName?: string,
+    inputPrice?: number,
     price?: number,
     status?: Status,
     category?: CategoryModel

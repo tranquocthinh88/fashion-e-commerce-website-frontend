@@ -8,6 +8,7 @@ import { ConvertPrice } from "../../../utils/convert.price";
 type Props = {
     productId: string,
     productName: string,
+    inputPrice: number,
     productPrice: number,
     productPriceFinal: number,
     fNavigate: (id: string) => void;
@@ -16,7 +17,7 @@ type Props = {
     status?: string;
 }
 
-const ProductCardAdmin = ({ productId, productName, productPrice, fNavigate, thumbnail, totalQuantity, status, productPriceFinal }: Props) => {
+const ProductCardAdmin = ({ productId, productName, inputPrice ,productPrice, fNavigate, thumbnail, totalQuantity, status, productPriceFinal }: Props) => {
     const isMobile = useMediaQuery('(max-width:600px)');
 
     const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -72,7 +73,7 @@ const ProductCardAdmin = ({ productId, productName, productPrice, fNavigate, thu
                         </Typography>
                     </Tooltip>
                     <Typography variant="body2" color="text.secondary">
-                        Giá nhập: {ConvertPrice(productPrice)}
+                        Giá nhập: {ConvertPrice(inputPrice)}
                     </Typography>
                     <Box sx={{ display: 'flex', gap: "25px" }}>
                         {
