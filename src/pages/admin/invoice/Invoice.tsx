@@ -9,13 +9,13 @@ import { bodyAdminColor, navbarHover } from "../../../theme";
 import { DatePicker, LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { useEffect, useState } from 'react';
-import { Dayjs } from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { OrderModel } from "../../../models/order.model";
 import { ResponseSuccess } from "../../../dtos/responses/response.success";
 import { getOrdersForAdmin, updateStatusForAdmin } from "../../../services/order.service";
 import { ConvertPrice } from "../../../utils/convert.price";
 import { PageResponse } from "../../../dtos/responses/page.response";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { OrderStatus } from "../../../models/order.model";
 
 
@@ -32,6 +32,7 @@ const Invoice = () => {
     const navigate = useNavigate();
     const [orders, setOrders] = useState<OrderModel[]>([]);
     const [sort, setSort] = useState<string>("");
+    const location = useLocation();
     const queryParams = new URLSearchParams(location.search);
     const [totalPage, setTotalPage] = useState(1);
     const pageNo = queryParams.get("pageNo") ? Number(queryParams.get("pageNo")) : 1;
@@ -42,7 +43,6 @@ const Invoice = () => {
     const [search, setSearch] = useState<string>("");
 
     useEffect(() => {
-        // (async () => {
         const fetchProducts = async () => {
             const searchParams: Array<{ field: string; operator: string; value: string }> = [];
             if (orderDateFrom) {
@@ -86,6 +86,16 @@ const Invoice = () => {
             setTotalPage(response.data.totalPage);
         };
         fetchProducts();
+        const queryParams = new URLSearchParams();
+
+        queryParams.append("pageNo", pageNoState.toString());
+        if (sort) queryParams.append("sort", sort);
+        if (search) queryParams.append("search", search);
+        if (status) queryParams.append("status", status);
+        if (orderDateFrom) queryParams.append("orderDateFrom", orderDateFrom.format('YYYY-MM-DD'));
+        if (orderDateTo) queryParams.append("orderDateTo", orderDateTo.format('YYYY-MM-DD'));
+
+        navigate(`?${queryParams.toString()}`, { replace: true });
     }, [search, status, orderDateFrom, orderDateTo, sort, pageNoState]);
 
 
@@ -95,8 +105,11 @@ const Invoice = () => {
 
 
     const handleNavigate = (pageNoState: number) => {
-        navigate(`?pageNo=${pageNoState}`);
-    }
+        const queryParams = new URLSearchParams(location.search);
+        queryParams.set("pageNo", pageNoState.toString());
+        navigate(`?${queryParams.toString()}`);
+    };
+
 
 
     const handleChange = (_event: React.ChangeEvent<unknown>, value: number) => {
@@ -114,6 +127,25 @@ const Invoice = () => {
             console.log(error);
         }
     }
+
+    useEffect(() => {
+        const queryParams = new URLSearchParams(location.search);
+
+        const pageNo = queryParams.get("pageNo") ? Number(queryParams.get("pageNo")) : 1;
+        const sort = queryParams.get("sort") || "";
+        const search = queryParams.get("search") || "";
+        const status = queryParams.get("status") || "";
+        const orderDateFrom = queryParams.get("orderDateFrom") ? dayjs(queryParams.get("orderDateFrom")) : null;
+        const orderDateTo = queryParams.get("orderDateTo") ? dayjs(queryParams.get("orderDateTo")) : null;
+
+        setPageNoState(pageNo);
+        setSort(sort);
+        setSearch(search);
+        setStatus(status);
+        setOrderDateFrom(orderDateFrom);
+        setOrderDateTo(orderDateTo);
+    }, [location.search]);
+
 
     return (
         <Box sx={{ background: bodyAdminColor, width: '100%', height: '100%' }}>
@@ -202,9 +234,20 @@ const Invoice = () => {
                                     key={order.id.toString()}
                                     sx={{
                                         '&:last-child td, &:last-child th': { border: 0 }, position: 'relative',
-                                        ':hover': { background: navbarHover, color: 'white' }
+                                        ':hover': { background: navbarHover, color: 'white', cursor: 'pointer' }
                                     }}
-                                    onClick={() => navigate(`/order-details/${order.id}`)}
+                                    onClick={() =>
+                                        navigate(`/order-details/${order.id}`, {
+                                            state: {
+                                                pageNoState,
+                                                sort,
+                                                search,
+                                                status,
+                                                orderDateFrom: orderDateFrom ? orderDateFrom.format('YYYY-MM-DD') : null,
+                                                orderDateTo: orderDateTo ? orderDateTo.format('YYYY-MM-DD') : null,
+                                            }
+                                        })
+                                    }
                                 >
                                     <TableCell component="th" scope="row">
                                         {order.id}
@@ -220,6 +263,7 @@ const Invoice = () => {
                                                 const newStatus = e.target.value as OrderStatus;
                                                 handleUpdateStatus(order.id.toString(), newStatus);
                                             }}
+
                                             disabled={(order.status as OrderStatus) === OrderStatus.NOT_PROCESSED_YET ||
                                                 (order.status as OrderStatus) === OrderStatus.CANCELLED
                                             }
@@ -230,6 +274,9 @@ const Invoice = () => {
                                             {Object.entries(orderStatusMap)
                                                 .map(([key, label]) => (
                                                     <MenuItem key={key} value={key}
+                                                        onMouseDown={(e) => {
+                                                            e.stopPropagation();  // Ngăn sự kiện MouseDown bọt lên thẻ Card
+                                                        }}
                                                         disabled={key === OrderStatus.NOT_PROCESSED_YET}
                                                     >
                                                         {label}
