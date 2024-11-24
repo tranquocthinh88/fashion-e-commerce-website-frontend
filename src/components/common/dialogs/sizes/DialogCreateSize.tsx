@@ -29,7 +29,6 @@ const DialogCreateSize = ({ open, handleClose, addSize, showAlert }: Props) => {
                     numberSize: sizeType === SizeType.NUMBER ? parseInt(sizeName) : undefined,
                     textSize: sizeType === SizeType.TEXT ? sizeName : undefined
                 }
-
                 const response: ResponseSuccess<SizeModel> = await createSize(value);
                 addSize(response.data);
                 showAlert('success', 'Thêm thành công');

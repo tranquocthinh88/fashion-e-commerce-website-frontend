@@ -101,7 +101,7 @@ const Color = () => {
             {openDelete && <DialogDeleteColor showAlert={showAlert} open={openDelete} handleClose={handleCloseDelete} color={color} deleteColor={deleteColor} />}
             {open && <DialogCreateColor showAlert={showAlert} addColor={addColor} open={open} handleClose={handleClose} />}
             {openAlert.show && <AlertCustom alert={openAlert} colseAlert={colseAlert} />}
-            <TableContainer component={Paper}>
+            <TableContainer component={Paper} sx={{ maxHeight: 400, overflowY: 'auto' }}>
                 <Table size={isMobile ? 'small' : 'medium'} aria-label="a dense table">
                     <TableHead>
                         <TableRow>
