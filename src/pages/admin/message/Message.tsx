@@ -171,7 +171,6 @@ const Message = () => {
                 sx={{
                     display: 'flex',
                     width: '100%',
-                    // minHeight: '100vh',
                 }}
             >
                 <Box

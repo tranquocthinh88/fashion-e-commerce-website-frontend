@@ -12,8 +12,8 @@ import { OrderStatus } from "../../../models/enum/order.status";
 
 const orderStatusMap: Record<OrderStatus, string> = {
     [OrderStatus.NOT_PROCESSED_YET]: "Giao dịch hủy bỏ",
-    [OrderStatus.PENDING]: "Người bán đang chuẩn bị",
-    [OrderStatus.PROCESSING]: "Đang xử lý",
+    [OrderStatus.PENDING]: "Đang chờ xử lý",
+    [OrderStatus.PROCESSING]: "Đã xác nhận đơn hàng", // ~ Đã xác nhận
     [OrderStatus.SHIPPING]: "Đang vận chuyển",
     [OrderStatus.DELIVERED]: "Đã giao",
     [OrderStatus.CANCELLED]: "Đã hủy"
@@ -50,9 +50,8 @@ const OrderDetails = () => {
                 <Typography>Ngày tạo: {new Date(order?.orderDate ?? "").toLocaleDateString()}</Typography>
                 <Typography>Phương thức thanh toán: {order?.paymentMethod == "CC" ? "Thanh toán VNPay" : "Thanh toán tiền mặt"}</Typography>
                 <Typography>Trạng thái: {orderStatusMap[order?.status as OrderStatus]}</Typography>
-                <Typography>Tiền hóa đơn gốc: {ConvertPrice(Number(order?.originalAmount))}</Typography>
-                <Typography>Phí vận chuyển: {ConvertPrice(Number(order?.deliveryFee))}</Typography>
-                <Typography>Tổng tiền hóa đơn: {ConvertPrice(Number(order?.discountPrice))}</Typography>
+                <Typography>Ngày giao dự kiến: {new Date(order?.estimatedDeliveryDate ?? "").toLocaleDateString()}</Typography>
+
             </Box>
             <Box>
                 {orderDetails.map((detail, index) => {
@@ -63,6 +62,11 @@ const OrderDetails = () => {
                     }
                     return <OrderItemCard key={index} item={cartItem} status={order?.status ?? ''} />
                 })}
+                <Box sx={{display: 'flex', justifyContent: 'flex-end', alignItems: 'flex-end', flexDirection: 'column'}}>
+                    <Typography>Tiền hóa đơn gốc: {ConvertPrice(Number(order?.originalAmount))}</Typography>
+                    <Typography>Phí vận chuyển: {ConvertPrice(Number(order?.deliveryFee))}</Typography>
+                    <Typography>Tổng tiền hóa đơn: {ConvertPrice(Number(order?.discountPrice))}</Typography>
+                </Box>
             </Box>
         </Box>
     );

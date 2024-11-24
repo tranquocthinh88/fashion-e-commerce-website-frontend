@@ -153,15 +153,6 @@ const Products = () => {
                     {/* </Grid> */}
                 </Box>
                 {/* Sản phẩm */}
-                {/* <Box
-                    sx={{
-                        marginLeft: '32%',
-                        width: '68%', 
-                        padding: 2,
-                        position: 'relative',
-                        minHeight: '100vh', 
-                    }}
-                > */}
                 <Box
                     sx={{
                         marginLeft: '32%',

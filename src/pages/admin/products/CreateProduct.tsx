@@ -37,7 +37,8 @@ const VisuallyHiddenInput = styled('input')({
 
 const validationProductSchema = yup.object({
     productName: yup.string().required('Vui lòng nhập tên sản phẩm'),
-    price: yup.number().min(1, 'Giá phải lớn hơn 0').required('Vui lòng nhập giá'),
+    inputPrice: yup.number().min(1, 'Giá phải lớn hơn 0').required('Vui lòng nhập giá sản phẩm nhập vào'),
+    price: yup.number().min(1, 'Giá phải lớn hơn 0').required('Vui lòng nhập giá sản phẩm bán ra'),
     categoryId: yup.string().required('Vui lòng chọn loại sản phẩm'),
     providerId: yup.string().required('Vui lòng chọn nhà cung cấp'),
     brandId: yup.string().required('Vui lòng chọn thương hiệu')
@@ -73,6 +74,7 @@ const CreateProduct = () => {
     const formik = useFormik({
         initialValues: {
             productName: '',
+            inputPrice: 0,
             price: 0,
             categoryId: '',
             providerId: '',
@@ -85,6 +87,7 @@ const CreateProduct = () => {
             const formData = new FormData();
             formData.append('productName', values.productName ? values.productName : '');
             formData.append('thumbnail', thumbnail.toString());
+            formData.append('inputPrice', values.inputPrice ? values.inputPrice.toString() : '0');
             formData.append('price', values.price ? values.price.toString() : '0');
             formData.append('description', values.description ? values.description : '');
             formData.append('categoryId', values.categoryId ? values.categoryId.toString() : '0');
@@ -274,23 +277,45 @@ const CreateProduct = () => {
                             display: 'flex',
                             flexGrow: 1
                         }}
-                        id="product-price"
-                        label="Giá"
+                        id="product-input-price"
+                        label="Giá nhập"
                         type="number"
-                        name="price"
-                        value={formik.values.price}
+                        name="inputPrice"
+                        value={formik.values.inputPrice}
                         onChange={formik.handleChange}
                         onBlur={formik.handleBlur}
-                        error={formik.touched.price && Boolean(formik.errors.price)}
-                        helperText={formik.touched.price && formik.errors.price}
+                        error={formik.touched.inputPrice && Boolean(formik.errors.inputPrice)}
+                        helperText={formik.touched.inputPrice && formik.errors.inputPrice}
                     />
                 </Box>
                 <Box sx={{
                     p: 2, pl: 3, display: 'flex',
                     flexWrap: 'wrap',
-                    gap: '20px'
+                    // gap: '20px'
 
                 }}>
+                    {/* <FormControl sx={{
+                        flexBasis: '200px',
+                        display: 'flex',
+                        flexGrow: 1
+                    }}> */}
+                        <TextField
+                            sx={{
+                                flexBasis: '200px',
+                                display: 'flex',
+                                flexGrow: 1
+                            }}
+                            id="product-price"
+                            label="Giá bán"
+                            type="number"
+                            name="price"
+                            value={formik.values.price}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            error={formik.touched.price && Boolean(formik.errors.price)}
+                            helperText={formik.touched.price && formik.errors.price}
+                        />
+                    {/* </FormControl> */}
                     <FormControl sx={{
                         flexBasis: '200px',
                         display: 'flex',
@@ -317,35 +342,6 @@ const CreateProduct = () => {
                         <Button sx={{ height: '30px', width: '100px' }} variant="contained" color="primary" startIcon={<AddIcon />}
                             onClick={() => navigate('/admin/products/createProducts/categories')}
                         >
-                            Thêm
-                        </Button>
-                    </FormControl>
-
-                    <FormControl sx={{
-                        flexBasis: '200px',
-                        display: 'flex',
-                        flexGrow: 1
-                    }}>
-                        <InputLabel id="providers">Nhà cung cấp</InputLabel>
-                        <Select
-                            labelId="providers"
-                            id="providers"
-                            label="Nhà cung cấp"
-                            name="providerId"
-                            value={formik.values.providerId}
-                            onChange={formik.handleChange}
-                            onBlur={formik.handleBlur}
-                            error={formik.touched.providerId && Boolean(formik.errors.providerId)}
-                        >
-                            {providers.map((provider: ProviderModel) => (
-                                <MenuItem key={provider.id} value={provider.id}>{provider.providerName}</MenuItem>
-                            ))}
-                        </Select>
-                        {formik.touched.providerId && formik.errors.providerId && (
-                            <Typography color="error">{formik.errors.providerId}</Typography>
-                        )}
-                        <Button sx={{ height: '30px', width: '100px' }} variant="contained" color="primary" startIcon={<AddIcon />}
-                            onClick={() => navigate('/admin/products/createProducts/providers')}>
                             Thêm
                         </Button>
                     </FormControl>
@@ -381,6 +377,34 @@ const CreateProduct = () => {
                         )}
                         <Button sx={{ height: '30px', width: '100px' }} variant="contained" color="primary" startIcon={<AddIcon />}
                             onClick={() => navigate('/admin/products/createProducts/brands')}>
+                            Thêm
+                        </Button>
+                    </FormControl>
+                    <FormControl sx={{
+                        flexBasis: '200px',
+                        display: 'flex',
+                        flexGrow: 1
+                    }}>
+                        <InputLabel id="providers">Nhà cung cấp</InputLabel>
+                        <Select
+                            labelId="providers"
+                            id="providers"
+                            label="Nhà cung cấp"
+                            name="providerId"
+                            value={formik.values.providerId}
+                            onChange={formik.handleChange}
+                            onBlur={formik.handleBlur}
+                            error={formik.touched.providerId && Boolean(formik.errors.providerId)}
+                        >
+                            {providers.map((provider: ProviderModel) => (
+                                <MenuItem key={provider.id} value={provider.id}>{provider.providerName}</MenuItem>
+                            ))}
+                        </Select>
+                        {formik.touched.providerId && formik.errors.providerId && (
+                            <Typography color="error">{formik.errors.providerId}</Typography>
+                        )}
+                        <Button sx={{ height: '30px', width: '100px' }} variant="contained" color="primary" startIcon={<AddIcon />}
+                            onClick={() => navigate('/admin/products/createProducts/providers')}>
                             Thêm
                         </Button>
                     </FormControl>

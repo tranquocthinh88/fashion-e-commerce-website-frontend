@@ -49,7 +49,6 @@ import { Status } from "../../../models/enum/status.enum";
 import ProductImage from "../../../components/admin/product/ProductImage";
 import { BrandModel } from "../../../models/brand.model";
 import { getAllBrands } from "../../../services/brand.service";
-import CustomTextField from "../../../components/common/TextFieldCustom";
 
 const VisuallyHiddenInput = styled('input')({
     clipPath: 'inset(50%)',

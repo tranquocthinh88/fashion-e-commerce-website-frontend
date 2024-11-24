@@ -11,8 +11,8 @@ type Props = {
 
 const orderStatusMap: Record<OrderStatus, string> = {
     [OrderStatus.NOT_PROCESSED_YET]: "Giao dịch hủy bỏ",
-    [OrderStatus.PENDING]: "Người bán đang chuẩn bị",
-    [OrderStatus.PROCESSING]: "Đang xử lý",
+    [OrderStatus.PENDING]: "Đang chờ xử lý",
+    [OrderStatus.PROCESSING]: "Đã xác nhận đơn hàng", // ~ Đã xác nhận
     [OrderStatus.SHIPPING]: "Đang vận chuyển",
     [OrderStatus.DELIVERED]: "Đã giao",
     [OrderStatus.CANCELLED]: "Đã hủy"
@@ -21,10 +21,10 @@ const OrderItem = ({ item }: Props) => {
     const navigate = useNavigate();
 
     const isCancelDisabled = (() => {
-        const orderDate = new Date(item.orderDate); // Ngày tạo đơn hàng
-        const now = new Date(); // Thời gian hiện tại
-        const hoursDifference = (now.getTime() - orderDate.getTime()) / (1000 * 60 * 60); // Tính khoảng cách giờ
-        return hoursDifference > 2; // Trả về true nếu đã quá 2 tiếng
+        const orderDate = new Date(item.orderDate); 
+        const now = new Date(); 
+        const hoursDifference = (now.getTime() - orderDate.getTime()) / (1000 * 60 * 60); 
+        return hoursDifference > 2; 
     })();
 
     return (
@@ -35,6 +35,7 @@ const OrderItem = ({ item }: Props) => {
                 <TableCell>{orderStatusMap[item.status as OrderStatus]}</TableCell>
                 <TableCell>{item.paymentMethod == "CC" ? "Thanh toán VNPay" : "Thanh toán tiền mặt"}</TableCell>
                 <TableCell>{ConvertPrice(Number(item.discountPrice) ?? 0)}</TableCell>
+                <TableCell>{new Date(item.estimatedDeliveryDate).toLocaleDateString()}</TableCell>
                 <TableCell colSpan={2}>
                     <Button color="error" variant="contained"
                         disabled={isCancelDisabled}

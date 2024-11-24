@@ -2,6 +2,7 @@ import { Status } from "../../../models/enum/status.enum";
 
 export type ProductDto = {
     productName?: string;
+    inputPrice?: number;
     price?: number;
     description?: string;
     thumbnail?: number;

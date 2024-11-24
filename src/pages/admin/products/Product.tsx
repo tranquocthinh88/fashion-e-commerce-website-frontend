@@ -186,6 +186,7 @@ const Product = () => {
                             <ProductCardAdmin
                                 productId={item.product.id ?? ''}
                                 productName={item.product.productName ?? ''}
+                                inputPrice={item.product.inputPrice ?? 0}
                                 productPrice={item.product.price ?? 0}
                                 productPriceFinal={item.priceFinal ?? 0}
                                 fNavigate={fNavigate}

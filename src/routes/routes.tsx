@@ -26,7 +26,7 @@ import UpdateProduct from "../pages/admin/products/UpdateProduct";
 import OrderDetails from "../pages/user/orders/OrderDetails";
 import Category from "../pages/admin/categories/Category";
 import Provider from "../pages/admin/providers/Provider";
-import Products from "../pages/user/products/products";
+import Products from "../pages/user/products/Products";
 import Color from "../pages/admin/colors/Color";
 import Brand from "../pages/admin/brands/Brand";
 import Size from "../pages/admin/sizes/Size";
@@ -70,10 +70,6 @@ const userRoutes = [
   {
     path: '/user/:email/:tab?',
     element: <ProtectRouter role={Role.ROLE_USER}><UserLayout><UserDetail /></UserLayout></ProtectRouter>,
-  },
-  {
-    path: '/order-details/:id',
-    element: <ProtectRouter role={Role.ROLE_USER}><UserLayout><OrderDetails /></UserLayout></ProtectRouter>,
   },
 
 ];
@@ -151,6 +147,10 @@ const publicRoutes = [
   {
     path: "/admin/statistics/best-sellers",
     element: <AdminLayout><BestSeller /></AdminLayout>
+  },
+  {
+    path: '/order-details/:id',
+    element: <UserLayout><OrderDetails /></UserLayout>
   },
 
 ];

@@ -8,6 +8,7 @@ export enum PaymentMethod {
 }
 
 export enum OrderStatus {
+    NOT_PROCESSED_YET = 'NOT_PROCESSED_YET',
     PENDING = 'PENDING',
     PROCESSING = 'PROCESSING',
     SHIPPING = 'SHIPPING',
@@ -30,5 +31,6 @@ export type OrderModel = {
     deliveryMethod: DeliveryMethod,
     user: UserModel,
     address: AddressModel,
-    addressDetail: String
+    addressDetail: String,
+    estimatedDeliveryDate: Date
 }
