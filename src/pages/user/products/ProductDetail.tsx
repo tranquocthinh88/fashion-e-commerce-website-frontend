@@ -249,7 +249,7 @@ const ProductDetail = () => {
                     const response: ResponseSuccess<PageResponse<ProductUserResponse[]>>
                         = await getProductsForUser(1, 10, [{
                             field: 'category.categoryName',
-                            operator: '-',
+                            operator: ':',
                             value: productResponse.category?.categoryName ?? '',
                         }], []);
                     console.log("Sản phẩm liên quan: ", response.data.data);

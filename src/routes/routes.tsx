@@ -30,6 +30,7 @@ import Products from "../pages/user/products/Products";
 import Color from "../pages/admin/colors/Color";
 import Brand from "../pages/admin/brands/Brand";
 import Size from "../pages/admin/sizes/Size";
+import UserDetails from "../pages/admin/user/UserDetails";
 
 const adminRoutes = [
   {
@@ -59,6 +60,10 @@ const adminRoutes = [
   {
     path: '/admin/products/createProducts/sizes',
     element: <ProtectRouter role={Role.ROLE_ADMIN}> <AdminLayout><Size /></AdminLayout></ProtectRouter>
+  },
+  {
+    path: '/admin/users/user-detail/:email',
+    element: <ProtectRouter role={Role.ROLE_ADMIN}> <AdminLayout><UserDetails /></AdminLayout></ProtectRouter>
   },
 ];
 

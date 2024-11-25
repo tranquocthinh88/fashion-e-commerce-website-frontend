@@ -56,8 +56,6 @@ const App = () => {
   
     connect(onConnected, onError);
 
-    console.log("User: ", user);
-    
     if (user?.id) {
       getNotifications(user.id);
     }
@@ -71,8 +69,6 @@ const App = () => {
     try {
       const response: ResponseSuccess<NotificationModel[]> = await getAllNotificationsByUserId(userId);
       dispatch(setNotification(response.data));
-      console.log("Dữ liệu: ", response.data);
-
     } catch (error) {
       console.log(error);
     }
