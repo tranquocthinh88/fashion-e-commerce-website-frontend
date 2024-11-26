@@ -1,7 +1,7 @@
 import { Avatar, Box, Button, Container, Pagination, Rating, Stack, Typography } from "@mui/material"
 import { useEffect, useState } from "react";
 import { ProductModel } from "../../../models/product.model";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ProductImageModel } from "../../../models/product-image.model";
 import { ProductDetailModel } from "../../../models/product-detail.model";
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
@@ -63,6 +63,7 @@ const ProductDetail = () => {
     const [totalPage, setTotalPage] = useState<number>(0);
     const [pageNo, setPageNo] = useState<number>(1);
     const [relatedProducts, SetRelatedProducts] = useState<ProductUserResponse[]>([]);
+    const navigate = useNavigate();
 
 
     const settings = {
@@ -263,6 +264,16 @@ const ProductDetail = () => {
         }
     }, [productResponse?.category?.categoryName]);
 
+    const handleBuyNow = () => {
+        const productDetail = getProductDetailByColorIdAndSizeId();
+        if (!productDetail) {
+            alert('Vui lòng chọn màu sắc và kích thước trước khi mua hàng');
+            return;
+        }
+        addProductToCart();
+        navigate("/payment")
+    }
+
     return (
         <Container >
             <Box
@@ -348,6 +359,7 @@ const ProductDetail = () => {
                                 height: '48px',
                             }}
                             color="success"
+                            onClick={handleBuyNow}
                         > <ShoppingCartIcon sx={{ mr: 1 }} />Mua ngay</Button>
                     </Box>
                 </Box>
