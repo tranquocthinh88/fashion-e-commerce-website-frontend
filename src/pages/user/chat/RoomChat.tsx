@@ -105,9 +105,6 @@ const RoomChat = () => {
         setErrorMessage(null);
     };
 
-    if (!isOpen) return null;
-
-
     const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
         if (event.key === 'Enter') {
             handleSendMessage();
@@ -122,102 +119,106 @@ const RoomChat = () => {
     }, [messages]);
 
     return (
-        <Box sx={{
-            position: 'fixed',
-            bottom: 0,
-            right: 20,
-            width: 450,
-            height: 500,
-            backgroundColor: 'white',
-            boxShadow: 3,
-            borderRadius: 2,
-            p: 2,
-            zIndex: 1300,
-            display: 'flex',
-            flexDirection: 'column',
-        }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Typography variant="h6" gutterBottom>Trao đổi với nhân viên</Typography>
-                <IconButton color="primary" size="small" onClick={closeChat}>
-                    <CloseIcon />
-                </IconButton>
-            </Box>
-            <Box
-                ref={chatContainerRef}
-                sx={{
-                    flexGrow: 1,
-                    overflowY: 'auto',
-                    border: '1px solid #ddd',
-                    p: 1,
-                    backgroundColor: '#99CCFF'
-                }}
-            >
-                {messages?.map((msg, index) => (
+        <>
+            {isOpen && (
+                <Box sx={{
+                    position: 'fixed',
+                    bottom: 0,
+                    right: 20,
+                    width: 450,
+                    height: 500,
+                    backgroundColor: 'white',
+                    boxShadow: 3,
+                    borderRadius: 2,
+                    p: 2,
+                    zIndex: 1300,
+                    display: 'flex',
+                    flexDirection: 'column',
+                }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Typography variant="h6" gutterBottom>Trao đổi với nhân viên</Typography>
+                        <IconButton color="primary" size="small" onClick={closeChat}>
+                            <CloseIcon />
+                        </IconButton>
+                    </Box>
                     <Box
-                        key={msg.id || index}
+                        ref={chatContainerRef}
                         sx={{
-                            display: 'flex',
-                            justifyContent: msg.sender === user?.email ? 'flex-end' : 'flex-start',
-                            width: '100%',
+                            flexGrow: 1,
+                            overflowY: 'auto',
+                            border: '1px solid #ddd',
+                            p: 1,
+                            backgroundColor: '#99CCFF'
                         }}
                     >
-                        <Box
-                            sx={{
-                                backgroundColor: msg.sender === user?.email ? '#cce5ff' : '#f8d7da',
-                                padding: '10px',
-                                borderRadius: '5px',
-                                margin: '5px 0',
-                                maxWidth: '75%',
-                                wordWrap: 'break-word',
-                            }}
-                        >
-                            <Typography align={msg.sender === user?.email ? 'right' : 'left'}>
-                                {msg.content}
-                            </Typography>
-                            <Typography>
-                                {msg.messageTime ? msg.messageTime.toString() : ''}
-                            </Typography>
+                        {messages?.map((msg, index) => (
+                            <Box
+                                key={msg.id || index}
+                                sx={{
+                                    display: 'flex',
+                                    justifyContent: msg.sender === user?.email ? 'flex-end' : 'flex-start',
+                                    width: '100%',
+                                }}
+                            >
+                                <Box
+                                    sx={{
+                                        backgroundColor: msg.sender === user?.email ? '#cce5ff' : '#f8d7da',
+                                        padding: '10px',
+                                        borderRadius: '5px',
+                                        margin: '5px 0',
+                                        maxWidth: '75%',
+                                        wordWrap: 'break-word',
+                                    }}
+                                >
+                                    <Typography align={msg.sender === user?.email ? 'right' : 'left'}>
+                                        {msg.content}
+                                    </Typography>
+                                    <Typography>
+                                        {msg.messageTime ? msg.messageTime.toString() : ''}
+                                    </Typography>
 
+                                </Box>
+                            </Box>
+                        ))}
+
+
+                    </Box>
+                    <Box sx={{ mt: 1 }}>
+                        <Box onKeyDown={handleKeyDown} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <Input
+                                placeholder="Nhập tin nhắn của bạn"
+                                fullWidth
+                                value={inputMessage}
+                                onChange={(e) => setInputMessage(e.target.value)}
+                            />
+                            <IconButton color="primary" size="small" onClick={handleSendMessage}>
+                                <SendIcon />
+                            </IconButton>
+                        </Box>
+                        <Box sx={{ mt: 1 }}>
+                            <IconButton color="primary" size="small">
+                                <AttachFileIcon />
+                            </IconButton>
+                            <IconButton color="primary" size="small">
+                                <ImageIcon />
+                            </IconButton>
+                            <IconButton color="primary" size="small">
+                                <OndemandVideoIcon />
+                            </IconButton>
                         </Box>
                     </Box>
-                ))}
 
-
-            </Box>
-            <Box sx={{ mt: 1 }}>
-                <Box onKeyDown={handleKeyDown} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Input
-                        placeholder="Nhập tin nhắn của bạn"
-                        fullWidth
-                        value={inputMessage}
-                        onChange={(e) => setInputMessage(e.target.value)}
-                    />
-                    <IconButton color="primary" size="small" onClick={handleSendMessage}>
-                        <SendIcon />
-                    </IconButton>
+                    {/* Thông báo lỗi */}
+                    {errorMessage && (
+                        <Snackbar open={Boolean(errorMessage)} autoHideDuration={6000} onClose={handleCloseErrorSnackbar}>
+                            <Alert onClose={handleCloseErrorSnackbar} severity="error" sx={{ width: '100%' }}>
+                                {errorMessage}
+                            </Alert>
+                        </Snackbar>
+                    )}
                 </Box>
-                <Box sx={{ mt: 1 }}>
-                    <IconButton color="primary" size="small">
-                        <AttachFileIcon />
-                    </IconButton>
-                    <IconButton color="primary" size="small">
-                        <ImageIcon />
-                    </IconButton>
-                    <IconButton color="primary" size="small">
-                        <OndemandVideoIcon />
-                    </IconButton>
-                </Box>
-            </Box>
-
-            {/* Thông báo lỗi */}
-            {errorMessage && (
-                <Snackbar open={Boolean(errorMessage)} autoHideDuration={6000} onClose={handleCloseErrorSnackbar}>
-                    <Alert onClose={handleCloseErrorSnackbar} severity="error" sx={{ width: '100%' }}>
-                        {errorMessage}
-                    </Alert>
-                </Snackbar>
             )}
-        </Box>
+        </>
     );
 };
 
