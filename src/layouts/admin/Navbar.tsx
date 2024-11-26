@@ -13,6 +13,8 @@ import { useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import AttachMoneyIcon from '@mui/icons-material/AttachMoney';
 import LocalShippingIcon from '@mui/icons-material/LocalShipping';
+import DiscountIcon from '@mui/icons-material/Discount';
+import WarehouseIcon from '@mui/icons-material/Warehouse';
 
 type NavbarProps = {
     isOpenNavbar: boolean;
@@ -22,7 +24,7 @@ const Navbar = ({ isOpenNavbar }: NavbarProps) => {
     const location = useLocation();
     const navigate = useNavigate();
 
-    const [selectedMainItem, setSelectedMainItem] = useState('Dashboard');
+    const [selectedMainItem, setSelectedMainItem] = useState('');
     const [selectedSubItem, setSelectedSubItem] = useState('');
     const [isStatisticsOpen, setIsStatisticsOpen] = useState(false);
 
@@ -33,6 +35,8 @@ const Navbar = ({ isOpenNavbar }: NavbarProps) => {
         { icon: <ReceiptIcon />, label: 'Hóa đơn', path: '/admin/invoices' },
         { icon: <StackedLineChartIcon />, label: 'Thống kê' },
         { icon: <MarkUnreadChatAltIcon />, label: 'Tin nhắn', path: '/admin/messages' },
+        { icon: <DiscountIcon />, label: 'Khuyến mãi', path: '/admin/discounts' },
+        { icon: <WarehouseIcon />, label: 'Kho', path: '/admin/warehouses' },
     ];
 
     useEffect(() => {
@@ -95,8 +99,8 @@ const Navbar = ({ isOpenNavbar }: NavbarProps) => {
                     {isOpenNavbar && isStatisticsOpen && (
                         <Box sx={{ pl : 4}}>
                             {[
-                                { label: 'Thống kê doanh thu', icon: <AttachMoneyIcon />, path: '/admin/statistics/revenue' },
-                                { label: 'Sản phẩm bán chạy', icon: <LocalShippingIcon />, path: '/admin/statistics/best-sellers' }
+                                { label: 'Doanh thu', icon: <AttachMoneyIcon />, path: '/admin/statistics/revenue' },
+                                { label: 'Sản phẩm', icon: <LocalShippingIcon />, path: '/admin/statistics/best-sellers' }
                             ].map((subItem, subIndex) => (
                                 <Box
                                     key={subIndex}
@@ -123,7 +127,7 @@ const Navbar = ({ isOpenNavbar }: NavbarProps) => {
             <Box
                 key={index}
                 sx={{
-                    display: 'flex', alignItems: 'center', width: '100%', mt: 4,
+                    display: 'flex', alignItems: 'center', width: '100%', mt: 3,
                     ':hover': { background: navbarHover, color: 'white' },
                     justifyContent: 'space-around',
                     color: itemColor,
