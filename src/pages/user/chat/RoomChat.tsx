@@ -1,7 +1,6 @@
 import { Box, IconButton, Input, Typography, Snackbar, Alert } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import SendIcon from '@mui/icons-material/Send';
-import AttachFileIcon from '@mui/icons-material/AttachFile';
 import ImageIcon from '@mui/icons-material/Image';
 import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
 import { useEffect, useRef, useState } from "react";
@@ -20,6 +19,7 @@ const RoomChat = () => {
     const [isConnected, setIsConnected] = useState(false);
     const isAdmin = user?.email === 'admin@gmail.com';
     const chatContainerRef = useRef<HTMLDivElement | null>(null);
+    const [mediaFile, setMediaFile] = useState<File | null>(null);
 
     // Đóng chat
     const closeChat = () => {
@@ -77,7 +77,7 @@ const RoomChat = () => {
     }, []);
 
     const handleSendMessage = async () => {
-        if (inputMessage.trim() === "") return;
+        if (inputMessage.trim() === "" && !mediaFile) return;
 
         if (!isConnected) {
             setErrorMessage("Kết nối WebSocket chưa được thiết lập.");
@@ -89,16 +89,18 @@ const RoomChat = () => {
             receiver: isAdmin ? user?.email || 'unknown' : 'admin@gmail.com',
             content: inputMessage,
             messageTime: new Date(),
+            mediaPath: mediaFile || undefined,
         }
-
         try {
             await send(messageRequestDto);
             setInputMessage("");
+            setMediaFile(null);
         } catch (error) {
             console.error("Error sending message", error);
             setErrorMessage("Gửi tin nhắn thất bại");
         }
     };
+
 
     // Đóng thông báo lỗi
     const handleCloseErrorSnackbar = () => {
@@ -117,6 +119,18 @@ const RoomChat = () => {
             chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
         }
     }, [messages]);
+
+    useEffect(() => {   
+        if (mediaFile) {
+            console.log("Media file: ", mediaFile);
+        }
+    }, [mediaFile]);
+    const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            setMediaFile(file);
+        }
+    };
 
     return (
         <>
@@ -173,6 +187,32 @@ const RoomChat = () => {
                                     <Typography align={msg.sender === user?.email ? 'right' : 'left'}>
                                         {msg.content}
                                     </Typography>
+                                    {msg.messageType === 'IMAGE' && (
+                                        <img
+                                            src={msg.path}
+                                            alt="Media content"
+                                            style={{
+                                                maxWidth: '150px',
+                                                minHeight: '150px',
+                                                borderRadius: '5px',
+                                                marginTop: '5px',
+                                            }}
+                                        />
+                                    )}
+                                    {msg.messageType === 'VIDEO' && (
+                                        <video
+                                            controls
+                                            style={{
+                                                maxWidth: '150px',
+                                                minHeight: '150px',
+                                                borderRadius: '5px',
+                                                marginTop: '5px',
+                                            }}
+                                        >
+                                            <source src={msg.path} type="video/mp4" />
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    )}
                                     <Typography>
                                         {msg.messageTime ? msg.messageTime.toString() : ''}
                                     </Typography>
@@ -195,16 +235,18 @@ const RoomChat = () => {
                                 <SendIcon />
                             </IconButton>
                         </Box>
-                        <Box sx={{ mt: 1 }}>
-                            <IconButton color="primary" size="small">
-                                <AttachFileIcon />
-                            </IconButton>
-                            <IconButton color="primary" size="small">
+                        <Box onKeyDown={handleKeyDown} sx={{ mt: 1 }}>
+                            <IconButton color="primary" size="small" component="label">
                                 <ImageIcon />
+                                <input type="file" multiple hidden accept="image/*" onChange={handleFileUpload} />
                             </IconButton>
-                            <IconButton color="primary" size="small">
+                            <IconButton color="primary" size="small" component="label">
                                 <OndemandVideoIcon />
+                                <input type="file" multiple hidden accept="video/*" onChange={handleFileUpload} />
                             </IconButton>
+                            {mediaFile && (
+                                <Typography>{mediaFile.name}</Typography>
+                            )}
                         </Box>
                     </Box>
 

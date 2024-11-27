@@ -7,7 +7,6 @@ import { UserModel } from "../../../models/user.model";
 import { MessageModel } from "../../../models/message.model";
 import { getMessageByRoomId, send } from "../../../services/message.service";
 import SendIcon from '@mui/icons-material/Send';
-import AttachFileIcon from '@mui/icons-material/AttachFile';
 import ImageIcon from '@mui/icons-material/Image';
 import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
 import { connect, disconnect, subscribe } from "../../../configs/websocket";
@@ -23,6 +22,7 @@ const Message = () => {
     const [errorMessage, setErrorMessage] = useState<string | null>(null);
     const [isConnected, setIsConnected] = useState(false);
     const chatContainerRef = useRef<HTMLDivElement | null>(null);
+    const [mediaFile, setMediaFile] = useState<File | null>(null);
 
     const roomchat = roomchatList.find((room) => room.roomId === selectedRoomId);
 
@@ -121,7 +121,7 @@ const Message = () => {
     }, []);
 
     const handleSendMessage = async () => {
-        if (inputMessage.trim() === "") return;
+        if (inputMessage.trim() === "" && !mediaFile) return;
 
         if (!isConnected) {
             setErrorMessage("Kết nối WebSocket chưa được thiết lập.");
@@ -133,13 +133,13 @@ const Message = () => {
             receiver: receiverEmail,
             content: inputMessage,
             messageTime: new Date(),
+            mediaPath: mediaFile || undefined,
         }
 
         try {
-            console.log("Sending message", messageRequestDto);
-
             await send(messageRequestDto);
             setInputMessage("");
+            setMediaFile(null);
         } catch (error) {
             console.error("Error sending message", error);
             setErrorMessage("Gửi tin nhắn thất bại");
@@ -158,12 +158,23 @@ const Message = () => {
         }
     };
 
-
     useEffect(() => {
         if (chatContainerRef.current) {
             chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
         }
     }, [currentMessages]);
+
+    useEffect(() => {
+        if (mediaFile) {
+            console.log("Media file: ", mediaFile);
+        }
+    }, [mediaFile]);
+    const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            setMediaFile(file);
+        }
+    };
 
     return (
         <>
@@ -225,7 +236,13 @@ const Message = () => {
                                                         WebkitLineClamp: 2,
                                                         textOverflow: 'ellipsis',
                                                     }}>
-                                                        {lastMessage?.sender === currentUserEmail ? 'Bạn: ' + lastMessage?.content : lastMessage?.content}
+                                                        {/* {lastMessage?.sender === currentUserEmail ? 'Bạn: ' + lastMessage?.content : lastMessage?.content} */}
+                                                        {lastMessage?.sender === currentUserEmail ? 'Bạn: ' : ''}
+                                                        {lastMessage?.messageType === 'IMAGE'
+                                                            ? 'Hình ảnh 📷'
+                                                            : lastMessage?.messageType === 'VIDEO'
+                                                                ? 'Video 🎥'
+                                                                : lastMessage?.content}
                                                     </Typography>
                                                     <Typography sx={{ whiteSpace: 'nowrap', color: 'gray' }}>
                                                         {new Date(lastMessage?.messageTime).toLocaleTimeString('vi-VN', {
@@ -301,6 +318,32 @@ const Message = () => {
                                             <Typography align={message.sender === currentUserEmail ? 'right' : 'left'}>
                                                 {message.content}
                                             </Typography>
+                                            {message.messageType === 'IMAGE' && (
+                                                <img
+                                                    src={message.path}
+                                                    alt="Media content"
+                                                    style={{
+                                                        maxWidth: '300px',
+                                                        maxHeight: '300px',
+                                                        borderRadius: '5px',
+                                                        marginTop: '5px',
+                                                    }}
+                                                />
+                                            )}
+                                            {message.messageType === 'VIDEO' && (
+                                                <video
+                                                    controls
+                                                    style={{
+                                                        maxWidth: '300px',
+                                                        maxHeight: '300px',
+                                                        borderRadius: '5px',
+                                                        marginTop: '5px',
+                                                    }}
+                                                >
+                                                    <source src={message.path} type="video/mp4" />
+                                                    Your browser does not support the video tag.
+                                                </video>
+                                            )}
                                             <Typography align={message.sender === currentUserEmail ? 'right' : 'left'}>
                                                 {message.messageTime ? message.messageTime.toString() : ''}
                                             </Typography>
@@ -320,20 +363,22 @@ const Message = () => {
                                         value={inputMessage}
                                         onChange={(e) => setInputMessage(e.target.value)}
                                     />
-                                    <IconButton color="primary" size="small">
+                                    <IconButton color="primary" size="small" onClick={handleSendMessage}>
                                         <SendIcon />
                                     </IconButton>
                                 </Box>
-                                <Box sx={{ mt: 1 }}>
-                                    <IconButton color="primary" size="small">
-                                        <AttachFileIcon />
-                                    </IconButton>
-                                    <IconButton color="primary" size="small">
+                                <Box onKeyDown={handleKeyDown} sx={{ mt: 1 }}>
+                                    <IconButton color="primary" size="small" component="label">
                                         <ImageIcon />
+                                        <input type="file" multiple hidden accept="image/*" onChange={handleFileUpload} />
                                     </IconButton>
-                                    <IconButton color="primary" size="small">
+                                    <IconButton color="primary" size="small" component="label">
                                         <OndemandVideoIcon />
+                                        <input type="file" multiple hidden accept="video/*" onChange={handleFileUpload} />
                                     </IconButton>
+                                    {mediaFile && (
+                                        <Typography>{mediaFile.name}</Typography>
+                                    )}
                                 </Box>
                             </Box>
                         </Box>
