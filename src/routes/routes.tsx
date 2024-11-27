@@ -162,7 +162,7 @@ const publicRoutes = [
     path: '/order-details/:id',
     element: <UserLayout><OrderDetails /></UserLayout>
   },
-
+  
 ];
 
 export const router = createBrowserRouter([

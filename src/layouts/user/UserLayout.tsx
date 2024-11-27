@@ -1,7 +1,7 @@
 import { Box } from "@mui/material"
-import Footer from "../admin/Footer"
 import { ReactNode } from "react";
 import Header from "./Header";
+import FooterUser from "./FooterUser";
 
 type UserLayoutProps = {
     children: ReactNode;
@@ -35,7 +35,7 @@ const UserLayout = ({ children }: UserLayoutProps) => {
                         position: 'relative',
                     }}
                 >
-                    <Footer />
+                    <FooterUser/>
                 </Box>
             </Box>
         </Box>
