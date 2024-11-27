@@ -1,3 +1,4 @@
+import { MessageType } from "./enum/message-type.enum";
 import { RoomChatModel } from "./roomchat.model";
 
 export type MessageModel = {
@@ -7,4 +8,6 @@ export type MessageModel = {
     content: string;
     messageTime: string;
     roomChat: RoomChatModel;
+    path?: string;
+    messageType?: MessageType;
 }

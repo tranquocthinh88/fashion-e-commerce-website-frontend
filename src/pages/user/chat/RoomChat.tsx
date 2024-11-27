@@ -1,7 +1,6 @@
 import { Box, IconButton, Input, Typography, Snackbar, Alert } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import SendIcon from '@mui/icons-material/Send';
-import AttachFileIcon from '@mui/icons-material/AttachFile';
 import ImageIcon from '@mui/icons-material/Image';
 import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
 import { useEffect, useRef, useState } from "react";
@@ -20,6 +19,7 @@ const RoomChat = () => {
     const [isConnected, setIsConnected] = useState(false);
     const isAdmin = user?.email === 'admin@gmail.com';
     const chatContainerRef = useRef<HTMLDivElement | null>(null);
+    const [mediaFile, setMediaFile] = useState<File | null>(null);
 
     // Đóng chat
     const closeChat = () => {
@@ -77,7 +77,7 @@ const RoomChat = () => {
     }, []);
 
     const handleSendMessage = async () => {
-        if (inputMessage.trim() === "") return;
+        if (inputMessage.trim() === "" && !mediaFile) return;
 
         if (!isConnected) {
             setErrorMessage("Kết nối WebSocket chưa được thiết lập.");
@@ -89,24 +89,23 @@ const RoomChat = () => {
             receiver: isAdmin ? user?.email || 'unknown' : 'admin@gmail.com',
             content: inputMessage,
             messageTime: new Date(),
+            mediaPath: mediaFile || undefined,
         }
-
         try {
             await send(messageRequestDto);
             setInputMessage("");
+            setMediaFile(null);
         } catch (error) {
             console.error("Error sending message", error);
             setErrorMessage("Gửi tin nhắn thất bại");
         }
     };
 
+
     // Đóng thông báo lỗi
     const handleCloseErrorSnackbar = () => {
         setErrorMessage(null);
     };
-
-    if (!isOpen) return null;
-
 
     const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
         if (event.key === 'Enter') {
@@ -121,103 +120,147 @@ const RoomChat = () => {
         }
     }, [messages]);
 
+    useEffect(() => {   
+        if (mediaFile) {
+            console.log("Media file: ", mediaFile);
+        }
+    }, [mediaFile]);
+    const handleFileUpload = async (event: React.ChangeEvent<HTMLInputElement>) => {
+        const file = event.target.files?.[0];
+        if (file) {
+            setMediaFile(file);
+        }
+    };
+
     return (
-        <Box sx={{
-            position: 'fixed',
-            bottom: 0,
-            right: 20,
-            width: 450,
-            height: 500,
-            backgroundColor: 'white',
-            boxShadow: 3,
-            borderRadius: 2,
-            p: 2,
-            zIndex: 1300,
-            display: 'flex',
-            flexDirection: 'column',
-        }}>
-            <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                <Typography variant="h6" gutterBottom>Trao đổi với nhân viên</Typography>
-                <IconButton color="primary" size="small" onClick={closeChat}>
-                    <CloseIcon />
-                </IconButton>
-            </Box>
-            <Box
-                ref={chatContainerRef}
-                sx={{
-                    flexGrow: 1,
-                    overflowY: 'auto',
-                    border: '1px solid #ddd',
-                    p: 1,
-                    backgroundColor: '#99CCFF'
-                }}
-            >
-                {messages?.map((msg, index) => (
+        <>
+            {isOpen && (
+                <Box sx={{
+                    position: 'fixed',
+                    bottom: 0,
+                    right: 20,
+                    width: 450,
+                    height: 500,
+                    backgroundColor: 'white',
+                    boxShadow: 3,
+                    borderRadius: 2,
+                    p: 2,
+                    zIndex: 1300,
+                    display: 'flex',
+                    flexDirection: 'column',
+                }}>
+                    <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Typography variant="h6" gutterBottom>Trao đổi với nhân viên</Typography>
+                        <IconButton color="primary" size="small" onClick={closeChat}>
+                            <CloseIcon />
+                        </IconButton>
+                    </Box>
                     <Box
-                        key={msg.id || index}
+                        ref={chatContainerRef}
                         sx={{
-                            display: 'flex',
-                            justifyContent: msg.sender === user?.email ? 'flex-end' : 'flex-start',
-                            width: '100%',
+                            flexGrow: 1,
+                            overflowY: 'auto',
+                            border: '1px solid #ddd',
+                            p: 1,
+                            backgroundColor: '#99CCFF'
                         }}
                     >
-                        <Box
-                            sx={{
-                                backgroundColor: msg.sender === user?.email ? '#cce5ff' : '#f8d7da',
-                                padding: '10px',
-                                borderRadius: '5px',
-                                margin: '5px 0',
-                                maxWidth: '75%',
-                                wordWrap: 'break-word',
-                            }}
-                        >
-                            <Typography align={msg.sender === user?.email ? 'right' : 'left'}>
-                                {msg.content}
-                            </Typography>
-                            <Typography>
-                                {msg.messageTime ? msg.messageTime.toString() : ''}
-                            </Typography>
+                        {messages?.map((msg, index) => (
+                            <Box
+                                key={msg.id || index}
+                                sx={{
+                                    display: 'flex',
+                                    justifyContent: msg.sender === user?.email ? 'flex-end' : 'flex-start',
+                                    width: '100%',
+                                }}
+                            >
+                                <Box
+                                    sx={{
+                                        backgroundColor: msg.sender === user?.email ? '#cce5ff' : '#f8d7da',
+                                        padding: '10px',
+                                        borderRadius: '5px',
+                                        margin: '5px 0',
+                                        maxWidth: '75%',
+                                        wordWrap: 'break-word',
+                                    }}
+                                >
+                                    <Typography align={msg.sender === user?.email ? 'right' : 'left'}>
+                                        {msg.content}
+                                    </Typography>
+                                    {msg.messageType === 'IMAGE' && (
+                                        <img
+                                            src={msg.path}
+                                            alt="Media content"
+                                            style={{
+                                                maxWidth: '150px',
+                                                minHeight: '150px',
+                                                borderRadius: '5px',
+                                                marginTop: '5px',
+                                            }}
+                                        />
+                                    )}
+                                    {msg.messageType === 'VIDEO' && (
+                                        <video
+                                            controls
+                                            style={{
+                                                maxWidth: '150px',
+                                                minHeight: '150px',
+                                                borderRadius: '5px',
+                                                marginTop: '5px',
+                                            }}
+                                        >
+                                            <source src={msg.path} type="video/mp4" />
+                                            Your browser does not support the video tag.
+                                        </video>
+                                    )}
+                                    <Typography>
+                                        {msg.messageTime ? msg.messageTime.toString() : ''}
+                                    </Typography>
 
+                                </Box>
+                            </Box>
+                        ))}
+
+
+                    </Box>
+                    <Box sx={{ mt: 1 }}>
+                        <Box onKeyDown={handleKeyDown} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <Input
+                                placeholder="Nhập tin nhắn của bạn"
+                                fullWidth
+                                value={inputMessage}
+                                onChange={(e) => setInputMessage(e.target.value)}
+                            />
+                            <IconButton color="primary" size="small" onClick={handleSendMessage}>
+                                <SendIcon />
+                            </IconButton>
+                        </Box>
+                        <Box onKeyDown={handleKeyDown} sx={{ mt: 1 }}>
+                            <IconButton color="primary" size="small" component="label">
+                                <ImageIcon />
+                                <input type="file" multiple hidden accept="image/*" onChange={handleFileUpload} />
+                            </IconButton>
+                            <IconButton color="primary" size="small" component="label">
+                                <OndemandVideoIcon />
+                                <input type="file" multiple hidden accept="video/*" onChange={handleFileUpload} />
+                            </IconButton>
+                            {mediaFile && (
+                                <Typography>{mediaFile.name}</Typography>
+                            )}
                         </Box>
                     </Box>
-                ))}
 
-
-            </Box>
-            <Box sx={{ mt: 1 }}>
-                <Box onKeyDown={handleKeyDown} sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                    <Input
-                        placeholder="Nhập tin nhắn của bạn"
-                        fullWidth
-                        value={inputMessage}
-                        onChange={(e) => setInputMessage(e.target.value)}
-                    />
-                    <IconButton color="primary" size="small" onClick={handleSendMessage}>
-                        <SendIcon />
-                    </IconButton>
+                    {/* Thông báo lỗi */}
+                    {errorMessage && (
+                        <Snackbar open={Boolean(errorMessage)} autoHideDuration={6000} onClose={handleCloseErrorSnackbar}>
+                            <Alert onClose={handleCloseErrorSnackbar} severity="error" sx={{ width: '100%' }}>
+                                {errorMessage}
+                            </Alert>
+                        </Snackbar>
+                    )}
                 </Box>
-                <Box sx={{ mt: 1 }}>
-                    <IconButton color="primary" size="small">
-                        <AttachFileIcon />
-                    </IconButton>
-                    <IconButton color="primary" size="small">
-                        <ImageIcon />
-                    </IconButton>
-                    <IconButton color="primary" size="small">
-                        <OndemandVideoIcon />
-                    </IconButton>
-                </Box>
-            </Box>
-
-            {/* Thông báo lỗi */}
-            {errorMessage && (
-                <Snackbar open={Boolean(errorMessage)} autoHideDuration={6000} onClose={handleCloseErrorSnackbar}>
-                    <Alert onClose={handleCloseErrorSnackbar} severity="error" sx={{ width: '100%' }}>
-                        {errorMessage}
-                    </Alert>
-                </Snackbar>
             )}
-        </Box>
+        </>
     );
 };
 

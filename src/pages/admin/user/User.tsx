@@ -10,10 +10,16 @@ import SearchIcon from '@mui/icons-material/Search';
 import { useEffect, useState } from "react";
 import { UserModel } from "../../../models/user.model";
 import { getAllUsers } from "../../../services/user.service";
+import { getOrdersByUser } from "../../../services/order.service";
+import { OrderModel } from "../../../models/order.model";
+import { ConvertPrice } from "../../../utils/convert.price";
+import { useNavigate } from "react-router-dom";
 
 const User = () => {
     const [users, setUsers] = useState<UserModel[]>([]);
     const [searchKeyword, setSearchKeyword] = useState<string>("");
+    const [userInvoices, setUserInvoices] = useState<any[]>([]);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const fetchUsers = async () => {
@@ -21,6 +27,7 @@ const User = () => {
                 const response = await getAllUsers();
                 setUsers(response.data);
             } catch (error) {
+                console.log("Failed to fetch users", users);
                 console.error("Failed to fetch users", error);
             }
         };
@@ -34,8 +41,27 @@ const User = () => {
             const filteredUsers = response.data
                 .filter(user => user.role === 'ROLE_USER') // Lọc người dùng có vai trò là "user"
                 .filter(user => user.username.toLowerCase().includes(trimmedKeyword.toLowerCase()))
-                .map((user, index) => ({ ...user, id: (index + 1)})); // Cập nhật ID của người dùng
+                .map((user, index) => ({ ...user, id: (index + 1) })); // Cập nhật ID của người dùng
+            const userWithInvoice = await Promise.all(
+                filteredUsers.map(async (user) => {
+                    try {
+                        const invoices = await getOrdersByUser(user.email);
+                        const totalOrders = invoices.data.length; // Tổng số hóa đơn
+                        const totalAmount = invoices.data.reduce((sum: number, invoice: OrderModel) => sum + Number(invoice.discountPrice), 0); // Tổng tiền hóa đơn
+                        return {
+                            ...user,
+                            totalOrders,
+                            totalAmount,
+                        };
+                    } catch (error) {
+                        console.error(`Failed to fetch invoices for user: ${user.username}`, error);
+                        return { ...user, totalOrders: 0, totalAmount: 0 };
+                    }
+                })
+            );
+
             setUsers(filteredUsers);
+            setUserInvoices(userWithInvoice);
         } catch (error) {
             console.error("Failed to fetch users", error);
         }
@@ -96,18 +122,20 @@ const User = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {users.map((user) => (
-                                <TableRow
-                                    key={user.id}
-                                    sx={{ '&:last-child td, &:last-child th': { border: 0 }, position: 'relative' }}
-                                >
-                                    <TableCell component="th" scope="row">
-                                        {user.id}
-                                    </TableCell>
-                                    <TableCell>{user.username}</TableCell>
-                                    <TableCell>{user.email}</TableCell>
-                                    <TableCell>{user.phone}</TableCell>
-                                    <TableCell>{new Date(user.createdAt ?? '').toLocaleDateString()}</TableCell>
+                            {userInvoices.map((data) => (
+                                <TableRow key={data.id} sx={{
+                                    ':hover': {
+                                        background: 'rgba(0, 0, 0, 0.14)',
+                                        cursor: 'pointer',
+                                    }
+                                }} onClick={() => navigate(`/admin/users/user-detail/${data.email}`)}>
+                                    <TableCell>{data.id}</TableCell>
+                                    <TableCell>{data.username}</TableCell>
+                                    <TableCell>{data.email}</TableCell>
+                                    <TableCell>{data.phone}</TableCell>
+                                    <TableCell>{new Date(data.createdAt).toLocaleDateString()}</TableCell>
+                                    <TableCell>{data.totalOrders}</TableCell>
+                                    <TableCell>{ConvertPrice(data.totalAmount)}</TableCell>
                                 </TableRow>
                             ))}
                         </TableBody>

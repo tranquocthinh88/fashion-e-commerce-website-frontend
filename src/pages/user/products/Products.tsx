@@ -44,8 +44,8 @@ const Products = () => {
                 if (priceMin !== undefined) searchParams.push({ field: 'price', operator: '>=', value: String(priceMin) });
                 if (priceMax !== undefined) searchParams.push({ field: 'price', operator: '<=', value: String(priceMax) });
 
-                if (category) searchParams.push({ field: 'category.categoryName', operator: '-', value: category });
-                if (brand) searchParams.push({ field: 'brand.brandName', operator: '-', value: brand });
+                if (category) searchParams.push({ field: 'category.categoryName', operator: ':', value: category });
+                if (brand) searchParams.push({ field: 'brand.brandName', operator: ':', value: brand });
 
                 console.log("Search params: ", searchParams);
 
