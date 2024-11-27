@@ -16,7 +16,7 @@ type Props = {
 const DialogCreateSize = ({ open, handleClose, addSize, showAlert }: Props) => {
     const [sizeName, setSizeName] = useState('');
     const [errorText, setErrorText] = useState('');
-    const [sizeType, setSizeType] = useState(SizeType.NUMBER || SizeType.TEXT);
+    const [sizeType, setSizeType] = useState<SizeType>(SizeType.NUMBER);
 
 
     const handleSubmit = async () => {
@@ -26,20 +26,27 @@ const DialogCreateSize = ({ open, handleClose, addSize, showAlert }: Props) => {
             try {
                 const value : SizeDto = {
                     sizeType: sizeType,
-                    numberSize: 0,
-                    textSize: sizeName
+                    numberSize: sizeType === SizeType.NUMBER ? parseInt(sizeName) : undefined,
+                    textSize: sizeType === SizeType.TEXT ? sizeName : undefined
                 }
-
                 const response: ResponseSuccess<SizeModel> = await createSize(value);
                 addSize(response.data);
                 showAlert('success', 'Thêm thành công');
                 handleClose();
+                resetForm();
             } catch (error) {
                 showAlert('error', 'Thêm thất bại');
                 handleClose();
             }
         }
     }
+
+    const resetForm = () => {
+        setSizeName('');
+        setErrorText('');
+        setSizeType(SizeType.NUMBER);
+    }
+
     return (
         <Dialog
             open={open}
@@ -59,8 +66,8 @@ const DialogCreateSize = ({ open, handleClose, addSize, showAlert }: Props) => {
                         value={sizeType}
                         onChange={(e) => setSizeType(e.target.value as SizeType)}
                     >
-                        <FormControlLabel value="number" control={<Radio />} label="Số" />
-                        <FormControlLabel value="text" control={<Radio />} label="Chữ" />
+                        <FormControlLabel value={SizeType.NUMBER} control={<Radio />} label="Số" />
+                        <FormControlLabel value={SizeType.TEXT} control={<Radio />} label="Chữ" />
                     </RadioGroup>
                 </FormControl>
                 <TextField

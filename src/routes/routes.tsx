@@ -31,6 +31,8 @@ import Color from "../pages/admin/colors/Color";
 import Brand from "../pages/admin/brands/Brand";
 import Size from "../pages/admin/sizes/Size";
 import UserDetails from "../pages/admin/user/UserDetails";
+import Discount from "../pages/admin/discount/Discount";
+import Warehouse from "../pages/admin/warehouse/Warehouse";
 
 const adminRoutes = [
   {
@@ -154,10 +156,18 @@ const publicRoutes = [
     element: <AdminLayout><BestSeller /></AdminLayout>
   },
   {
+    path: "/admin/discounts",
+    element: <AdminLayout><Discount /></AdminLayout>
+  },
+  {
+    path: "/admin/warehouses",
+    element: <AdminLayout><Warehouse /></AdminLayout>
+  },
+  {
     path: '/order-details/:id',
     element: <UserLayout><OrderDetails /></UserLayout>
   },
-
+  
 ];
 
 export const router = createBrowserRouter([
