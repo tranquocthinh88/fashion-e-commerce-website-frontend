@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { ConvertPrice } from "../../../utils/convert.price";
 import { OrderModel } from "../../../models/order.model";
 import { OrderStatus } from "../../../models/enum/order.status";
+import { updateStatusCancel } from "../../../services/order.service";
 
 type Props = {
     item: OrderModel,
@@ -24,8 +25,13 @@ const OrderItem = ({ item }: Props) => {
         const orderDate = new Date(item.orderDate);
         const now = new Date();
         const hoursDifference = (now.getTime() - orderDate.getTime()) / (1000 * 60 * 60);
-        return hoursDifference > 2 || item.status !== OrderStatus.PENDING;  
+        return hoursDifference > 2 || item.status !== OrderStatus.PENDING;
     })();
+
+    const handleCancel = async () => {
+        const response = await updateStatusCancel(item.id as string);
+        console.log("Cancel response: ", response);
+    }
 
     return (
         <>
@@ -39,13 +45,14 @@ const OrderItem = ({ item }: Props) => {
                 <TableCell colSpan={2}>
                     <Button color="error" variant="contained"
                         disabled={isCancelDisabled}
-                        onClick={() => { navigate(`/user/${item.user.email}/orders/${item.id}`) }}>Hủy đơn</Button>
+                        onClick={handleCancel}>Hủy đơn</Button>
                     <Button sx={{ ml: 2 }} color="success" variant="contained" onClick={() => { navigate(`/order-details/${item.id}`) }}>Chi tiết</Button>
                 </TableCell>
             </TableRow>
         </>
 
 
+        //  onClick={() => { navigate(`/user/${item.user.email}/orders/${item.id}`) }}>Hủy đơn</Button>
 
     )
 }
