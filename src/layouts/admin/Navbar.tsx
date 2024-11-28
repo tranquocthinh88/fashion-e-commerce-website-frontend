@@ -36,7 +36,7 @@ const Navbar = ({ isOpenNavbar }: NavbarProps) => {
         { icon: <StackedLineChartIcon />, label: 'Thống kê' },
         { icon: <MarkUnreadChatAltIcon />, label: 'Tin nhắn', path: '/admin/messages' },
         { icon: <DiscountIcon />, label: 'Khuyến mãi', path: '/admin/discounts' },
-        { icon: <WarehouseIcon />, label: 'Kho', path: '/admin/warehouses' },
+        { icon: <WarehouseIcon />, label: 'Kho hàng', path: '/admin/warehouses' },
     ];
 
     useEffect(() => {
@@ -85,7 +85,7 @@ const Navbar = ({ isOpenNavbar }: NavbarProps) => {
                 <Box key={index}>
                     <Box
                         sx={{
-                            display: 'flex', alignItems: 'center', width: '100%', mt: 4,
+                            display: 'flex', alignItems: 'center', width: '100%', mt: 2,
                             ':hover': { background: navbarHover, color: 'white' },
                             justifyContent: 'space-around',
                             color: itemColor,
@@ -105,7 +105,7 @@ const Navbar = ({ isOpenNavbar }: NavbarProps) => {
                                 <Box
                                     key={subIndex}
                                     sx={{
-                                        display: 'flex', alignItems: 'center', width: '100%', mt: 4,
+                                        display: 'flex', alignItems: 'center', width: '100%', mt: 2,
                                         ':hover': { background: navbarHover, color: 'white' },
                                         justifyContent: 'space-around',
                                         color: selectedSubItem === subItem.label ? 'red' : 'inherit',
@@ -127,7 +127,7 @@ const Navbar = ({ isOpenNavbar }: NavbarProps) => {
             <Box
                 key={index}
                 sx={{
-                    display: 'flex', alignItems: 'center', width: '100%', mt: 3,
+                    display: 'flex', alignItems: 'center', width: '100%', mt: 2,
                     ':hover': { background: navbarHover, color: 'white' },
                     justifyContent: 'space-around',
                     color: itemColor,
@@ -167,7 +167,7 @@ const Navbar = ({ isOpenNavbar }: NavbarProps) => {
             <Box className={`navbar ${isOpenNavbar ? "open" : "closed"}`} sx={{ mt: 1 }}>
                 <img src={logo} alt="Logo" className="logo-shop-item" />
             </Box>
-            <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', marginTop: 5 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'column', width: '100%', marginTop: 1 }}>
                 {buttonIcon.map(renderMenuItem)}
             </Box>
         </Box>

@@ -21,10 +21,10 @@ const OrderItem = ({ item }: Props) => {
     const navigate = useNavigate();
 
     const isCancelDisabled = (() => {
-        const orderDate = new Date(item.orderDate); 
-        const now = new Date(); 
-        const hoursDifference = (now.getTime() - orderDate.getTime()) / (1000 * 60 * 60); 
-        return hoursDifference > 2; 
+        const orderDate = new Date(item.orderDate);
+        const now = new Date();
+        const hoursDifference = (now.getTime() - orderDate.getTime()) / (1000 * 60 * 60);
+        return hoursDifference > 2 || item.status !== OrderStatus.PENDING;  
     })();
 
     return (
