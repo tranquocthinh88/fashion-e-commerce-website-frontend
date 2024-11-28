@@ -32,7 +32,8 @@ import Brand from "../pages/admin/brands/Brand";
 import Size from "../pages/admin/sizes/Size";
 import UserDetails from "../pages/admin/user/UserDetails";
 import Discount from "../pages/admin/discount/Discount";
-import Warehouse from "../pages/admin/warehouse/Warehouse";
+import Stoke from "../pages/admin/stoke/Stoke";
+import ProductDetailAdmin from "../pages/admin/products/ProductDetailAdmin";
 
 const adminRoutes = [
   {
@@ -67,6 +68,46 @@ const adminRoutes = [
     path: '/admin/users/user-detail/:email',
     element: <ProtectRouter role={Role.ROLE_ADMIN}> <AdminLayout><UserDetails /></AdminLayout></ProtectRouter>
   },
+  {
+    path: '/admin/products',
+    element: <ProtectRouter role={Role.ROLE_ADMIN}> <AdminLayout><Product /></AdminLayout></ProtectRouter>
+  },
+  {
+    path: '/admin/products/createProducts',
+    element: <ProtectRouter role={Role.ROLE_ADMIN}> <AdminLayout><CreateProduct /></AdminLayout></ProtectRouter>
+  },
+  {
+    path: '/admin/users',
+    element: <ProtectRouter role={Role.ROLE_ADMIN}> <AdminLayout><User /></AdminLayout></ProtectRouter>
+  },
+  {
+    path: '/admin/invoices',
+    element: <ProtectRouter role={Role.ROLE_ADMIN}> <AdminLayout><Invoice /></AdminLayout></ProtectRouter>
+  },
+  {
+    path: '/admin/messages',
+    element: <ProtectRouter role={Role.ROLE_ADMIN}> <AdminLayout><Message /></AdminLayout></ProtectRouter>
+  },
+  {
+    path: '/admin/statistics/revenue',
+    element: <ProtectRouter role={Role.ROLE_ADMIN}> <AdminLayout><RevenueStatistics /></AdminLayout></ProtectRouter>
+  },
+  {
+    path: '/admin/statistics/best-sellers',
+    element: <ProtectRouter role={Role.ROLE_ADMIN}> <AdminLayout><BestSeller /></AdminLayout></ProtectRouter>
+  },
+  {
+    path: '/admin/discounts',
+    element: <ProtectRouter role={Role.ROLE_ADMIN}> <AdminLayout><Discount /></AdminLayout></ProtectRouter>
+  },
+  {
+    path: '/admin/stokes',
+    element: <ProtectRouter role={Role.ROLE_ADMIN}> <AdminLayout><Stoke /></AdminLayout></ProtectRouter>
+  },
+  // {
+  //   path: '/admin/products/product-detail/:id',
+  //   element: <AdminLayout><ProductDetailAdmin /></AdminLayout>
+  // },
 ];
 
 const userRoutes = [
@@ -128,46 +169,10 @@ const publicRoutes = [
     element: <UserLayout><PaymentSuccess /></UserLayout>
   },
   {
-    path: "/admin/products",
-    element: <AdminLayout><Product /></AdminLayout>
-  },
-  {
-    path: "/admin/products/createProducts",
-    element: <AdminLayout><CreateProduct /></AdminLayout>
-  },
-  {
-    path: "/admin/users",
-    element: <AdminLayout><User /></AdminLayout>
-  },
-  {
-    path: "/admin/invoices",
-    element: <AdminLayout><Invoice /></AdminLayout>
-  },
-  {
-    path: "/admin/messages",
-    element: <AdminLayout><Message /></AdminLayout>
-  },
-  {
-    path: "/admin/statistics/revenue",
-    element: <AdminLayout><RevenueStatistics /></AdminLayout>
-  },
-  {
-    path: "/admin/statistics/best-sellers",
-    element: <AdminLayout><BestSeller /></AdminLayout>
-  },
-  {
-    path: "/admin/discounts",
-    element: <AdminLayout><Discount /></AdminLayout>
-  },
-  {
-    path: "/admin/warehouses",
-    element: <AdminLayout><Warehouse /></AdminLayout>
-  },
-  {
     path: '/order-details/:id',
     element: <UserLayout><OrderDetails /></UserLayout>
   },
-  
+
 ];
 
 export const router = createBrowserRouter([

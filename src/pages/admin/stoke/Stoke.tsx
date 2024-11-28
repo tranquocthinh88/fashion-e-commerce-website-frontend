@@ -23,9 +23,9 @@ const columns: GridColDef[] = [
     },
     { field: 'productCode', headerName: 'Mã sản phẩm', width: 150 },
     { field: 'productName', headerName: 'Tên sản phẩm', width: 250 },
-    { field: 'issueDate', headerName: 'Ngày nhập', type: 'date', width: 150 },
-    { field: 'inputRevenue', headerName: 'Số lượng nhập', type: 'number', width: 150 },
-    { field: 'sold', headerName: 'Số lượng bán', type: 'number', width: 150 },
+    { field: 'issueDate', headerName: 'Ngày nhập', type: 'date', width: 120 },
+    { field: 'inputRevenue', headerName: 'Số lượng nhập', type: 'number', width: 120 },
+    { field: 'sold', headerName: 'Số lượng bán', type: 'number', width: 120 },
     { field: 'revenue', headerName: 'Giá nhập', type: 'number', width: 150 },
     {
         field: 'action',
@@ -48,7 +48,7 @@ const useStyles = makeStyles({
     },
 });
 
-const Warehouse = () => {
+const Stoke = () => {
     const classes = useStyles();
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', ml: 4, mr: 1 , width: '100%'}}>
@@ -67,4 +67,4 @@ const Warehouse = () => {
 
     );
 }
-export default Warehouse;
+export default Stoke;

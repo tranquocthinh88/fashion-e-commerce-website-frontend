@@ -181,8 +181,8 @@ const Product = () => {
                 p: 0.5
             }}>
                 {products.map((item: ProductUserResponse, index: number) => (
-                    <Box sx={{ width: '270px' }} key={index}>
-                        <Box sx={{ width: isMobile ? '150px' : '270px' }} key={index}>
+                    // <Box sx={{ width: '270px' }} key={index} onClick={() => navigate(`/admin/products/product-detail/${item.product.id}`)}>
+                        <Box sx={{ width: isMobile ? '150px' : '270px' }} key={index} >
                             <ProductCardAdmin
                                 productId={item.product.id ?? ''}
                                 productName={item.product.productName ?? ''}
@@ -193,7 +193,7 @@ const Product = () => {
                                 thumbnail={item.product.thumbnail ?? ''}
                                 totalQuantity={item.product.totalQuantity ?? 0}
                             />
-                        </Box>
+                        {/* </Box> */}
                     </Box>
                 ))}
             </Box>

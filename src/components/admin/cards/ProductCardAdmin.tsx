@@ -17,7 +17,7 @@ type Props = {
     status?: string;
 }
 
-const ProductCardAdmin = ({ productId, productName, inputPrice ,productPrice, fNavigate, thumbnail, totalQuantity, status, productPriceFinal }: Props) => {
+const ProductCardAdmin = ({ productId, productName, inputPrice, productPrice, fNavigate, thumbnail, totalQuantity, status, productPriceFinal }: Props) => {
     const isMobile = useMediaQuery('(max-width:600px)');
 
     const [isDialogOpen, setIsDialogOpen] = useState(false);
@@ -46,7 +46,7 @@ const ProductCardAdmin = ({ productId, productName, inputPrice ,productPrice, fN
 
     return (
         <>
-            <Card sx={{ maxWidth: 345 }}>
+            <Card sx={{maxWidth: 345}}>
                 <CardMedia
                     component="img"
                     height={isMobile ? '150px' : '200px'}
@@ -107,7 +107,7 @@ const ProductCardAdmin = ({ productId, productName, inputPrice ,productPrice, fN
                         Delete
                     </Fab>
                 </CardActions>
-            </Card>
+            </Card >
             <Dialog open={isDialogOpen} onClose={handleCloseDialog}>
                 <DialogTitle>Xác nhận ngưng hoạt động</DialogTitle>
                 <DialogContent>

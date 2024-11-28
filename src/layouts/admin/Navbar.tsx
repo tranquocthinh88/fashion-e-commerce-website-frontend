@@ -36,7 +36,7 @@ const Navbar = ({ isOpenNavbar }: NavbarProps) => {
         { icon: <StackedLineChartIcon />, label: 'Thống kê' },
         { icon: <MarkUnreadChatAltIcon />, label: 'Tin nhắn', path: '/admin/messages' },
         { icon: <DiscountIcon />, label: 'Khuyến mãi', path: '/admin/discounts' },
-        { icon: <WarehouseIcon />, label: 'Kho', path: '/admin/warehouses' },
+        { icon: <WarehouseIcon />, label: 'Kho', path: '/admin/stokes' },
     ];
 
     useEffect(() => {
