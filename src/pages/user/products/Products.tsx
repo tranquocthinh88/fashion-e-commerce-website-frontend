@@ -52,6 +52,8 @@ const Products = () => {
 
                 const responseProducts: ResponseSuccess<PageResponse<ProductUserResponse[]>> =
                     await getProductsForUser(pageNo, 20, searchParams, sort ? [{ field: sort.split(':')[0], order: sort.split(':')[1] }] : []);
+                console.log("Products: ", responseProducts.data.data);
+                
                 setProducts(responseProducts.data.data);
                 setTotalPage(responseProducts.data.totalPage);
             } catch (error) {
@@ -108,12 +110,12 @@ const Products = () => {
                             <Select
                                 labelId="category-label"
                                 id="category-select"
-                                value={category}
+                                value={category || ""}
                                 label="Danh mục sản phẩm"
                                 onChange={(e) => setCategory(e.target.value as string)}
                             >
                                 <MenuItem key="all" value="">Tất cả</MenuItem>
-                                {categories.map((category: CategoryModel) => (
+                                {categories?.map((category: CategoryModel) => (
                                     <MenuItem key={category.id} value={category.categoryName}>{category.categoryName}</MenuItem>
                                 ))}
                             </Select>

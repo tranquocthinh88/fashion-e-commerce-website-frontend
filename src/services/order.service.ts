@@ -149,3 +149,19 @@ export const updateStatusForAdmin = async (orderId: string, orderUpdateDto: Orde
         return Promise.reject(error);
     }
 }
+
+
+export const updateStatusCancel = async (orderId: string): Promise<ResponseSuccess<OrderModel>> => {
+    try {
+        const response = await requestConfig(
+            `orders/user/update/${orderId}`,
+            Method.PUT,
+            [],
+            ContentType.JSON,
+            true
+        );
+        return response.data;
+    } catch (error) {
+        return Promise.reject(error);
+    }
+}

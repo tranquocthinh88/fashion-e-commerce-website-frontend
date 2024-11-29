@@ -598,7 +598,7 @@ const Payment = () => {
             <Grid container spacing={4}>
                 <Grid item xs={12} md={7}>
                     <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }} >
-                        <Button variant="contained" color="warning" onClick={() => { navigate('/') }}>
+                        <Button variant="contained" color="warning" onClick={() => { navigate('/cart') }}>
                             Quay về giỏ hàng
                         </Button>
                         <Button

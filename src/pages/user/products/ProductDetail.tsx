@@ -24,6 +24,7 @@ import { connect, disconnect, subscribe } from "../../../configs/websocket";
 import ProductCard from "../../../components/user/product/ProductCard";
 import CustomArrow from "../../../components/user/customs/CustomArrow ";
 import Slider from "react-slick";
+import { isLoginAccount } from "../../../services/user.service";
 
 const SizeColorBox = ({ text, onClick, selected }: { text: string | number, onClick(): void, selected: boolean }) => {
     return (
@@ -64,7 +65,7 @@ const ProductDetail = () => {
     const [pageNo, setPageNo] = useState<number>(1);
     const [relatedProducts, SetRelatedProducts] = useState<ProductUserResponse[]>([]);
     const navigate = useNavigate();
-
+    const login = isLoginAccount();
 
     const settings = {
         dots: true, // Hiển thị nút chỉ báo trang
@@ -265,13 +266,18 @@ const ProductDetail = () => {
     }, [productResponse?.category?.categoryName]);
 
     const handleBuyNow = () => {
-        const productDetail = getProductDetailByColorIdAndSizeId();
-        if (!productDetail) {
-            alert('Vui lòng chọn màu sắc và kích thước trước khi mua hàng');
-            return;
+        if (login) {
+            const productDetail = getProductDetailByColorIdAndSizeId();
+            if (!productDetail) {
+                alert('Vui lòng chọn màu sắc và kích thước trước khi mua hàng');
+                return;
+            }
+            addProductToCart();
+            navigate("/payment")
         }
-        addProductToCart();
-        navigate("/payment")
+        else {
+            navigate('/login', { state: { from: `/products/${id}` } });
+        }
     }
 
     return (
@@ -287,7 +293,7 @@ const ProductDetail = () => {
 
                 <Box sx={{ width: '60%', display: 'flex', flexDirection: 'column', gap: 1 }}>
                     <Typography variant="h5" sx={{ fontWeight: '700' }}>{productResponse?.productName}</Typography>
-                    <Typography variant="h6">{productResponse?.provider?.providerName}</Typography>
+                    <Typography variant="h6">{productResponse?.brand?.brandName}</Typography>
                     <Box sx={{ display: 'flex', gap: '25px' }}>
                         {
                             productUserResponse?.priceFinal == productUserResponse?.product.price ?
