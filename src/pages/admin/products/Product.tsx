@@ -127,7 +127,7 @@ const Product = () => {
         setFilterOption(selectedCategory); // Cập nhật state khi chọn option
         setCategoryName(selectedCategory); // Cập nhật categoryName
         if (selectedCategory !== "ALL") {
-            setSearch([{ field: "category.categoryName", value: selectedCategory, operator: "-" }]);
+            setSearch([{ field: "category.categoryName", value: selectedCategory, operator: ":" }]);
         } else {
             setSearch([]);
         }
