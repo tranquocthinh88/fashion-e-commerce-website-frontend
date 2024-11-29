@@ -34,8 +34,9 @@ import UserDetails from "../pages/admin/user/UserDetails";
 import Discount from "../pages/admin/discount/Discount";
 import Stoke from "../pages/admin/stoke/Stoke";
 import ProductDetailAdmin from "../pages/admin/products/ProductDetailAdmin";
-import Introduce from "../pages/user/introduce/Introduce";
-import Police from "../pages/user/introduce/Police";
+import Introduce from "../pages/user/information/Introduce";
+import Police from "../pages/user/information/Police";
+import Instruct from "../pages/user/information/instruct";
 
 const adminRoutes = [
   {
@@ -181,6 +182,10 @@ const publicRoutes = [
   {
     path: '/polices',
     element: <UserLayout><Police /></UserLayout>
+  },
+  {
+    path: '/instructs',
+    element: <UserLayout><Instruct /></UserLayout>
   },
 ];
 

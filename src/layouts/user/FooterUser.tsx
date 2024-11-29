@@ -56,14 +56,11 @@ const FooterUser = () => {
                     <Link href="/products" color="inherit" variant="body2" display="block">
                         Danh mục sản phẩm
                     </Link>
-                    <Link href="#" color="inherit" variant="body2" display="block">
-                        Tin tức
-                    </Link>
                     <Link href="/introduces" color="inherit" variant="body2" display="block">
                         Liên hệ
                     </Link>
-                    <Link href="#" color="inherit" variant="body2" display="block">
-                        Hướng dẫn sử dụng
+                    <Link href="/instructs" color="inherit" variant="body2" display="block">
+                        Hướng dẫn mua hàng
                     </Link>
                 </Box>
             </Box>
