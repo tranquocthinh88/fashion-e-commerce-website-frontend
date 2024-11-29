@@ -38,7 +38,7 @@ const Instruct = () => {
                     Hãy đến với cửa hàng của chúng tôi để có được những trải nghiệm tuyệt vời nhé ! <a href="/home">Trang chủ</a>
                 </Typography>
                 <Typography variant="body1" paragraph>
-                    Nếu có thắc mắc xin hãy liên hệ ngay với chúng tôi ! <a href="/introduces">Liên hệ</a>
+                    Nếu có thắc mắc xin hãy liên hệ ngay với chúng tôi hoặc có thể nhắn tin trực tiếp để được tư vấn ! <a href="/introduces">Liên hệ</a>
                 </Typography>
             </Box>
         </Container>

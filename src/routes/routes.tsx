@@ -33,10 +33,9 @@ import Size from "../pages/admin/sizes/Size";
 import UserDetails from "../pages/admin/user/UserDetails";
 import Discount from "../pages/admin/discount/Discount";
 import Stoke from "../pages/admin/stoke/Stoke";
-import ProductDetailAdmin from "../pages/admin/products/ProductDetailAdmin";
 import Introduce from "../pages/user/information/Introduce";
 import Police from "../pages/user/information/Police";
-import Instruct from "../pages/user/information/instruct";
+import Instruct from "../pages/user/information/Instruct";
 
 const adminRoutes = [
   {

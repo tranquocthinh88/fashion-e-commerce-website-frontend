@@ -62,6 +62,9 @@ const FooterUser = () => {
                     <Link href="/instructs" color="inherit" variant="body2" display="block">
                         Hướng dẫn mua hàng
                     </Link>
+                    <Link href="/polices" color="inherit" variant="body2" display="block">
+                        Chính sách của cửa hàng
+                    </Link>
                 </Box>
             </Box>
             <Box sx={{ display: 'flex', justifyContent: 'center' }}>
