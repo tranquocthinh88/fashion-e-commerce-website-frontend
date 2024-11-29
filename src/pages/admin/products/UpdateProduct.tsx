@@ -40,7 +40,7 @@ import { ProductDetailModel } from "../../../models/product-detail.model";
 import { createProductDetail, removeProductDetail, updateProductDetail } from "../../../services/product-detail.service";
 import { ProductResponse } from "../../../dtos/responses/products/product.response";
 import { ProductPriceModel } from "../../../models/product-price.model";
-import { createProductPrice, deleteProductPrice } from "../../../services/product-price.service";
+import { createProductPrice, deleteProductPrice, getAllProductPricesByProductId } from "../../../services/product-price.service";
 import { ProductDto } from "../../../dtos/requests/admin/product.dto";
 import { ProductPriceDto } from "../../../dtos/requests/admin/product-price.dto";
 import { ProductDetailDto } from "../../../dtos/requests/admin/product-detail.dto";
@@ -105,11 +105,7 @@ const UpdateProduct = () => {
         (async () => {
             try {
                 const response: ResponseSuccess<ProductResponse> = await getProductById(id ?? '');
-                // const response2: ResponseSuccess<ProductPriceModel[]> = await getAllProductPricesByProductId(id ?? '');
                 setProduct(response.data);
-                console.log(response.data);
-
-                // setProductPrices(response2.data);
                 const productImages: ProductImageModel | any = response.data.productImage;
                 const productDetails: ProductDetailModel | any = response.data.productDetail;
                 if (productDetails) {
@@ -125,7 +121,7 @@ const UpdateProduct = () => {
             }
 
         })();
-    }, []);
+    }, [id]);
 
     const [openAlert, setOpenAlert] = useState({
         show: false,
@@ -305,11 +301,13 @@ const UpdateProduct = () => {
                 setColors(responseColors.data);
                 const responseBrand: ResponseSuccess<BrandModel[]> = await getAllBrands();
                 setBrands(responseBrand.data);
+                const responseProductPrice: ResponseSuccess<ProductPriceModel[]> = await getAllProductPricesByProductId(id ?? '');
+                setProductPrices(responseProductPrice.data.filter(price => new Date(price.expiredDate) > new Date()) ? responseProductPrice.data : []);
             } catch (error) {
-                console.log(error);
+                console.log(error);     
             }
         })();
-    }, []);
+    }, [id]);
 
     // cleanup
     useEffect(() => {
