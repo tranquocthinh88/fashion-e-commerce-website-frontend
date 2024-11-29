@@ -1,4 +1,5 @@
 import { Box, Button } from "@mui/material";
+import { parse } from 'date-fns';
 import { useEffect, useState } from "react";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
 import { makeStyles } from "@mui/styles";
@@ -8,28 +9,49 @@ import { VoucherModel } from "../../../models/voucher.model";
 import { ResponseSuccess } from "../../../dtos/responses/response.success";
 import { getAllVouchers } from "../../../services/voucher.service";
 
-const data = [
-    { id: 1, productCode: 'HTD1008KI', productName: 'Bánh cá mận', sold: 24, revenue: 2781816 },
-    { id: 2, productCode: 'xoay-3-vong', productName: 'SP Xoay 3 vòng', sold: 21, revenue: 3103500 },
-    { id: 3, productCode: 'M89-38', productName: 'Giày Boot Nam Cao Cổ Khẩu Đế Màu Đen Da Sần M89-38', sold: 20, revenue: 5960000 },
-    { id: 4, productCode: 'testtonkho-gianhap', productName: 'Công trình liên quan tồn kho và giá nhập', sold: 13, revenue: 3887000 },
-    { id: 5, productCode: 'HTD1008KT', productName: 'Bánh sầu riêng', sold: 10, revenue: 3500000 },
-    { id: 6, productCode: 'M89-39', productName: 'Giày Boot Nam Cao Cổ Khẩu Đế Màu Đen Da Sần M89-39', sold: 9, revenue: 2682000 },
-    { id: 7, productCode: 'VAYNU-003', productName: 'Váy nữ thời trang 003', sold: 5, revenue: 3250000 },
-];
-
 const columns: GridColDef[] = [
-    { field: 'id', headerName: 'STT', width: 30 },
-    { field: 'productCode', headerName: 'Mã voucher', width: 150 },
-    { field: 'productName', headerName: 'Tên voucher', width: 150 },
-    { field: 'issueDate', headerName: 'Ngày bắt đầu', type: 'date', width: 120 },
-    { field: 'expiredDate', headerName: 'Ngày kết thúc', type: 'date', width: 120 },
-    { field: 'voucherType', headerName: 'Loại voucher', type: 'singleSelect', width: 100 },
-    { field: 'quantity', headerName: 'Số lượng', type: 'number', width: 80 },
-    { field: 'discount', headerName: 'Phần trăm', type: 'number', width: 100 },
-    { field: 'maxDiscount', headerName: 'Tiền giảm tối đa', type: 'singleSelect', width: 130 },
-    { field: 'minOrder', headerName: 'Hóa đơn tối thiểu', type: 'singleSelect', width: 130 },
-    { field: 'note', headerName: 'Ghi chú', type: 'string', width: 150 },
+    { field: 'id', headerName: 'Mã voucher' },
+    { field: 'name', headerName: 'Tên voucher', type: 'string' },
+    {
+        field: 'startDate',
+        headerName: 'Ngày bắt đầu',
+        type: 'date',
+        valueGetter: (params: { row: VoucherModel }) => {
+            const startDate = params;
+            if (!startDate) {
+                return new Date(); 
+            }
+            try {
+                return parse(startDate.toString(), 'yyyy-MM-dd HH:mm:ss', new Date());
+            } catch (e) {
+                console.error("Error parsing startDate: ", startDate);
+                return new Date(); 
+            }
+        }
+    },
+    {
+        field: 'expiredDate',
+        headerName: 'Ngày kết thúc',
+        type: 'date',
+        valueGetter: (params: { row: VoucherModel }) => {
+            const startDate = params;
+            if (!startDate) {
+                return new Date();
+            }
+            try {
+                return parse(startDate.toString(), 'yyyy-MM-dd HH:mm:ss', new Date());
+            } catch (e) {
+                console.error("Error parsing startDate: ", startDate);
+                return new Date();
+            }
+        }
+    },
+    { field: 'voucherType', headerName: 'Loại voucher', type: 'string' },
+    { field: 'quantity', headerName: 'Số lượng', type: 'number' },
+    { field: 'discount', headerName: 'Phần trăm', type: 'number' },
+    { field: 'maxDiscountAmount', headerName: 'Tiền giảm tối đa', type: 'number' },
+    { field: 'minOrderAmount', headerName: 'Hóa đơn tối thiểu', type: 'number' },
+    { field: 'note', headerName: 'Ghi chú', type: 'string' },
 ];
 
 const useStyles = makeStyles({
@@ -76,7 +98,13 @@ const Discount = () => {
         (async () => {
             try {
                 const response: ResponseSuccess<VoucherModel[]> = await getAllVouchers();
-                setVouchers(response.data);
+                
+                const filteredVouchers = response.data.filter(voucher => {
+                    const expiredDate = new Date(voucher.expiredDate); 
+                    return expiredDate > new Date(); 
+                });
+    
+                setVouchers(filteredVouchers); 
             } catch (error) {
                 console.log(error);
             }
