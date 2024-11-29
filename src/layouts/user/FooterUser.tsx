@@ -47,19 +47,19 @@ const FooterUser = () => {
                     <Typography variant="h6" color="textPrimary" gutterBottom>
                         Hướng dẫn mua hàng
                     </Typography>
-                    <Link href="#" color="inherit" variant="body2" display="block">
+                    <Link href="/home" color="inherit" variant="body2" display="block">
                         Trang chủ
                     </Link>
-                    <Link href="#" color="inherit" variant="body2" display="block">
+                    <Link href="/introduces" color="inherit" variant="body2" display="block">
                         Giới thiệu
                     </Link>
-                    <Link href="#" color="inherit" variant="body2" display="block">
-                        Danh mục
+                    <Link href="/products" color="inherit" variant="body2" display="block">
+                        Danh mục sản phẩm
                     </Link>
                     <Link href="#" color="inherit" variant="body2" display="block">
                         Tin tức
                     </Link>
-                    <Link href="#" color="inherit" variant="body2" display="block">
+                    <Link href="/introduces" color="inherit" variant="body2" display="block">
                         Liên hệ
                     </Link>
                     <Link href="#" color="inherit" variant="body2" display="block">
