@@ -33,6 +33,7 @@ import Size from "../pages/admin/sizes/Size";
 import UserDetails from "../pages/admin/user/UserDetails";
 import Discount from "../pages/admin/discount/Discount";
 import Stoke from "../pages/admin/stoke/Stoke";
+import Promotion from "../pages/user/promotions/Promotion";
 import Introduce from "../pages/user/information/Introduce";
 import Police from "../pages/user/information/Police";
 import Instruct from "../pages/user/information/Instruct";
@@ -106,10 +107,6 @@ const adminRoutes = [
     path: '/admin/stokes',
     element: <ProtectRouter role={Role.ROLE_ADMIN}> <AdminLayout><Stoke /></AdminLayout></ProtectRouter>
   },
-  // {
-  //   path: '/admin/products/product-detail/:id',
-  //   element: <AdminLayout><ProductDetailAdmin /></AdminLayout>
-  // },
 ];
 
 const userRoutes = [
@@ -173,6 +170,10 @@ const publicRoutes = [
   {
     path: '/order-details/:id',
     element: <UserLayout><OrderDetails /></UserLayout>
+  },
+  {
+    path: '/promotions/',
+    element: <UserLayout><Promotion /></UserLayout>
   },
   {
     path: '/introduces',

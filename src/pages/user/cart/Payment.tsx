@@ -73,6 +73,7 @@ const Payment = () => {
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const [userVoucher, setUserVoucher] = useState<UserVoucherModel[]>([]);
+    const [appliedVouchers, setAppliedVouchers] = useState<number[]>([]);
 
     const showAlert = (status: string, message: string) => {
         setOpenAlert({ show: true, status, message });
@@ -164,7 +165,7 @@ const Payment = () => {
         (async () => {
             try {
                 const responseVoucher: ResponseSuccess<VoucherModel[]> = await getAllVouchers();
-                setVouchers(responseVoucher.data);
+                setVouchers(responseVoucher.data.filter(voucher => new Date(voucher.expiredDate) > new Date()));
 
                 const responseUserVoucher = await getUserVoucherByUserId(user?.id ?? 0);
 
@@ -210,6 +211,8 @@ const Payment = () => {
             }
 
             formilCreateOrder.setFieldValue('vouchers', updatedVouchers);
+
+            setAppliedVouchers((prev) => [...prev, voucher.id]);
 
             handleCalDiscount(voucher);
             setOpen(false);
@@ -530,7 +533,7 @@ const Payment = () => {
                                     <List sx={{ pt: 0 }}>
                                         {vouchers.map((item, index) => {
                                             const isUsed = userVoucher.some(uv => uv.voucher.id === item.id && uv.isUsed);
-
+                                            const isApplied = appliedVouchers.includes(item.id);
                                             return (
                                                 <ListItem component="div" key={index} sx={{ display: 'flex', justifyContent: 'space-between' }}>
                                                     <Box>
@@ -540,12 +543,15 @@ const Payment = () => {
                                                         {isUsed && (
                                                             <Typography sx={{ fontSize: 12, color: 'green' }}>Đã sử dụng</Typography>
                                                         )}
+                                                        {isApplied && (
+                                                            <Typography sx={{ fontSize: 12, color: 'blue' }}>Voucher đã áp dụng</Typography>
+                                                        )}
                                                     </Box>
                                                     <Button
                                                         variant="outlined"
                                                         color="primary"
                                                         onClick={() => handleSelectVoucher(item)}
-                                                        disabled={isUsed}
+                                                        disabled={isUsed || isApplied}
                                                     >
                                                         Áp dụng
                                                     </Button>

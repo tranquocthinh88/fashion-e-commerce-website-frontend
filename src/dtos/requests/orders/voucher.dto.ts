@@ -12,7 +12,7 @@ export type applyVoucherShipDto= {
 }
 
 export type voucherDto = {
-    voucherName: string;
+    name: string;
     note: string;
     discount: number;
     voucherType: VoucherType;

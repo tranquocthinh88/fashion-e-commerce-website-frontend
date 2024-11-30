@@ -19,8 +19,8 @@ const DialogCreateVoucher = ({ open, handleClose, addVoucher, showAlert }: Props
     const [discount, setDiscount] = useState(0);
     const [voucherType, setVoucherType] = useState<VoucherType>(VoucherType.FOR_PRODUCT);
     const [scope, setScope] = useState<Scope>(Scope.ALL);
-    const [startDate, setStartDate] = useState('');
-    const [expiredDate, setExpiredDate] = useState('');
+    const [startDate, setStartDate] = useState(Date);
+    const [expiredDate, setExpiredDate] = useState(Date);
     const [maxDiscountAmount, setMaxDiscountAmount] = useState(0);
     const [minOrderAmount, setMinOrderAmount] = useState(0);
     const [quantity, setQuantity] = useState(0);
@@ -54,7 +54,7 @@ const DialogCreateVoucher = ({ open, handleClose, addVoucher, showAlert }: Props
                 const formattedExpiredDate = `${expiredDate}T23:59:59`;
 
                 const value: voucherDto = {
-                    voucherName: voucherName,
+                    name: voucherName,
                     note: note,
                     discount: discount,
                     voucherType: voucherType,
@@ -72,7 +72,6 @@ const DialogCreateVoucher = ({ open, handleClose, addVoucher, showAlert }: Props
                 resetForm();
             } catch (error) {
                 showAlert('error', 'Thêm thất bại');
-                handleClose();
             }
         }
     }

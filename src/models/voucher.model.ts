@@ -15,8 +15,8 @@ export type VoucherModel = {
     note: string;
     discount: number;
     voucherType: VoucherType;
-    startDate: string;
-    expiredDate: string;
+    startDate: Date | string;
+    expiredDate: Date | string;
     quantity: number;
     scope: Scope;
     maxDiscountAmount: number;
