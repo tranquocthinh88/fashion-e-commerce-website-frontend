@@ -102,7 +102,7 @@ const Home = () => {
     }, [location.state]);
 
     return (
-        <Box>
+        <Box sx={{mt: 4}}>
             <Slide />
             <Box sx={{
                 width: "100%",

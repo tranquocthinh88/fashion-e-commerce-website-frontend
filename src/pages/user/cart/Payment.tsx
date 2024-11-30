@@ -338,7 +338,7 @@ const Payment = () => {
     }
 
     return (
-        <Container maxWidth="lg">
+        <Container maxWidth="lg" sx={{mt: 4}}>
             <Grid container spacing={4}>
                 {/* Shipping Information Section */}
                 <Grid item xs={12} md={7}>
@@ -461,7 +461,7 @@ const Payment = () => {
                                 <FormControlLabel
                                     value={PaymentMethod.CC}
                                     control={<Radio />}
-                                    label="Thẻ ATM/Visa/MasterCard/JCBQR Pay qua ứng dụng VNPAY"
+                                    label="ATM/Visa/MasterCard/JCBQR Pay qua ứng dụng VNPAY"
                                     onChange={() => setPaymentMethod(PaymentMethod.CC)}
                                 />
                             </RadioGroup>
@@ -597,8 +597,8 @@ const Payment = () => {
             </Grid>
             <Grid container spacing={4}>
                 <Grid item xs={12} md={7}>
-                    <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }} >
-                        <Button variant="contained" color="warning" onClick={() => { navigate('/cart') }}>
+                    <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', mt: 1 }} >
+                        <Button sx={{fontSize: '12px'}} variant="contained" color="warning" onClick={() => { navigate('/cart') }}>
                             Quay về giỏ hàng
                         </Button>
                         <Button
@@ -606,6 +606,7 @@ const Payment = () => {
                             variant="contained"
                             color="success"
                             onClick={handleSubmitOrder1}
+                            sx={{fontSize: '12px'}}
                         >
                             Hoàn tất đơn hàng
                         </Button>

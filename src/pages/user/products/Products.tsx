@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useMediaQuery } from "@mui/material";
 import { ProductUserResponse } from "../../../dtos/responses/products/productUser-response";
 import { getProductsForUser } from "../../../services/product.service";
 import { ResponseSuccess } from "../../../dtos/responses/response.success";
@@ -11,6 +12,7 @@ import { BrandModel } from "../../../models/brand.model";
 import { getAllBrands } from "../../../services/brand.service";
 
 const Products = () => {
+    const isMobile = useMediaQuery('(max-width:768px)');
     const [products, setProducts] = useState<ProductUserResponse[]>();
     const [categories, setCategories] = useState<CategoryModel[]>([]);
     const [brands, setBrands] = useState<BrandModel[]>([]);
@@ -49,11 +51,10 @@ const Products = () => {
 
                 console.log("Search params: ", searchParams);
 
-
                 const responseProducts: ResponseSuccess<PageResponse<ProductUserResponse[]>> =
                     await getProductsForUser(pageNo, 20, searchParams, sort ? [{ field: sort.split(':')[0], order: sort.split(':')[1] }] : []);
                 console.log("Products: ", responseProducts.data.data);
-                
+
                 setProducts(responseProducts.data.data);
                 setTotalPage(responseProducts.data.totalPage);
             } catch (error) {
@@ -79,11 +80,13 @@ const Products = () => {
             if (name === "priceMax") setPriceMax(Number(value));
         }
     };
+
     return (
         <>
             <Box
                 sx={{
                     display: 'flex',
+                    flexDirection: isMobile ? 'column' : 'row',
                     width: '100%',
                     minHeight: '100vh',
                 }}
@@ -91,21 +94,22 @@ const Products = () => {
                 {/* Bộ lọc */}
                 <Box
                     sx={{
-                        width: '32%',
-                        position: 'fixed',
-                        top: 150,
+                        width: isMobile ? '100%' : '32%',
+                        position: isMobile ? 'relative' : 'fixed',
+                        top: isMobile ? 0 : 150,
                         left: 0,
                         padding: 2,
                         zIndex: 1,
-                        height: `calc(100vh - 150px)`,
-                        paddingBottom: '150px',
-                        overflowY: 'auto',
+                        height: isMobile ? 'auto' : `calc(100vh - 150px)`,
+                        paddingBottom: isMobile ? 0 : '150px',
+                        overflowY: isMobile ? 'visible' : 'auto',
+                        mt: isMobile ? 0 : 4
                     }}
                 >
                     <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 1 }}>Bộ lọc</Typography>
                     <Grid item xs={12}>
-                        <Typography variant="h6" sx={{}}>Danh mục sản phẩm</Typography>
-                        <FormControl style={{ width: "50%" }}>
+                        <Typography variant="h6">Danh mục sản phẩm</Typography>
+                        <FormControl fullWidth>
                             <InputLabel id="category-label">Danh mục sản phẩm</InputLabel>
                             <Select
                                 labelId="category-label"
@@ -122,8 +126,8 @@ const Products = () => {
                         </FormControl>
                     </Grid>
                     <Grid item xs={12}>
-                        <Typography variant="h6" sx={{}}>Thương hiệu</Typography>
-                        <FormControl style={{ width: "50%" }}>
+                        <Typography variant="h6" sx={{ mt: 2 }}>Thương hiệu</Typography>
+                        <FormControl fullWidth>
                             <InputLabel id="brand-label">Thương hiệu</InputLabel>
                             <Select
                                 labelId="brand-label"
@@ -140,34 +144,33 @@ const Products = () => {
                         </FormControl>
                     </Grid>
                     <Grid item xs={12}>
-                        <Typography variant="h6" sx={{}}>
+                        <Typography variant="h6" sx={{ mt: 2 }}>
                             Khoảng giá
                         </Typography>
 
-                        <FormControl style={{ width: "40%", marginRight: 3 }}>
+                        <FormControl style={{ width: "50%", marginRight: 3 }}>
                             Từ <Input name="priceMin" type="number" placeholder="Nhập giá sản phẩm" onChange={handlePriceChange} />
                         </FormControl>
 
-                        <FormControl style={{ width: "40%" }}>
-                            đến <Input name="priceMax" type="number" placeholder="Nhập giá sản phẩm" onChange={handlePriceChange} />
+                        <FormControl style={{ width: "50%" }}>
+                            Đến <Input name="priceMax" type="number" placeholder="Nhập giá sản phẩm" onChange={handlePriceChange} />
                         </FormControl>
                     </Grid>
-                    {/* </Grid> */}
                 </Box>
                 {/* Sản phẩm */}
                 <Box
                     sx={{
-                        marginLeft: '32%',
-                        width: '68%',
+                        marginLeft: isMobile ? 0 : '32%',
+                        width: isMobile ? '100%' : '68%',
                         padding: 2,
                         position: 'relative',
                         minHeight: 'calc(100vh - 145px)', // Trừ chiều cao của footer
                     }}
                 >
                     <Grid item xs={12}>
-                        <Box sx={{ padding: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                        <Box sx={{ padding: 2, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexDirection: isMobile ? 'column' : 'row' }}>
                             <Typography variant="h6" sx={{ fontWeight: 'bold', marginBottom: 1 }}>{products?.length} sản phẩm</Typography>
-                            <FormControl style={{ width: "300px", }}>
+                            <FormControl fullWidth={isMobile} style={{ width: isMobile ? '100%' : '300px' }}>
                                 <InputLabel id="demo-simple-select-label">Sắp xếp theo</InputLabel>
                                 <Select
                                     labelId="demo-simple-select-label"
@@ -202,12 +205,11 @@ const Products = () => {
                             </Grid>
                         )}
                     </Grid>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mt: 2 }}>
+                    <Box sx={{ display: 'flex', alignItems: 'center', mt: 2, justifyContent: 'center' }}>
                         <Stack spacing={2}>
                             <Pagination count={totalPage} page={pageNo} variant="outlined" shape="rounded" onChange={handleChange} />
                         </Stack>
                     </Box>
-                    {/* </Grid> */}
                 </Box>
             </Box>
         </>

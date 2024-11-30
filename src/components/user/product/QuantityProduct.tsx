@@ -46,7 +46,7 @@ const QuantityProduct = ({ quantity, setQuantity, maxValue, cartItem }: Props) =
             <Button onClick={(e) => decreasement(e)}>
                 <RemoveIcon />
             </Button>
-            <Box sx={{width: '100px'}}>
+            <Box sx={{width: '80px'}}>
                 <TextField size="small" type="number" value={quantity} onChange={(e) => setQuantity(Number(e.target.value))} />
             </Box>
             <Button onClick={(e) => increasement(e)}>

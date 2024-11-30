@@ -1,14 +1,23 @@
-import { Box, Typography, Link } from '@mui/material';
+import { Box, Typography, Link, useMediaQuery } from '@mui/material';
 import FacebookOutlinedIcon from '@mui/icons-material/FacebookOutlined';
 import GoogleIcon from '@mui/icons-material/Google';
 
 const FooterUser = () => {
+    const isMobile = useMediaQuery('(max-width:600px)');
+
     return (
         <Box>
-            <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-around' }}>
-                <Box >
+            <Box
+                sx={{
+                    display: 'flex',
+                    flexDirection: isMobile ? 'column' : 'row',
+                    justifyContent: 'space-around',
+                    textAlign: isMobile ? 'center' : 'left'
+                }}
+            >
+                <Box>
                     <Typography
-                        variant="h4"
+                        variant={isMobile ? "h5" : "h4"}
                         color="red"
                         gutterBottom
                         style={{
@@ -20,12 +29,12 @@ const FooterUser = () => {
                         Total Trendsetter
                     </Typography>
 
-                    <Typography variant="h6">
+                    <Typography variant={isMobile ? "body1" : "h6"}>
                         Cửa hàng thời trang uy tín hàng đầu Việt Nam
                     </Typography>
                 </Box>
-                <Box >
-                    <Typography variant="h6" color="textPrimary" gutterBottom>
+                <Box>
+                    <Typography variant={isMobile ? "body1" : "h6"} color="textPrimary" gutterBottom>
                         Bạn cần hỗ trợ
                     </Typography>
                     <Typography variant="body2">
@@ -40,11 +49,11 @@ const FooterUser = () => {
                     <Typography variant="body2">
                         Email: trungthinh2k2@gmail.com
                     </Typography>
-                    <FacebookOutlinedIcon sx={{ color: '#1976D2' }} fontSize="large"/>
-                    <GoogleIcon sx={{ color: '#DB4437'}} fontSize="large"/>
+                    <FacebookOutlinedIcon sx={{ color: '#1976D2', fontSize: isMobile ? 'medium' : 'large' }} />
+                    <GoogleIcon sx={{ color: '#DB4437', fontSize: isMobile ? 'medium' : 'large' }} />
                 </Box>
-                <Box >
-                    <Typography variant="h6" color="textPrimary" gutterBottom>
+                <Box>
+                    <Typography variant={isMobile ? "body1" : "h6"} color="textPrimary" gutterBottom>
                         Hướng dẫn mua hàng
                     </Typography>
                     <Link href="/home" color="inherit" variant="body2" display="block">
@@ -67,7 +76,7 @@ const FooterUser = () => {
                     </Link>
                 </Box>
             </Box>
-            <Box sx={{ display: 'flex', justifyContent: 'center' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'center', marginTop: isMobile ? '20px' : '10px' }}>
                 <Typography variant="body2">
                     © Bản quyền thuộc về Total Trendsetter
                 </Typography>

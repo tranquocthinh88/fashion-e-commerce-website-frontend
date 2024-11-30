@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, Container, Pagination, Rating, Stack, Typography } from "@mui/material"
+import { Avatar, Box, Button, Container, Pagination, Rating, Stack, Typography, useMediaQuery } from "@mui/material"
 import { useEffect, useState } from "react";
 import { ProductModel } from "../../../models/product.model";
 import { useNavigate, useParams } from "react-router-dom";
@@ -67,12 +67,14 @@ const ProductDetail = () => {
     const navigate = useNavigate();
     const login = isLoginAccount();
 
+    const isMobile = useMediaQuery('(max-width:600px)');
+
     const settings = {
         dots: true, // Hiển thị nút chỉ báo trang
         infinite: false, // Không cuộn vô hạn
         speed: 500, // Tốc độ chuyển đổi slide
-        slidesToShow: 5, // Số lượng sản phẩm trên mỗi trang
-        slidesToScroll: 5, // Số sản phẩm khi cuộn mỗi lần
+        slidesToShow: isMobile ? 1 : 5, // Số lượng sản phẩm trên mỗi trang
+        slidesToScroll: isMobile ? 1 : 5, // Số sản phẩm khi cuộn mỗi lần
         prevArrow: <CustomArrow type="prev" />,
         nextArrow: <CustomArrow type="next" />,
         initialSlide: 0,
@@ -285,13 +287,15 @@ const ProductDetail = () => {
             <Box
                 sx={{
                     display: 'flex',
-                    flexDirection: 'row',
+                    flexDirection: isMobile ? 'column' : 'row',
                     gap: 2,
+                    mt: 2
                 }}
             >
-                <ListImage images={productImages} />
-
-                <Box sx={{ width: '60%', display: 'flex', flexDirection: 'column', gap: 1 }}>
+                {/* <Box sx={{width: isMobile ? '250%' : '100%'}}> */}
+                    <ListImage images={productImages} />
+                {/* </Box> */}
+                <Box sx={{ width: isMobile ? '100%' : '60%', display: 'flex', flexDirection: 'column', gap: 1 }}>
                     <Typography variant="h5" sx={{ fontWeight: '700' }}>{productResponse?.productName}</Typography>
                     <Typography variant="h6">{productResponse?.brand?.brandName}</Typography>
                     <Box sx={{ display: 'flex', gap: '25px' }}>
@@ -348,31 +352,33 @@ const ProductDetail = () => {
                             <QuantityProduct quantity={buyQuantity} setQuantity={setBuyQuantityProp} maxValue={availableQuantity} />
                         </Box>
                     </Box>
-                    <Box sx={{ display: 'flex', gap: 2 }}>
+                    <Box sx={{ display: 'flex', gap: 3 }}>
                         <Button
                             variant="contained"
                             sx={{
                                 width: 'auto',
                                 height: '48px',
+                                fontSize: '12px',
                             }}
                             color="warning"
                             onClick={addProductToCart}
-                        > <LocalMallIcon sx={{ mr: 1 }} /> Thêm vào giỏ hàng</Button>
+                        > <LocalMallIcon /> Thêm vào giỏ hàng</Button>
                         <Button
                             variant="contained"
                             sx={{
                                 width: 'auto',
                                 height: '48px',
+                                fontSize: '12px',
                             }}
                             color="success"
                             onClick={handleBuyNow}
-                        > <ShoppingCartIcon sx={{ mr: 1 }} />Mua ngay</Button>
+                        > <ShoppingCartIcon />Mua ngay</Button>
                     </Box>
                 </Box>
             </Box>
             <Box>
                 <Box>
-                    <Typography variant="h6">MÔ TẢ SẢN PHẨM</Typography>
+                    <Typography variant="h6" sx={{ mt: 2 }}>MÔ TẢ SẢN PHẨM</Typography>
                     <Box>
                         <Typography>Tổng số sản phẩm trong kho: {productResponse?.totalQuantity}</Typography>
                         <Typography>{productResponse?.description}</Typography>
@@ -449,5 +455,3 @@ const ProductDetail = () => {
 }
 
 export default ProductDetail;
-
-
