@@ -34,6 +34,9 @@ import UserDetails from "../pages/admin/user/UserDetails";
 import Discount from "../pages/admin/discount/Discount";
 import Stoke from "../pages/admin/stoke/Stoke";
 import Promotion from "../pages/user/promotions/Promotion";
+import Introduce from "../pages/user/information/Introduce";
+import Police from "../pages/user/information/Police";
+import Instruct from "../pages/user/information/Instruct";
 
 const adminRoutes = [
   {
@@ -171,8 +174,19 @@ const publicRoutes = [
   {
     path: '/promotions/',
     element: <UserLayout><Promotion /></UserLayout>
-  }
-
+  },
+  {
+    path: '/introduces',
+    element: <UserLayout><Introduce /></UserLayout>
+  },
+  {
+    path: '/polices',
+    element: <UserLayout><Police /></UserLayout>
+  },
+  {
+    path: '/instructs',
+    element: <UserLayout><Instruct /></UserLayout>
+  },
 ];
 
 export const router = createBrowserRouter([

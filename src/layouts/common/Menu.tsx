@@ -17,7 +17,6 @@ export const UserMenu = [
     },
     {
         title: 'Giới thiệu',
-        href: '/about'
+        href: '/introduces'
     }
-
 ]
