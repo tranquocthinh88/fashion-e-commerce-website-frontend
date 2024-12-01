@@ -275,7 +275,7 @@ const ProductDetail = () => {
                 return;
             }
             addProductToCart();
-            navigate("/payment")
+            navigate("/payment", { state: { selectedItems: [{ productDetail: productDetail, quantity: buyQuantity, priceFinal: productUserResponse?.priceFinal ?? 0 }] } });
         }
         else {
             navigate('/login', { state: { from: `/products/${id}` } });
