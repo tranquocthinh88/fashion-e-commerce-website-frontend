@@ -39,7 +39,7 @@ import { applyVoucherOrderDto, applyVoucherShipDto } from "../../../dtos/request
 import { OrderModel, PaymentMethod } from "../../../models/order.model";
 import { createOrder } from "../../../services/order.service";
 import { OrderDto } from "../../../dtos/requests/orders/order.dto";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { updateCartState } from "../../../redux/reducers/cart.reducer";
 import { useFormik } from "formik";
@@ -75,13 +75,20 @@ const Payment = () => {
     const [userVoucher, setUserVoucher] = useState<UserVoucherModel[]>([]);
     const [appliedVouchers, setAppliedVouchers] = useState<number[]>([]);
 
+    const location = useLocation();
+    const selectedItems: CartItemModel[] = location.state?.selectedItems || [];
+
+    useEffect(() => {
+        console.log('Selected items for payment:', selectedItems);
+    }, [selectedItems]);
+
     const showAlert = (status: string, message: string) => {
         setOpenAlert({ show: true, status, message });
     };
 
     useEffect(() => {
         let total = 0;
-        cart.forEach((cartItem: CartItemModel) => {
+        selectedItems.forEach((cartItem: CartItemModel) => {
             total += (cartItem.priceFinal ?? 0) * (cartItem.quantity ?? 0);
         });
         setTotalMoney(total);
@@ -287,9 +294,10 @@ const Payment = () => {
                 street: selectedWard
             },
             addressDetail: '',
-            productsOrderDtos: cart.map((cartItem: CartItemModel) => ({
-                productDetailId: cartItem.productDetail?.id ?? '',
-                quantity: cartItem.quantity ?? 0,
+            productsOrderDtos: selectedItems.map((item) => ({
+                productDetailId: item.productDetail.id ?? '',
+                quantity: item.quantity,
+                priceFinal: item.priceFinal,
             })),
             vouchers: [selectedVoucherForProduct, selectedVoucherForDelivery].filter(Boolean) || [],
         },
@@ -300,6 +308,22 @@ const Payment = () => {
 
                 const response: ResponseSuccess<OrderModel> = await createOrder(values);
                 const order: OrderModel = response.data;
+
+                // Lấy danh sách `productDetailId` đã mua
+                const purchasedProductIds = values.productsOrderDtos.map((item) => item.productDetailId);
+
+                // Lấy giỏ hàng hiện tại từ localStorage
+                const currentCart: CartItemModel[] = JSON.parse(localStorage.getItem('cart') ?? '[]');
+
+                // Lọc bỏ các sản phẩm đã mua khỏi giỏ hàng
+                const updatedCart = currentCart.filter(
+                    (cartItem) => cartItem.productDetail.id && !purchasedProductIds.includes(cartItem.productDetail.id)
+                );
+
+                // Cập nhật lại localStorage và Redux store
+                localStorage.setItem('cart', JSON.stringify(updatedCart));
+                dispatch(updateCartState());
+
                 if (order.paymentMethod === PaymentMethod.CC) {
                     alert('Đã đặt hàng thành công, vui lòng chuyển tiền qua đây: ');
 
@@ -314,10 +338,6 @@ const Payment = () => {
                     } catch (error) {
                         console.error('Error getting payment URL:', error);
                     }
-                }
-                else {
-                    localStorage.removeItem('cart');
-                    dispatch(updateCartState());
                 }
 
                 showAlert('success', 'Đơn hàng đã được tạo thành công.');
@@ -341,7 +361,7 @@ const Payment = () => {
     }
 
     return (
-        <Container maxWidth="lg" sx={{mt: 4}}>
+        <Container maxWidth="lg" sx={{ mt: 4 }}>
             <Grid container spacing={4}>
                 {/* Shipping Information Section */}
                 <Grid item xs={12} md={7}>
@@ -483,7 +503,7 @@ const Payment = () => {
                                 flexDirection: 'column',
                                 width: '100%',
                             }}>
-                                {cart.map((cartItem: CartItemModel, index: number) => (
+                                {selectedItems.map((cartItem: CartItemModel, index: number) => (
                                     <ListItemText key={index}
                                         sx={{
                                             width: '100%',
@@ -604,7 +624,7 @@ const Payment = () => {
             <Grid container spacing={4}>
                 <Grid item xs={12} md={7}>
                     <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', mt: 1 }} >
-                        <Button sx={{fontSize: '12px'}} variant="contained" color="warning" onClick={() => { navigate('/cart') }}>
+                        <Button sx={{ fontSize: '12px' }} variant="contained" color="warning" onClick={() => { navigate('/cart') }}>
                             Quay về giỏ hàng
                         </Button>
                         <Button
@@ -612,7 +632,7 @@ const Payment = () => {
                             variant="contained"
                             color="success"
                             onClick={handleSubmitOrder1}
-                            sx={{fontSize: '12px'}}
+                            sx={{ fontSize: '12px' }}
                         >
                             Hoàn tất đơn hàng
                         </Button>

@@ -1,6 +1,6 @@
 import { ProductDetailModel } from "./product-detail.model";
 
-export type CartItemModel = { 
+export type CartItemModel = {
     productDetail: ProductDetailModel;
     quantity: number;
     priceFinal: number;

@@ -38,9 +38,6 @@ const OrderDetails = () => {
     }, [id]);
 
     useEffect(() => {
-        console.log("Order detail 2: ", orderDetails);
-        console.log("Order detail 3: ", order);
-
     }, [orderDetails, order]);
 
     return (

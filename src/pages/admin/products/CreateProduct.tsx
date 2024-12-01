@@ -14,7 +14,7 @@ import { createProduct } from "../../../services/product.service";
 import { createProductDetail } from "../../../services/product-detail.service";
 import { ProductModel } from "../../../models/product.model";
 import { getAllProviders } from "../../../services/provider.service";
-import { createCategory, getAllCategories } from "../../../services/category.service";
+import { getAllCategories } from "../../../services/category.service";
 import { getAllSizes } from "../../../services/size.service";
 import { getAllColors } from "../../../services/color.service";
 import AlertCustom from "../../../components/common/AlertCustom";
