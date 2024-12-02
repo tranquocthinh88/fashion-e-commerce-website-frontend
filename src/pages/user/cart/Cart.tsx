@@ -1,4 +1,4 @@
-import { Box, Button, Container, Typography } from "@mui/material"
+import { Box, Button, Container, Typography, useMediaQuery } from "@mui/material"
 import { RootState } from "../../../redux/stores/store";
 import { useSelector } from "react-redux";
 import CartEmpty from "./CartEmpty";
@@ -16,6 +16,7 @@ const Cart = () => {
     const navigate = useNavigate();
     const login: boolean = isLoginAccount();
     const location = useLocation();
+    const isMobile = useMediaQuery('(max-width:600px)');
 
     useEffect(() => {
         let total = 0;
@@ -36,16 +37,16 @@ const Cart = () => {
     return (
         <Container>
             {cart.length > 0 ? <>
-                <Box>
+                <Box sx={{mt: isMobile ? 4 : 1}}>
                     <Typography variant="h5" sx={{ mb: 2 }}>Giỏ hàng của bạn</Typography>
                     {cart.map((cartItem: CartItemModel, index: number) => (
                         <CartItem key={index} item={cartItem} />
                     ))}
                 </Box>
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', mb: 2 }}>
-                    <Typography sx={{ fontWeight: 600, mr: '30px', color: 'red' }}>Tổng thanh toán: {ConvertPrice(totalMoney)}</Typography>
+                    <Typography sx={{ fontWeight: 600, mr: '30px', color: 'red', fontSize: isMobile ? '12px' : '18px' }}>Tổng thanh toán: {ConvertPrice(totalMoney)}</Typography>
                     <Button color="success" variant="contained"
-                        onClick={handleCheckout}>
+                        onClick={handleCheckout} sx={{fontSize: isMobile ? '9px' : '16px', width: isMobile ? '40%' : '15%'}}>
                         Thanh toán
                     </Button>
                 </Box>

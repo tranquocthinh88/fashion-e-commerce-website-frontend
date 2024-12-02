@@ -42,7 +42,7 @@ const QuantityProduct = ({ quantity, setQuantity, maxValue, cartItem }: Props) =
     }, [quantity])
 
     return (
-        <Box sx={{ display: 'flex', flexDirection: 'row', }}>
+        <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'center'}}>
             <Button onClick={(e) => decreasement(e)}>
                 <RemoveIcon />
             </Button>

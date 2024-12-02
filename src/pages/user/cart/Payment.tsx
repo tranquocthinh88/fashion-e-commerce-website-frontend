@@ -20,6 +20,8 @@ import {
     DialogTitle,
     Snackbar,
     Alert,
+    useTheme,
+    useMediaQuery,
 } from "@mui/material";
 import { getUserFromLocalStorage } from "../../../services/user.service";
 import { UserModel } from "../../../models/user.model";
@@ -74,6 +76,9 @@ const Payment = () => {
     const dispatch = useDispatch();
     const [userVoucher, setUserVoucher] = useState<UserVoucherModel[]>([]);
     const [appliedVouchers, setAppliedVouchers] = useState<number[]>([]);
+
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
     const showAlert = (status: string, message: string) => {
         setOpenAlert({ show: true, status, message });
@@ -341,7 +346,7 @@ const Payment = () => {
     }
 
     return (
-        <Container maxWidth="lg" sx={{mt: 4}}>
+        <Container maxWidth="lg" sx={{ mt: 4 }}>
             <Grid container spacing={4}>
                 {/* Shipping Information Section */}
                 <Grid item xs={12} md={7}>
@@ -491,7 +496,7 @@ const Payment = () => {
                                             pb: '16px',
                                         }}
                                     >
-                                        <Grid container spacing={2} alignItems="center" sx={{ width: '100%' }}>
+                                        <Grid container spacing={2} alignItems="center" sx={{ width: '100%', flexDirection: isMobile ? 'column' : 'row' }}>
                                             {/* Cột chứa hình ảnh sản phẩm */}
                                             <Grid item xs={3}>
                                                 <Box display="flex" justifyContent="center">
@@ -504,8 +509,8 @@ const Payment = () => {
                                             </Grid>
 
                                             {/* Cột chứa thông tin sản phẩm */}
-                                            <Grid item xs={6}>
-                                                <Typography variant="subtitle1" fontWeight="bold">
+                                            <Grid item xs={isMobile ? 12 : 6} >
+                                                <Typography variant="subtitle1" fontWeight="bold" >
                                                     {cartItem.productDetail?.product?.productName}
                                                 </Typography>
                                                 <Typography variant="body2" color="textSecondary">
@@ -514,7 +519,7 @@ const Payment = () => {
                                             </Grid>
 
                                             {/* Cột chứa giá hoặc các thông tin khác */}
-                                            <Grid item xs={3} display="flex" justifyContent="flex-end">
+                                            <Grid item xs={isMobile ? 12 : 3} display="flex" justifyContent={isMobile ? 'center' : 'flex-end'}>
                                                 <Typography variant="subtitle1" fontWeight="bold" color="primary">
                                                     {ConvertPrice((cartItem.quantity ?? 0) * (cartItem.priceFinal ?? 0))}
                                                 </Typography>
@@ -604,7 +609,7 @@ const Payment = () => {
             <Grid container spacing={4}>
                 <Grid item xs={12} md={7}>
                     <Box sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between', mt: 1 }} >
-                        <Button sx={{fontSize: '12px'}} variant="contained" color="warning" onClick={() => { navigate('/cart') }}>
+                        <Button sx={{ fontSize: '12px' }} variant="contained" color="warning" onClick={() => { navigate('/cart') }}>
                             Quay về giỏ hàng
                         </Button>
                         <Button
@@ -612,7 +617,7 @@ const Payment = () => {
                             variant="contained"
                             color="success"
                             onClick={handleSubmitOrder1}
-                            sx={{fontSize: '12px'}}
+                            sx={{ fontSize: '12px' }}
                         >
                             Hoàn tất đơn hàng
                         </Button>
