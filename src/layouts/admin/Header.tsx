@@ -1,14 +1,9 @@
-import { Avatar, Badge, Box, Button, IconButton, Menu, MenuItem, TextField, Tooltip } from "@mui/material";
+import { Avatar, Box, Button, IconButton, Menu, MenuItem, TextField, Tooltip } from "@mui/material";
 import ReorderIcon from '@mui/icons-material/Reorder';
 import { navbarHover } from "../../theme";
-import MessageIcon from '@mui/icons-material/Message';
-import NotificationsIcon from '@mui/icons-material/Notifications';
-import SettingsIcon from '@mui/icons-material/Settings';
 import { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import ProtectRouter from "../../routes/ProtectRoutes";
-import { Role, UserModel } from "../../models/user.model";
-import RoomChat from "../../pages/user/chat/RoomChat";
+import { UserModel } from "../../models/user.model";
 import { getUserFromLocalStorage, isLoginAccount } from "../../services/user.service";
 import { getToken } from "../../services/token.service";
 import { LoginResponse } from "../../dtos/responses/login.response";
@@ -21,17 +16,11 @@ type HeaderProps = {
 const Header = ({ handleOpenNavbar }: HeaderProps) => {
     const navigate = useNavigate();
     const location = useLocation();
-
-    const [isChatOpen, setIsChatOpen] = useState(false);
     const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
     const openMenu = Boolean(anchorEl);
 
     const user: UserModel | null = getUserFromLocalStorage();
     const login: boolean = isLoginAccount() && user?.role === 'ROLE_ADMIN';
-
-    const toggleChat = () => {
-        setIsChatOpen(!isChatOpen);
-    }
 
     const handleAccountClick = (event: React.MouseEvent<HTMLElement>) => {
         setAnchorEl(event.currentTarget);
@@ -107,25 +96,6 @@ const Header = ({ handleOpenNavbar }: HeaderProps) => {
                     alignItems: "center",
                     marginRight: 2,
                 }}>
-                    <Tooltip title="Tin nhắn">
-                        <IconButton onClick={toggleChat}>
-                            <Badge badgeContent={4} color="primary">
-                                <MessageIcon />
-                            </Badge>
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Thông báo">
-                        <IconButton>
-                            <Badge badgeContent={4} color="primary">
-                                <NotificationsIcon />
-                            </Badge>
-                        </IconButton>
-                    </Tooltip>
-                    <Tooltip title="Cài đặt">
-                        <IconButton>
-                            <SettingsIcon />
-                        </IconButton>
-                    </Tooltip>
                     {login ? (
                         <>
                             <Tooltip title={user ? user.username : "Tài khoản"}>
@@ -170,12 +140,6 @@ const Header = ({ handleOpenNavbar }: HeaderProps) => {
                     )}
                 </Box>
             </Box>
-
-            {isChatOpen &&
-                <ProtectRouter role={Role.ROLE_ADMIN}>
-                    <RoomChat />
-                </ProtectRouter>
-            }
         </Box>
     );
 }

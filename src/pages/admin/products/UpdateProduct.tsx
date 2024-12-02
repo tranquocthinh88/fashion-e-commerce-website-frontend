@@ -191,7 +191,7 @@ const UpdateProduct = () => {
         validationSchema: validationProductPriceSchema,
         onSubmit: async (values: ProductPriceDto, { resetForm }) => {
             console.log("Giá trị ở 198: ", values);
-            
+
             try {
                 const response: ResponseSuccess<ProductPriceModel> = await createProductPrice(values);
                 setProductPrices(prev => [...prev, response.data]);
@@ -304,7 +304,7 @@ const UpdateProduct = () => {
                 const responseProductPrice: ResponseSuccess<ProductPriceModel[]> = await getAllProductPricesByProductId(id ?? '');
                 setProductPrices(responseProductPrice.data.filter(price => new Date(price.expiredDate) > new Date()) ? responseProductPrice.data : []);
             } catch (error) {
-                console.log(error);     
+                console.log(error);
             }
         })();
     }, [id]);
@@ -341,18 +341,16 @@ const UpdateProduct = () => {
 
         if (existingProductDetail) {
             // Update the quantity of the existing product detail
-            const updatedQuantity = (existingProductDetail.quantity ?? 0) + (formikProductDetail.values.quantity ?? 0);
+            const updatedQuantity = formikProductDetail.values.quantity ?? 0;
             try {
                 setOpenBackdrop(true);
                 console.log("Updating product detail with ID:", existingProductDetail.id);
-                await updateProductDetail(Number(existingProductDetail.id), {
-                    ...existingProductDetail,
-                    quantity: updatedQuantity,
-                });
+                const response: ResponseSuccess<string> = await updateProductDetail(existingProductDetail.id!, { quantity: updatedQuantity });
+                console.log("Dữ liệu update: ", response.data);
                 setProductDetail((prev) =>
                     prev.map((detail) =>
                         detail.id === existingProductDetail.id
-                            ? { ...detail, quantity: updatedQuantity }
+                            ? { ...detail, quantity: (detail.quantity ?? 0) + updatedQuantity }
                             : detail
                     )
                 );

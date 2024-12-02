@@ -289,7 +289,7 @@ const ProductDetail = () => {
                     display: 'flex',
                     flexDirection: isMobile ? 'column' : 'row',
                     gap: 2,
-                    mt: 2
+                    mt: 3
                 }}
             >
                 {/* <Box sx={{width: isMobile ? '250%' : '100%'}}> */}
