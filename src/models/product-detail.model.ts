@@ -9,4 +9,5 @@ export type ProductDetailModel = {
     size: SizeModel;
     quantity?: number;
     weight: number; 
+    importDate?: Date;
 }

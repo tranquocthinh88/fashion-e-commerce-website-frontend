@@ -16,31 +16,46 @@ const Cart = () => {
     const navigate = useNavigate();
     const login: boolean = isLoginAccount();
     const location = useLocation();
+    const [selectedItems, setSelectedItems] = useState<CartItemModel[]>([]);
     const isMobile = useMediaQuery('(max-width:600px)');
 
     useEffect(() => {
         let total = 0;
         cart.forEach((cartItem: CartItemModel) => {
-            total += (cartItem.priceFinal ?? 0) * (cartItem.quantity ?? 0);
+            if (cartItem.productDetail.product && cartItem.productDetail.product.id && selectedItems.some(item => item.productDetail.product?.id === cartItem.productDetail.product?.id)) { // Tính tổng tiền chỉ với sản phẩm được chọn
+                total += (cartItem.priceFinal ?? 0) * (cartItem.quantity ?? 0);
+            }
         });
         setTotalMoney(total);
-    }, [cart]);
+    }, [cart, selectedItems]);
 
     const handleCheckout = () => {
         if (login) {
-            navigate('/payment');
+            navigate('/payment', { state: { selectedItems } }); 
         } else {
             navigate('/login', { state: { from: location.pathname } });
         }
-    }
+    };
+    const handleSelectItem = (cartItem: CartItemModel, isSelected: boolean) => {
+        setSelectedItems((prev) =>
+            isSelected
+                ? [...prev, cartItem] // Thêm sản phẩm nếu được chọn
+                : prev.filter((item) => item.productDetail.product?.id !== cartItem.productDetail.product?.id) // Bỏ sản phẩm nếu bị hủy chọn
+        );
+    };
 
     return (
         <Container>
             {cart.length > 0 ? <>
                 <Box sx={{mt: isMobile ? 4 : 1}}>
                     <Typography variant="h5" sx={{ mb: 2 }}>Giỏ hàng của bạn</Typography>
-                    {cart.map((cartItem: CartItemModel, index: number) => (
-                        <CartItem key={index} item={cartItem} />
+                     {cart.map((cartItem: CartItemModel, index: number) => (
+                        <CartItem
+                            key={index}
+                            item={cartItem}
+                            isSelected={selectedItems.some(item => item.productDetail.product?.id === cartItem.productDetail.product?.id)}
+                            onSelect={handleSelectItem}
+                        />
                     ))}
                 </Box>
                 <Box sx={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center', mb: 2 }}>

@@ -19,4 +19,6 @@ export type ProductModel = {
     buyQuantity?: number
     numberOfRating?: number
     totalQuantity?: number
+    createdAt?: Date
+    importDate?: Date
 }

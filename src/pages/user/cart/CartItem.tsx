@@ -1,4 +1,4 @@
-import { Box, Button, Typography } from "@mui/material";
+import { Box, Button, Checkbox, Typography } from "@mui/material";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { CartItemModel } from "../../../models/cart.model";
@@ -11,10 +11,11 @@ import { removeProductFromCart } from "../../../utils/cart.handle";
 import useMediaQuery from '@mui/material/useMediaQuery';
 
 type Props = {
-    item: CartItemModel,
-}
-
-const CartItem = ({ item }: Props) => {
+    item: CartItemModel;
+    isSelected: boolean;
+    onSelect: (cartItem: CartItemModel, isSelected: boolean) => void;
+};
+const CartItem = ({ item, isSelected, onSelect }: Props) => {
     const navigate = useNavigate();
     const [quantity, setQuantity] = useState<number>(item.quantity);
     const dispatch = useDispatch();
@@ -29,6 +30,9 @@ const CartItem = ({ item }: Props) => {
         dispatch(updateCartState());
     };
 
+    const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        onSelect(item, e.target.checked); // Truyền sản phẩm và trạng thái checkbox về `Cart`
+    };
     return (
         <Box sx={{
             cursor: 'pointer',
@@ -51,6 +55,14 @@ const CartItem = ({ item }: Props) => {
                     padding: isMobile ? 2 : 0,
                 }}
             >
+                <Grid size={1}>
+                    <Checkbox
+                        checked={isSelected}
+                        onChange={handleCheckboxChange}
+                        onClick={(e) => e.stopPropagation()} // Ngăn checkbox kích hoạt điều hướng
+                    />
+                </Grid>
+
                 <Grid size={isMobile ? 12 : 1} sx={{ display: 'flex', justifyContent: 'center', mb: isMobile ? 2 : 0 }}>
                     <img
                         src={item.productDetail.product?.thumbnail ?? ""}
@@ -60,6 +72,7 @@ const CartItem = ({ item }: Props) => {
                         style={{ objectFit: 'contain', borderRadius: '4px' }}
                     />
                 </Grid>
+
                 <Grid size={isMobile ? 12 : 3} sx={{ textAlign: isMobile ? 'center' : 'left', mb: isMobile ? 2 : 0 }}>
                     <Typography sx={{
                         minHeight: '48px',
