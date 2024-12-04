@@ -497,11 +497,11 @@ const UpdateProduct = () => {
             <Box sx={{
                 p: 2, pl: 3, display: 'flex',
                 flexWrap: 'wrap',
-                gap: '20px'
+                gap: '35px'
 
             }}>
                 <FormControl sx={{
-                    flexBasis: '200px',
+                    flexBasis: '180px',
                     display: 'flex',
                     flexGrow: 1
                 }}>
@@ -524,7 +524,7 @@ const UpdateProduct = () => {
                     )}
                 </FormControl>
                 <FormControl sx={{
-                    flexBasis: '200px',
+                    flexBasis: '180px',
                     display: 'flex',
                     flexGrow: 1
                 }}>
@@ -660,7 +660,7 @@ const UpdateProduct = () => {
             <Box sx={{
                 p: 2, pl: 3, display: 'flex',
                 flexWrap: 'wrap',
-                gap: '20px'
+                gap: '30px'
 
             }}>
                 <FormControl sx={{
@@ -706,9 +706,9 @@ const UpdateProduct = () => {
                 </FormControl>
             </Box>
             <Box sx={{
-                p: 2, display: 'flex',
+                p: 2, pl : 2,  display: 'flex',
                 flexWrap: 'wrap',
-                gap: '20px'
+                gap: '15px'
             }}>
                 <TextField
                     sx={{ flex: 1 }}
