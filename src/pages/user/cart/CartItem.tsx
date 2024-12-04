@@ -8,6 +8,7 @@ import { ConvertPrice } from "../../../utils/convert.price";
 import { useDispatch } from "react-redux";
 import { updateCartState } from "../../../redux/reducers/cart.reducer";
 import { removeProductFromCart } from "../../../utils/cart.handle";
+import useMediaQuery from '@mui/material/useMediaQuery';
 
 type Props = {
     item: CartItemModel;
@@ -18,6 +19,7 @@ const CartItem = ({ item, isSelected, onSelect }: Props) => {
     const navigate = useNavigate();
     const [quantity, setQuantity] = useState<number>(item.quantity);
     const dispatch = useDispatch();
+    const isMobile = useMediaQuery('(max-width:600px)');
 
     const setQuantityProp = (quantity: number) => {
         setQuantity(quantity);
@@ -49,6 +51,8 @@ const CartItem = ({ item, isSelected, onSelect }: Props) => {
                     alignItems: 'center',
                     justifyContent: 'center',
                     width: '100%',
+                    flexDirection: isMobile ? 'column' : 'row',
+                    padding: isMobile ? 2 : 0,
                 }}
             >
                 <Grid size={1}>
@@ -58,16 +62,18 @@ const CartItem = ({ item, isSelected, onSelect }: Props) => {
                         onClick={(e) => e.stopPropagation()} // Ngăn checkbox kích hoạt điều hướng
                     />
                 </Grid>
-                <Grid size={1} >
+
+                <Grid size={isMobile ? 12 : 1} sx={{ display: 'flex', justifyContent: 'center', mb: isMobile ? 2 : 0 }}>
                     <img
                         src={item.productDetail.product?.thumbnail ?? ""}
                         alt={item.productDetail.product?.productName ?? ""}
-                        width={"100%"}
-                        height={"100%"}
+                        width={isMobile ? "80%" : "100%"}
+                        height={isMobile ? "auto" : "100%"}
                         style={{ objectFit: 'contain', borderRadius: '4px' }}
                     />
                 </Grid>
-                <Grid size={2} >
+
+                <Grid size={isMobile ? 12 : 3} sx={{ textAlign: isMobile ? 'center' : 'left', mb: isMobile ? 2 : 0 }}>
                     <Typography sx={{
                         minHeight: '48px',
                         display: '-webkit-box',
@@ -79,7 +85,7 @@ const CartItem = ({ item, isSelected, onSelect }: Props) => {
                         pl: 1, pr: 1
                     }}>{item.productDetail.product?.productName}</Typography>
                 </Grid>
-                <Grid size={2} >
+                <Grid size={isMobile ? 12 : 2} sx={{ textAlign: isMobile ? 'center' : 'left', mb: isMobile ? 2 : 0 }}>
                     <Box>
                         <Typography>Màu sắc: {item.productDetail.color.colorName}</Typography>
                     </Box>
@@ -87,18 +93,18 @@ const CartItem = ({ item, isSelected, onSelect }: Props) => {
                         <Typography>Kích thước: {item.productDetail.size.numberSize ?? item.productDetail.size.textSize}</Typography>
                     </Box>
                 </Grid>
-                <Grid size={1} >
+                <Grid size={isMobile ? 12 : 1} sx={{ textAlign: isMobile ? 'center' : 'left', mb: isMobile ? 2 : 0 }}>
                     <Typography>{ConvertPrice(item.priceFinal)}</Typography>
                 </Grid>
-                <Grid size={2} >
+                <Grid size={isMobile ? 12 : 2} sx={{ textAlign: 'center', mb: isMobile ? 2 : 0 }}>
                     <QuantityProduct cartItem={item} quantity={quantity} setQuantity={setQuantityProp} maxValue={item.productDetail?.quantity ?? 0} />
                 </Grid>
-                <Grid size={2} >
+                <Grid size={isMobile ? 12 : 2} sx={{ textAlign: 'center', mb: isMobile ? 2 : 0 }}>
                     <Box sx={{ display: 'flex', justifyContent: 'center' }}>
                         <Typography>{ConvertPrice((item.priceFinal ?? 0) * (item.quantity ?? 0))}</Typography>
                     </Box>
                 </Grid>
-                <Grid size={1} >
+                <Grid size={isMobile ? 12 : 1} sx={{ textAlign: 'center' }}>
                     <Button variant="contained" color="warning" onClick={handleDeleleProductOutCart} >Xóa</Button>
                 </Grid>
             </Grid>

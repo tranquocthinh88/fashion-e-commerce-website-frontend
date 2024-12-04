@@ -1,4 +1,4 @@
-import { Box, IconButton, Input, Typography, Snackbar, Alert } from "@mui/material";
+import { Box, IconButton, Input, Typography, Snackbar, Alert, useMediaQuery } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import SendIcon from '@mui/icons-material/Send';
 import ImageIcon from '@mui/icons-material/Image';
@@ -20,6 +20,7 @@ const RoomChat = () => {
     const isAdmin = user?.email === 'admin@gmail.com';
     const chatContainerRef = useRef<HTMLDivElement | null>(null);
     const [mediaFile, setMediaFile] = useState<File | null>(null);
+    const isMobile = useMediaQuery('(max-width: 600px)');
 
     // Đóng chat
     const closeChat = () => {
@@ -139,8 +140,8 @@ const RoomChat = () => {
                     position: 'fixed',
                     bottom: 0,
                     right: 20,
-                    width: 450,
-                    height: 500,
+                    width: isMobile ? '60%' : 450,
+                    height: isMobile ? '60%' : 500,
                     backgroundColor: 'white',
                     boxShadow: 3,
                     borderRadius: 2,
@@ -150,7 +151,7 @@ const RoomChat = () => {
                     flexDirection: 'column',
                 }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <Typography variant="h6" gutterBottom>Trao đổi với nhân viên</Typography>
+                        <Typography variant="h6" gutterBottom sx={{fontSize: isMobile ? '16px' : '20px'}}>Trao đổi với nhân viên</Typography>
                         <IconButton color="primary" size="small" onClick={closeChat}>
                             <CloseIcon />
                         </IconButton>

@@ -1,4 +1,4 @@
-import { Alert, Box, Button, IconButton, Link, Snackbar, Typography } from "@mui/material";
+import { Alert, Box, Button, IconButton, Link, Snackbar, Typography, useMediaQuery, useTheme } from "@mui/material";
 import { bodyAdminColor } from "../../../theme";
 import GoogleIcon from '@mui/icons-material/Google';
 import './Login&Register.scss';
@@ -23,11 +23,12 @@ const validationLoginSchema = yup.object({
     password: yup.string().required('Vui lòng nhập mật khẩu')
 });
 
-
 const Login = () => {
     const [error, setError] = useState('');
     const navigate = useNavigate();
     const location = useLocation();
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down("sm"));
 
     const formikLogin = useFormik({
         initialValues: {
@@ -75,7 +76,6 @@ const Login = () => {
         }
     });
 
-
     const handleKeyDown = (event: React.KeyboardEvent<HTMLDivElement>) => {
         if (event.key === 'Enter') {
             formikLogin.submitForm();
@@ -96,33 +96,62 @@ const Login = () => {
         });
     };
 
-
     return (
-        <Box sx={{ width: '100vw', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center', background: bodyAdminColor }}>
-            <Box className="red-panel" sx={{ width: 800, minHeight: 400, display: 'flex' }}>
-                <Box sx={{
-                    width: 800, minHeight: 400, backgroundColor: "white",
+        <Box
+            sx={{
+                width: '100vw',
+                height: '100vh',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                background: bodyAdminColor,
+                flexDirection: isMobile ? 'column' : 'row',
+            }}
+        >
+            <Box
+                className="red-panel"
+                sx={{
+                    width: isMobile ? '90%' : 800,
+                    minHeight: 400,
                     display: 'flex',
-                    flexDirection: 'column',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    gap: 2
+                    flexDirection: isMobile ? 'column' : 'row',
                 }}
+            >
+                <Box
+                    sx={{
+                        width: isMobile ? '100%' : 800,
+                        minHeight: 400,
+                        backgroundColor: 'white',
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        gap: 2,
+                        padding: isMobile ? 2 : 0,
+                    }}
                     onKeyDown={handleKeyDown}
                 >
                     <Box sx={{ fontSize: 25, fontWeight: 'bold' }}>Đăng nhập</Box>
                     <Box sx={{ display: 'flex', gap: 2 }}>
                         <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                            <IconButton onClick={() => loginWithSocial('facebook')} >
+                            <IconButton onClick={() => loginWithSocial('facebook')}>
                                 <FacebookOutlinedIcon sx={{ color: '#1976D2' }} fontSize="large" />
                             </IconButton>
                             <IconButton onClick={() => loginWithSocial('google')}>
-                                <GoogleIcon sx={{ color: '#DB4437'}} fontSize="large"/>
+                                <GoogleIcon sx={{ color: '#DB4437' }} fontSize="large" />
                             </IconButton>
                         </Box>
                     </Box>
                     <Box sx={{ fontSize: 15 }}>Hoặc tài khoản của bạn</Box>
-                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2, width: '100%', alignItems: 'center' }}>
+                    <Box
+                        sx={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: 2,
+                            width: '100%',
+                            alignItems: 'center',
+                        }}
+                    >
                         <CustomTextField label="Email" id="email" name="email" type="email" formik={formikLogin} width="80%" />
                         <CustomTextField label="Mật khẩu" id="password" name="password" type="password" formik={formikLogin} width="80%" />
                         {error && <Typography component={'span'} sx={{ color: 'red' }}>{error}</Typography>}
@@ -135,7 +164,15 @@ const Login = () => {
                             Quên mật khẩu?
                         </Link>
 
-                        <Button variant="contained" sx={{ backgroundColor: 'red', color: 'white', width: 150, borderRadius: 10, mb: 2 }}
+                        <Button
+                            variant="contained"
+                            sx={{
+                                backgroundColor: 'red',
+                                color: 'white',
+                                width: 150,
+                                borderRadius: 10,
+                                mb: 2,
+                            }}
                             onClick={() => formikLogin.submitForm()}
                         >
                             Đăng nhập
@@ -148,20 +185,34 @@ const Login = () => {
                     classNames="red-panel"
                     unmountOnExit
                 >
-                    <Box sx={{
-                        width: 800,
-                        flexGrow: 1,
-                        backgroundColor: "red",
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                    }}>
+                    <Box
+                        sx={{
+                            width: isMobile ? '100%' : 800,
+                            minHeight: isMobile ? 200 : '100%',
+                            flexGrow: 1,
+                            backgroundColor: "red",
+                            display: 'flex',
+                            flexDirection: 'column',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            padding: isMobile ? 2 : 0,
+                        }}
+                    >
                         <Box sx={{ fontSize: 35, fontWeight: 'bold', color: 'white' }}>Xin chào, bạn !</Box>
                         <Box sx={{ fontSize: 15, color: 'white', mt: 2 }}>Nhập thông tin cá nhân của bạn</Box>
                         <Box sx={{ fontSize: 15, color: 'white' }}>và bắt đầu hành trình với chúng tôi!</Box>
-                        <Button variant="contained" sx={{ backgroundColor: 'red', color: 'white', width: 150, borderRadius: 10, mt: 3, border: '1px solid white' }}
-                            onClick={() => navigate("/register")}>
+                        <Button
+                            variant="contained"
+                            sx={{
+                                backgroundColor: 'red',
+                                color: 'white',
+                                width: 150,
+                                borderRadius: 10,
+                                mt: 3,
+                                border: '1px solid white',
+                            }}
+                            onClick={() => navigate("/register")}
+                        >
                             Đăng ký
                         </Button>
                     </Box>

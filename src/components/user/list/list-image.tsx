@@ -1,4 +1,4 @@
-import { Box, IconButton } from "@mui/material"
+import { Box, IconButton, useMediaQuery } from "@mui/material"
 import { ProductImageModel } from "../../../models/product-image.model"
 
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
@@ -21,6 +21,7 @@ const ListImage = ({ images }: Props) => {
     const [activePage, setActivePage] = useState<number>(0);
     const [currentPage, setCurrentPage] = useState<number>(1);
     const [pageImage, setPageImage] = useState<PageImage>();
+    const isMobile = useMediaQuery('(max-width:600px)');
 
     const handleNextPage = (pageNo: number, pageSize: number) => {
         setPageImage({
@@ -33,7 +34,6 @@ const ListImage = ({ images }: Props) => {
     useEffect(() => {
         handleNextPage(currentPage, 5);
     }, [images, currentPage]);
-
 
     const nextImage = () => {
         setActive(prev => prev + 1);
@@ -53,30 +53,23 @@ const ListImage = ({ images }: Props) => {
         }
     }
     return (
-        <Box sx={{ width: '40%', flexGrow: 1 }}>
+        <Box sx={{ width: isMobile ? '100%' : '40%', flexGrow: 1 }}>
             <Box sx={{
                 width: '100%',
-                height: '450px',
+                height: isMobile ? '300px' : '450px',
                 overflow: 'hidden',
                 position: 'relative',
             }}>
                 <Box sx={{ position: 'relative' }}>
-                    {/* {images.map((image: ProductImageModel) => (
-                        <Box key={image.id} >
-                            <img src={image.path} alt={image.product?.productName} width="100%" height="450px" />
-                        </Box>
-                    ))} */}
                     {images.length > 0 && (
                         <Box>
                             <img
                                 src={images[active].path}
                                 alt={images[active].product?.productName}
-                                width="100%"
-                                height="450px"
+                                style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                             />
                         </Box>
                     )}
-
                 </Box>
                 <Box sx={{
                     position: 'absolute',
@@ -105,7 +98,6 @@ const ListImage = ({ images }: Props) => {
                     <ArrowForwardIosIcon />
                 </IconButton>}
 
-
                 {active > 0 && <IconButton sx={{
                     position: "absolute",
                     top: "50%",
@@ -121,8 +113,6 @@ const ListImage = ({ images }: Props) => {
                 }} onClick={prevImage}>
                     <ArrowBackIosNewIcon />
                 </IconButton>}
-
-
             </Box>
 
             <Box sx={{ gap: '8px', marginTop: '8px', width: "100%", display: 'inline-flex' }}>
@@ -137,7 +127,7 @@ const ListImage = ({ images }: Props) => {
                         key={image.id}
                         onClick={() => { setActive(index + 5 * (currentPage - 1)); setActivePage(index) }}
                     >
-                        <img src={image.path ?? ""} alt="image" height={'100%'} width={'100%'} />
+                        <img src={image.path ?? ""} alt="image" height={'100%'} width={'100%'} style={{ objectFit: 'cover' }} />
                     </Box>
                 ))}
             </Box>

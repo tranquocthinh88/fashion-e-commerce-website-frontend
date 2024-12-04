@@ -254,11 +254,11 @@ const CreateProduct = () => {
                     p: 2,
                     display: 'flex',
                     flexWrap: 'wrap',
-                    gap: '20px'
+                    gap: '10px'
                 }}>
                     <TextField
                         sx={{
-                            flexBasis: '200px',
+                            flexBasis: '230px',
                             display: 'flex',
                             flexGrow: 1
                         }}
@@ -273,7 +273,7 @@ const CreateProduct = () => {
                     />
                     <TextField
                         sx={{
-                            flexBasis: '200px',
+                            flexBasis: '220px',
                             display: 'flex',
                             flexGrow: 1
                         }}
@@ -289,16 +289,10 @@ const CreateProduct = () => {
                     />
                 </Box>
                 <Box sx={{
-                    p: 2, pl: 3, display: 'flex',
+                    p: 2, display: 'flex',
                     flexWrap: 'wrap',
-                    // gap: '20px'
-
+                    gap: '20px'
                 }}>
-                    {/* <FormControl sx={{
-                        flexBasis: '200px',
-                        display: 'flex',
-                        flexGrow: 1
-                    }}> */}
                         <TextField
                             sx={{
                                 flexBasis: '200px',
@@ -315,11 +309,11 @@ const CreateProduct = () => {
                             error={formik.touched.price && Boolean(formik.errors.price)}
                             helperText={formik.touched.price && formik.errors.price}
                         />
-                    {/* </FormControl> */}
                     <FormControl sx={{
                         flexBasis: '200px',
                         display: 'flex',
-                        flexGrow: 1
+                        flexGrow: 1,
+                        mt : 1
                     }}>
                         <InputLabel id="categories">Loại sản phẩm</InputLabel>
                         <Select
@@ -349,7 +343,7 @@ const CreateProduct = () => {
                 <Box sx={{
                     p: 2, pl: 3, display: 'flex',
                     flexWrap: 'wrap',
-                    gap: '20px'
+                    gap: '27px'
 
                 }}>
                     <FormControl sx={{
@@ -460,7 +454,7 @@ const CreateProduct = () => {
                     Chi tiết sản phẩm
                 </Typography>
                 <Box sx={{
-                    p: 2, pl: 3, display: 'flex',
+                    p: 2, display: 'flex',
                     flexWrap: 'wrap',
                     gap: '20px'
 
@@ -517,12 +511,12 @@ const CreateProduct = () => {
                     </FormControl>
                 </Box>
                 <Box sx={{
-                    p: 2, display: 'flex',
+                    p: 1, display: 'flex',
                     flexWrap: 'wrap',
-                    gap: '20px'
+                    gap: '5px'
                 }}>
                     <TextField
-                        sx={{ flex: 1 }}
+                        sx={{ flex: 1}}
                         id="product-price"
                         label="Số lượng"
                         type="number"

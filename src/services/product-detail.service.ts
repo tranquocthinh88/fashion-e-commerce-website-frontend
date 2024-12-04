@@ -1,6 +1,6 @@
 
 import requestConfig, { ContentType, Method } from "../configs/axios.config";
-import { ProductDetailDto } from "../dtos/requests/admin/product-detail.dto";
+import { ProductDetailDto, UpdateProductDetailDto } from "../dtos/requests/admin/product-detail.dto";
 import { ResponseSuccess } from "../dtos/responses/response.success";
 import { ProductDetailModel } from "../models/product-detail.model";
 
@@ -32,10 +32,11 @@ export const removeProductDetail = async (id: number): Promise<ResponseSuccess<s
         return Promise.reject(error);
     }
 }
-export const updateProductDetail = async (id: number, updateProductDetailDto: ProductDetailDto ): Promise<ResponseSuccess<string>> => {
+
+export const updateProductDetail = async (id: string, updateProductDetailDto: UpdateProductDetailDto): Promise<ResponseSuccess<string>> => {
     try {
         const response = await requestConfig(
-            `product-details/${id}`,
+            `productDetails/${id}`,
             Method.PATCH,
             updateProductDetailDto,
             ContentType.JSON,

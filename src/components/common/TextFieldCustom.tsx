@@ -37,14 +37,6 @@ const CustomTextField = ({ label, name, type, formik , width = '100%', multiline
           height: 40, // Tùy chỉnh chiều cao của input bên trong
         },
       }}
-      // InputLabelProps={{
-      //   shrink: true, // Bắt buộc label luôn thu nhỏ để không bị lệch
-      //   sx: {
-      //     fontSize: 14, // Tùy chỉnh kích thước chữ của label
-      //     transform: 'translate(14px, 12px) scale(1)', // Vị trí của label khi không focus
-      //   },
-      // }}
-      // {...props} // Truyền thêm các thuộc tính khác nếu cần
     />
   );
 };

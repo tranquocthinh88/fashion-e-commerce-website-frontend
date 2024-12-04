@@ -20,6 +20,8 @@ import {
     DialogTitle,
     Snackbar,
     Alert,
+    useTheme,
+    useMediaQuery,
 } from "@mui/material";
 import { getUserFromLocalStorage } from "../../../services/user.service";
 import { UserModel } from "../../../models/user.model";
@@ -81,6 +83,9 @@ const Payment = () => {
     useEffect(() => {
         console.log('Selected items for payment:', selectedItems);
     }, [selectedItems]);
+
+    const theme = useTheme();
+    const isMobile = useMediaQuery(theme.breakpoints.down('md'));
 
     const showAlert = (status: string, message: string) => {
         setOpenAlert({ show: true, status, message });
@@ -511,7 +516,7 @@ const Payment = () => {
                                             pb: '16px',
                                         }}
                                     >
-                                        <Grid container spacing={2} alignItems="center" sx={{ width: '100%' }}>
+                                        <Grid container spacing={2} alignItems="center" sx={{ width: '100%', flexDirection: isMobile ? 'column' : 'row' }}>
                                             {/* Cột chứa hình ảnh sản phẩm */}
                                             <Grid item xs={3}>
                                                 <Box display="flex" justifyContent="center">
@@ -524,8 +529,8 @@ const Payment = () => {
                                             </Grid>
 
                                             {/* Cột chứa thông tin sản phẩm */}
-                                            <Grid item xs={6}>
-                                                <Typography variant="subtitle1" fontWeight="bold">
+                                            <Grid item xs={isMobile ? 12 : 6} >
+                                                <Typography variant="subtitle1" fontWeight="bold" >
                                                     {cartItem.productDetail?.product?.productName}
                                                 </Typography>
                                                 <Typography variant="body2" color="textSecondary">
@@ -534,7 +539,7 @@ const Payment = () => {
                                             </Grid>
 
                                             {/* Cột chứa giá hoặc các thông tin khác */}
-                                            <Grid item xs={3} display="flex" justifyContent="flex-end">
+                                            <Grid item xs={isMobile ? 12 : 3} display="flex" justifyContent={isMobile ? 'center' : 'flex-end'}>
                                                 <Typography variant="subtitle1" fontWeight="bold" color="primary">
                                                     {ConvertPrice((cartItem.quantity ?? 0) * (cartItem.priceFinal ?? 0))}
                                                 </Typography>

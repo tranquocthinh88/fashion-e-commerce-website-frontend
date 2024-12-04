@@ -5,3 +5,7 @@ export type ProductDetailDto = {
     quantity?: number;
     weight: number
 }
+
+export type UpdateProductDetailDto = {
+    quantity: number
+}

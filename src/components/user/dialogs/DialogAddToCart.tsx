@@ -49,6 +49,7 @@ const SizeColorBox = ({ text, onClick, selected }: { text: string | number, onCl
 const DiaLogAddToCart = ({ open, handleClose, productUserResponse }: Props) => {
     const theme = useTheme();
     const fullScreen = useMediaQuery(theme.breakpoints.down('lg'));
+    const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
     const [colors, setColors] = useState<ColorModel[]>([]);
     const [sizes, setSizes] = useState<SizeModel[]>([]);
     const [selectedColor, setSelectedColor] = useState<ColorModel | null>(null);
@@ -147,19 +148,19 @@ const DiaLogAddToCart = ({ open, handleClose, productUserResponse }: Props) => {
             onClose={handleClose}
             PaperProps={{
                 sx: {
-                    width: "60%",
+                    width: isMobile ? "90%" : "60%",
                     height: "auto",
-                    maxWidth: "60%",
+                    maxWidth: isMobile ? "90%" : "60%",
                     background: "white",
                 }
             }}
         >
             <DialogContent>
-                <Box sx={{ display: "flex", flexDirection: "row" }}>
-                    <Box sx={{ width: "40%", background: "gray", height: 400, resizeMode: 'contain' }}>
+                <Box sx={{ display: "flex", flexDirection: isMobile ? "column" : "row" }}>
+                    <Box sx={{ width: isMobile ? "100%" : "40%", background: "gray", height: isMobile ? 250 : 400, resizeMode: 'contain' }}>
                         <img src={productUserResponse.product?.thumbnail} alt="product" style={{ width: "100%", height: "100%" }} />
                     </Box>
-                    <Box sx={{ width: "60%", display: "flex", flexDirection: "column", ml: 2 }}> {/* Chi tiết*/}
+                    <Box sx={{ width: isMobile ? "100%" : "60%", display: "flex", flexDirection: "column", ml: isMobile ? 0 : 2, mt: isMobile ? 2 : 0 }}> {/* Chi tiết*/}
                         <Typography
                             sx={{
                                 fontWeight: '500',
@@ -187,10 +188,10 @@ const DiaLogAddToCart = ({ open, handleClose, productUserResponse }: Props) => {
                         }}>
                             <Typography
                                 sx={{
-                                    fontSize: 18
+                                    fontSize: isMobile ? '14px' : '18px'
                                 }}
                             >Giá: </Typography>
-                            <Typography variant="h5" sx={{ color: 'red', fontWeight: '600', }}>{productUserResponse.priceFinal}</Typography>
+                            <Typography variant="h5" sx={{ color: 'red', fontWeight: '600', fontSize: isMobile ? '15px' : '20px' }}>{productUserResponse.priceFinal}</Typography>
                             {productUserResponse.priceFinal != productUserResponse.product.price &&
                                 <Typography variant="h5"
                                     sx={{ color: 'gray', fontWeight: '300', textDecoration: 'line-through' }}>
@@ -235,7 +236,8 @@ const DiaLogAddToCart = ({ open, handleClose, productUserResponse }: Props) => {
                             </Box>
                             <Box sx={{ display: "flex", justifyContent: "center", mb: 2 }}>
                                 <Button sx={{
-                                    width: "60%",
+                                    fontSize: isMobile ? '12px' : '16px',
+                                    width: isMobile ? "70%" : "60%",
                                     ':hover': {
                                         background: 'linear-gradient(45deg, #FE6B8B 30%, #FF8E53 90%)',
                                         color: 'white',
