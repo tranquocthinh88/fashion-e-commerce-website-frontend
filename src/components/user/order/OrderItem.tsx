@@ -4,8 +4,6 @@ import { ConvertPrice } from "../../../utils/convert.price";
 import { OrderModel } from "../../../models/order.model";
 import { OrderStatus } from "../../../models/enum/order.status";
 import { updateStatusCancel, updateStatusReceived } from "../../../services/order.service";
-import DialogOrderDetails from "../dialogs/DialogOrderDetails";
-import { useState } from "react";
 
 type Props = {
     item: OrderModel,
@@ -23,8 +21,6 @@ const orderStatusMap: Record<OrderStatus, string> = {
 };
 const OrderItem = ({ item }: Props) => {
     const navigate = useNavigate();
-    const [openOrderDialog, setOpenOrderDialog] = useState(false);
-    const [selectedOrder, setSelectedOrder] = useState<OrderModel | null>(null);
 
     const isCancelDisabled = (() => {
         const orderDate = new Date(item.orderDate);
@@ -64,19 +60,19 @@ const OrderItem = ({ item }: Props) => {
                         disabled={isReceivedDisabled}
                         onClick={handleReceived}>Xác nhận</Button>
                     <Button sx={{ ml: 1, textTransform: 'none' }} color="success" variant="contained" onClick={() => {
-                        //  navigate(`/order-details/${item.id}`) 
-                         setSelectedOrder(item);
-                                        setOpenOrderDialog(true);
+                         navigate(`/order-details/${item.id}`) 
+                        //  setSelectedOrder(item);
+                        //                 setOpenOrderDialog(true);
                          }}>Chi tiết</Button>
                 </TableCell>
             </TableRow>
-            {openOrderDialog && selectedOrder && (
+            {/* {openOrderDialog && selectedOrder && (
                             <DialogOrderDetails
                                 open={openOrderDialog}
                                 onClose={() => setOpenOrderDialog(false)}
                                 order={selectedOrder}
                             />
-                        )}
+                        )} */}
         </>
     )
 }

@@ -193,8 +193,8 @@ const Products = () => {
                     <Grid container spacing={2}>
                         {products && products.length > 0 ? (
                             products.map((product: ProductUserResponse, index: number) => (
-                                <Grid item xs={12} sm={6} md={4} lg={3} key={`${product.product.id}-${index}`}>
-                                    <Box sx={{ boxShadow: 2, borderRadius: 2, padding: 1, '&:hover': { boxShadow: 6 } }}>
+                                <Grid item xs={12} sm={6} md={4} lg={3} key={`${product.product.id}-${index}`} sx={{ display: 'flex', justifyContent: 'center' }}>
+                                    <Box sx={{ boxShadow: 2, borderRadius: 2, padding: 1, '&:hover': { boxShadow: 6 }, display: 'flex', alignItems: 'center' }}>
                                         <ProductCard product={product} />
                                     </Box>
                                 </Grid>

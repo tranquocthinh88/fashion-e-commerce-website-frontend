@@ -277,10 +277,11 @@ const Header = () => {
                         justifyContent: 'space-around',
                         alignItems: 'center',
                         backgroundColor: thirdGradient,
-                        width: '100%',
+                        width: isMobile ? '100%' : '60%',
                         maxWidth: '100%',
                         position: 'relative',
                         borderRadius: '8px',
+                        left: isMobile ? '0%' : '20%',
                         zIndex: 1,
                         boxShadow: '0 6px 12px rgba(0, 0, 0, 0.1)',
                         padding: '5px', // Giảm padding để thu nhỏ khung
