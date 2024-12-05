@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Dialog from '@mui/material/Dialog';
 import Box from '@mui/material/Box';
-import { Typography } from '@mui/material';
+import { Typography, Button } from '@mui/material';
 import Grid from '@mui/material/Grid';
 import { OrderModel } from '../../../models/order.model';
 import { useEffect } from "react";
@@ -9,6 +9,8 @@ import { getOrderDetailsByOrderId } from '../../../services/order.service';
 import { ResponseSuccess } from '../../../dtos/responses/response.success';
 import { OrderDetailsModel } from '../../../models/order.details.model';
 import { ConvertPrice } from '../../../utils/convert.price';
+import { getUserFromLocalStorage } from '../../../services/user.service';
+import { Role, UserModel } from '../../../models/user.model';
 
 type Props = {
     open: boolean;
@@ -18,6 +20,7 @@ type Props = {
 
 export const DialogOrderDetails = ({ open, onClose, order }: Props) => {
     const [orderDetails, setOrderDetails] = React.useState<OrderDetailsModel[]>([]);
+    const user: UserModel | null = getUserFromLocalStorage();
 
     useEffect(() => {
         const fetchOrderDetails = async () => {
@@ -98,7 +101,15 @@ export const DialogOrderDetails = ({ open, onClose, order }: Props) => {
                             <Grid item xs={2}>
                                 <Typography>{ConvertPrice((orderDetail.priceAtCreateOrder ?? 0) * (orderDetail.quantity ?? 0))}</Typography>
                             </Grid>
+                            <Box sx={{ml: 2}}>
+                            {user?.role && user.role === Role.ROLE_USER && (
+                                <Button>
+                                 Đánh giá
+                                </Button>)}
+                            </Box>
+                            
                         </Grid>
+                       
                     </Box>
                 ))}
 

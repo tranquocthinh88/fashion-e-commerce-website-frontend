@@ -73,6 +73,7 @@ const OrderManagementTab = () => {
             </MenuItem>
             <MenuItem value={OrderStatus.SHIPPING}>Đang vận chuyển</MenuItem>
             <MenuItem value={OrderStatus.DELIVERED}>Đã giao</MenuItem>
+            <MenuItem value={OrderStatus.RECEIVED}>Đã nhận</MenuItem>
             <MenuItem value={OrderStatus.CANCELLED}>Đã hủy</MenuItem>
           </Select>
         </FormControl>
