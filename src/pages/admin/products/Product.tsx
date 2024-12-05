@@ -4,10 +4,10 @@ import { useLocation, useNavigate } from "react-router-dom";
 import ProductCardAdmin from "../../../components/admin/cards/ProductCardAdmin";
 import { useEffect, useState } from "react";
 import { ResponseSuccess } from "../../../dtos/responses/response.success";
-import { ProviderModel } from "../../../models/provider.model";
+// import { ProviderModel } from "../../../models/provider.model";
 import { CategoryModel } from "../../../models/category.model";
 import { ProductUserResponse } from "../../../dtos/responses/products/productUser-response";
-import { getAllProviders } from "../../../services/provider.service";
+// import { getAllProviders } from "../../../services/provider.service";
 import { getAllCategories } from "../../../services/category.service";
 import { PageResponse } from "../../../dtos/responses/page.response";
 import { getPageProducts } from "../../../services/product.service";
@@ -28,18 +28,18 @@ const Product = () => {
         value: string,
         operator: string
     }[]>([]);
-    const [status, setStatus] = useState<string>("ALL");
-    const [providers, setProviders] = useState<ProviderModel[]>([]);
+    // const [status, setStatus] = useState<string>("ALL");
+    // const [providers, setProviders] = useState<ProviderModel[]>([]);
     const [categories, setCategories] = useState<CategoryModel[]>([]);
-    const [categoryName, setCategoryName] = useState<string>("ALL");
-    const [providerName, setProviderName] = useState<string>("ALL");
+    // const [categoryName, setCategoryName] = useState<string>("ALL");
+    // const [providerName, setProviderName] = useState<string>("ALL");
     const fNavigate = (id: string) => {
         navigate('update/' + id);
     }
     const handleSearch = (text: string) => {
         if (text) {
             const searchParams = [{
-                field: "productName",
+                field: "productNameConvert",
                 value: text,
                 operator: ":"
             }];
@@ -78,29 +78,29 @@ const Product = () => {
                 const value = operatorValue.split('or')[0];
                 return { field, operator, value };
             });
-            if (search.length > 0) {
-                for (let i = 0; i < searchArray.length; i++) {
-                    if (searchArray[i].field.startsWith("category")) {
-                        setCategoryName(searchArray[i].value);
-                    } else if (searchArray[i].field.startsWith("provider")) {
-                        setProviderName(searchArray[i].value);
-                    } else if (searchArray[i].field.startsWith("status")) {
-                        setStatus(searchArray[i].value);
-                    }
-                }
-            } else {
-                setCategoryName("ALL");
-                setProviderName("ALL");
-                setStatus("ALL");
-            }
+            // if (search.length > 0) {
+            //     for (let i = 0; i < searchArray.length; i++) {
+            //         if (searchArray[i].field.startsWith("category")) {
+            //             setCategoryName(searchArray[i].value);
+            //         } else if (searchArray[i].field.startsWith("provider")) {
+            //             setProviderName(searchArray[i].value);
+            //         } else if (searchArray[i].field.startsWith("status")) {
+            //             setStatus(searchArray[i].value);
+            //         }
+            //     }
+            // } else {
+            //     setCategoryName("ALL");
+            //     setProviderName("ALL");
+            //     setStatus("ALL");
+            // }
             setSearch(searchArray);
         }
     }, [location.search]);
     useEffect(() => {
         (async () => {
             try {
-                const responseProvider: ResponseSuccess<ProviderModel[]> = await getAllProviders();
-                setProviders(responseProvider.data);
+                // const responseProvider: ResponseSuccess<ProviderModel[]> = await getAllProviders();
+                // setProviders(responseProvider.data);
                 const responseCategory: ResponseSuccess<CategoryModel[]> = await getAllCategories();
                 setCategories(responseCategory.data);
             } catch (error) {
@@ -112,7 +112,7 @@ const Product = () => {
     useEffect(() => {
         (async () => {
             try {
-                const response: ResponseSuccess<PageResponse<ProductUserResponse[]>> = await getPageProducts(pageNoState, 15, search);
+                const response: ResponseSuccess<PageResponse<ProductUserResponse[]>> = await getPageProducts(pageNoState, 16, search);
                 setProducts(response.data.data);
                 setTotalPage(response.data.totalPage);
             } catch (e) {
@@ -125,7 +125,7 @@ const Product = () => {
         // setFilterOption(event.target.value); // Cập nhật state khi chọn option
         const selectedCategory = event.target.value;
         setFilterOption(selectedCategory); // Cập nhật state khi chọn option
-        setCategoryName(selectedCategory); // Cập nhật categoryName
+        // setCategoryName(selectedCategory); // Cập nhật categoryName
         if (selectedCategory !== "ALL") {
             setSearch([{ field: "category.categoryName", value: selectedCategory, operator: ":" }]);
         } else {

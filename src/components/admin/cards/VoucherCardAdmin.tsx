@@ -1,4 +1,4 @@
-import { Box, Card, CardActions, CardContent, CardMedia, Fab, Tooltip, Typography, useMediaQuery } from "@mui/material";
+import { Card, CardContent, CardMedia, Tooltip, Typography, useMediaQuery } from "@mui/material";
 
 const VoucherCardAdmin = () => {
     const isMobile = useMediaQuery('(max-width:600px)');

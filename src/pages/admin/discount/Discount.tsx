@@ -9,13 +9,21 @@ import { VoucherModel } from "../../../models/voucher.model";
 import { ResponseSuccess } from "../../../dtos/responses/response.success";
 import { getAllVouchers } from "../../../services/voucher.service";
 
+const voucherTypeToVietnamese = (type: string): string => {
+    const map: { [key: string]: string } = {
+        FOR_PRODUCT: "Giảm giá cho hóa đơn",
+        FOR_DELIVERY: "Giảm giá cho vận chuyển",
+    };
+    return map[type] || "Không xác định"; // Trả về "Không xác định" nếu không tìm thấy
+};
+
 const columns: GridColDef[] = [
-    { field: 'id', headerName: 'Mã voucher' },
-    { field: 'name', headerName: 'Tên voucher', type: 'string' },
+    { field: 'id', headerName: 'Mã voucher', width: 100 },
+    { field: 'name', headerName: 'Tên voucher', type: 'string', width: 150 },
     {
         field: 'startDate',
         headerName: 'Ngày bắt đầu',
-        type: 'date',
+        type: 'date', width: 100,
         valueGetter: (params: { row: VoucherModel }) => {
             const startDate = params;
             if (!startDate) {
@@ -32,7 +40,7 @@ const columns: GridColDef[] = [
     {
         field: 'expiredDate',
         headerName: 'Ngày kết thúc',
-        type: 'date',
+        type: 'date', width: 100,
         valueGetter: (params: { row: VoucherModel }) => {
             const startDate = params;
             if (!startDate) {
@@ -46,17 +54,20 @@ const columns: GridColDef[] = [
             }
         }
     },
-    { field: 'voucherType', headerName: 'Loại voucher', type: 'string' },
-    { field: 'quantity', headerName: 'Số lượng', type: 'number' },
-    { field: 'discount', headerName: 'Phần trăm', type: 'number' },
-    { field: 'maxDiscountAmount', headerName: 'Tiền giảm tối đa', type: 'number' },
-    { field: 'minOrderAmount', headerName: 'Hóa đơn tối thiểu', type: 'number' },
-    { field: 'note', headerName: 'Ghi chú', type: 'string' },
+    { field: 'voucherType', headerName: 'Loại voucher', type: 'string', 
+        renderCell: (params) => voucherTypeToVietnamese(params.value as string),
+        width: 190
+    },
+    { field: 'quantity', headerName: 'Số lượng', type: 'number', width: 80 },
+    { field: 'discount', headerName: 'Phần trăm', type: 'number', width: 100 },
+    { field: 'maxDiscountAmount', headerName: 'Tiền giảm tối đa', type: 'number', width: 130 },
+    { field: 'minOrderAmount', headerName: 'Hóa đơn tối thiểu', type: 'number', width: 130 },
+    { field: 'note', headerName: 'Ghi chú', type: 'string', width: 200 },
 ];
 
 const useStyles = makeStyles({
     dataGridBox: {
-        width: '93%',
+        width: '98%',
     },
 });
 

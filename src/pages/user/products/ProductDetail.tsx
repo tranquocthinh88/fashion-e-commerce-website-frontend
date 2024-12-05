@@ -293,7 +293,7 @@ const ProductDetail = () => {
                 }}
             >
                 {/* <Box sx={{width: isMobile ? '250%' : '100%'}}> */}
-                    <ListImage images={productImages} />
+                <ListImage images={productImages} />
                 {/* </Box> */}
                 <Box sx={{ width: isMobile ? '100%' : '60%', display: 'flex', flexDirection: 'column', gap: 1 }}>
                     <Typography variant="h5" sx={{ fontWeight: '700' }}>{productResponse?.productName}</Typography>
@@ -381,7 +381,7 @@ const ProductDetail = () => {
                     <Typography variant="h6" sx={{ mt: 2 }}>MÔ TẢ SẢN PHẨM</Typography>
                     <Box>
                         <Typography>Tổng số sản phẩm trong kho: {productResponse?.totalQuantity}</Typography>
-                        <Typography>{productResponse?.description}</Typography>
+                        <Typography sx={{ whiteSpace: 'pre-line' }}>{productResponse?.description}</Typography>
                     </Box>
                 </Box>
                 <Box>

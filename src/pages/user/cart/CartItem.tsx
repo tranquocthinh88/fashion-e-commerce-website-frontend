@@ -73,7 +73,7 @@ const CartItem = ({ item, isSelected, onSelect }: Props) => {
                     />
                 </Grid>
 
-                <Grid size={isMobile ? 12 : 3} sx={{ textAlign: isMobile ? 'center' : 'left', mb: isMobile ? 2 : 0 }}>
+                <Grid size={isMobile ? 12 : 2} sx={{ textAlign: isMobile ? 'center' : 'left', mb: isMobile ? 2 : 0 }}>
                     <Typography sx={{
                         minHeight: '48px',
                         display: '-webkit-box',

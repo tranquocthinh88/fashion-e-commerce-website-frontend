@@ -165,3 +165,19 @@ export const updateStatusCancel = async (orderId: string): Promise<ResponseSucce
         return Promise.reject(error);
     }
 }
+
+
+export const updateStatusReceived = async (orderId: string): Promise<ResponseSuccess<OrderModel>> => {
+    try {
+        const response = await requestConfig(
+            `orders/user/received/${orderId}`,
+            Method.PUT,
+            [],
+            ContentType.JSON,
+            true
+        );
+        return response.data;
+    } catch (error) {
+        return Promise.reject(error);
+    }
+}
