@@ -37,7 +37,7 @@ import AlertCustom from "../../../components/common/AlertCustom";
 import { useParams } from "react-router-dom";
 import { ProductImageModel } from "../../../models/product-image.model";
 import { ProductDetailModel } from "../../../models/product-detail.model";
-import { createProductDetail, removeProductDetail, updateProductDetail } from "../../../services/product-detail.service";
+import { createProductDetail, updateProductDetail } from "../../../services/product-detail.service";
 import { ProductResponse } from "../../../dtos/responses/products/product.response";
 import { ProductPriceModel } from "../../../models/product-price.model";
 import { createProductPrice, deleteProductPrice, getAllProductPricesByProductId } from "../../../services/product-price.service";
@@ -49,6 +49,7 @@ import { Status } from "../../../models/enum/status.enum";
 import ProductImage from "../../../components/admin/product/ProductImage";
 import { BrandModel } from "../../../models/brand.model";
 import { getAllBrands } from "../../../services/brand.service";
+import { format } from 'date-fns';
 
 const VisuallyHiddenInput = styled('input')({
     clipPath: 'inset(50%)',
@@ -190,10 +191,14 @@ const UpdateProduct = () => {
         },
         validationSchema: validationProductPriceSchema,
         onSubmit: async (values: ProductPriceDto, { resetForm }) => {
-            console.log("Giá trị ở 198: ", values);
-
             try {
-                const response: ResponseSuccess<ProductPriceModel> = await createProductPrice(values);
+                const formattedValues = {
+                    ...values,
+                    issueDate: new Date(format(values.issueDate, 'yyyy-MM-dd HH:mm:ss')),
+                    expiredDate: new Date(format(values.expiredDate, 'yyyy-MM-dd HH:mm:ss')),
+                };
+
+                const response: ResponseSuccess<ProductPriceModel> = await createProductPrice(formattedValues);
                 setProductPrices(prev => [...prev, response.data]);
                 resetForm();
             } catch (error) {
@@ -250,41 +255,40 @@ const UpdateProduct = () => {
                 )
                 console.log(error);
             }
-
         },
     });
 
-    const deleteProductDetail = async (productDetailModel: ProductDetailModel) => {
-        try {
-            setOpenBackdrop(true);
-            await removeProductDetail(Number(productDetailModel.id) || 0);
-            setProductDetail(prev => {
-                const index: number = prev.findIndex(p => p.id === productDetailModel.id);
-                if (index !== -1) {
-                    prev.splice(index, 1);
-                }
-                return prev;
-            })
-            setOpenBackdrop(false);
-            setOpenAlert(
-                {
-                    show: true,
-                    status: 'success',
-                    message: 'Xóa thành công'
-                }
-            )
-        } catch (error) {
-            setOpenBackdrop(false);
-            setOpenAlert(
-                {
-                    show: true,
-                    status: 'error',
-                    message: 'Xóa thất bại'
-                }
-            )
-            console.log(error);
-        }
-    }
+    // const deleteProductDetail = async (productDetailModel: ProductDetailModel) => {
+    //     try {
+    //         setOpenBackdrop(true);
+    //         await removeProductDetail(Number(productDetailModel.id) || 0);
+    //         setProductDetail(prev => {
+    //             const index: number = prev.findIndex(p => p.id === productDetailModel.id);
+    //             if (index !== -1) {
+    //                 prev.splice(index, 1);
+    //             }
+    //             return prev;
+    //         })
+    //         setOpenBackdrop(false);
+    //         setOpenAlert(
+    //             {
+    //                 show: true,
+    //                 status: 'success',
+    //                 message: 'Xóa thành công'
+    //             }
+    //         )
+    //     } catch (error) {
+    //         setOpenBackdrop(false);
+    //         setOpenAlert(
+    //             {
+    //                 show: true,
+    //                 status: 'error',
+    //                 message: 'Xóa thất bại'
+    //             }
+    //         )
+    //         console.log(error);
+    //     }
+    // }
 
 
     useEffect(() => {
@@ -344,7 +348,6 @@ const UpdateProduct = () => {
             const updatedQuantity = formikProductDetail.values.quantity ?? 0;
             try {
                 setOpenBackdrop(true);
-                console.log("Updating product detail with ID:", existingProductDetail.id);
                 const response: ResponseSuccess<string> = await updateProductDetail(existingProductDetail.id!, { quantity: updatedQuantity });
                 console.log("Dữ liệu update: ", response.data);
                 setProductDetail((prev) =>
@@ -432,6 +435,14 @@ const UpdateProduct = () => {
         }
     }
 
+    const handleRowClick = (productDetail: ProductDetailModel) => {
+        formikProductDetail.setValues({
+            colorId: productDetail.color.id,
+            sizeId: productDetail.size.id,
+            quantity: productDetail.quantity,
+            weight: productDetail.weight,
+        });
+    };
 
     return <Box
         component="form"
@@ -706,7 +717,7 @@ const UpdateProduct = () => {
                 </FormControl>
             </Box>
             <Box sx={{
-                p: 2, pl : 2,  display: 'flex',
+                p: 2, pl: 2, display: 'flex',
                 flexWrap: 'wrap',
                 gap: '15px'
             }}>
@@ -748,7 +759,7 @@ const UpdateProduct = () => {
                             <TableCell >Kích thước</TableCell>
                             <TableCell >Số lượng</TableCell>
                             <TableCell >Khối lượng</TableCell>
-                            <TableCell align="center">Thao tác</TableCell>
+                            {/* <TableCell align="center">Thao tác</TableCell> */}
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -757,14 +768,16 @@ const UpdateProduct = () => {
                                 ':hover': {
                                     backgroundColor: 'secondary.main'
                                 }
-                            }}>
+                            }}
+                                onClick={() => handleRowClick(productDetailModel)}
+                            >
                                 <TableCell >{colors.filter(color => productDetailModel.color.id === color.id)[0]?.colorName}</TableCell>
                                 <TableCell >{sizes.filter(size => productDetailModel.size.id === size.id)[0]?.numberSize ??
                                     sizes.filter(size => productDetailModel.size.id === size.id)[0]?.textSize
                                 }</TableCell>
                                 <TableCell>{productDetailModel.quantity}</TableCell>
                                 <TableCell>{productDetailModel.weight}</TableCell>
-                                <TableCell align="center">
+                                {/* <TableCell align="center">
                                     <Button sx={{
                                         width: '70px',
                                         height: '20px',
@@ -774,7 +787,7 @@ const UpdateProduct = () => {
                                     }} className="btn-action-table" variant="contained" color="error" onClick={() => {
                                         deleteProductDetail(productDetailModel)
                                     }} >Xóa</Button>
-                                </TableCell>
+                                </TableCell> */}
 
                             </TableRow>
                         ))}
@@ -807,7 +820,7 @@ const UpdateProduct = () => {
                 <TextField
                     sx={{ flex: 1 }}
                     label="Ngày bắt đầu"
-                    type="datetime-local"
+                    type="date"
                     name="issueDate"
                     value={formikProductPrice.values.issueDate}
                     onChange={formikProductPrice.handleChange}
@@ -824,7 +837,7 @@ const UpdateProduct = () => {
                 <TextField
                     sx={{ flex: 1 }}
                     label="Ngày kết thúc"
-                    type="datetime-local"
+                    type="date"
                     name="expiredDate"
                     value={formikProductPrice.values.expiredDate}
                     onChange={formikProductPrice.handleChange}

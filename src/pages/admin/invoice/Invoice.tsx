@@ -17,6 +17,7 @@ import { ConvertPrice } from "../../../utils/convert.price";
 import { PageResponse } from "../../../dtos/responses/page.response";
 import { useLocation, useNavigate } from "react-router-dom";
 import { OrderStatus } from "../../../models/order.model";
+import DialogOrderDetails from "../../../components/user/dialogs/DialogOrderDetails";
 
 
 const orderStatusMap: Record<OrderStatus, string> = {
@@ -25,6 +26,7 @@ const orderStatusMap: Record<OrderStatus, string> = {
     [OrderStatus.PROCESSING]: "Đã xác nhận đơn hàng", // ~ Đã xác nhận
     [OrderStatus.SHIPPING]: "Đang vận chuyển",
     [OrderStatus.DELIVERED]: "Đã giao",
+    [OrderStatus.RECEIVED]: "Đã nhận",
     [OrderStatus.CANCELLED]: "Đã hủy"
 };
 
@@ -41,6 +43,8 @@ const Invoice = () => {
     const [orderDateFrom, setOrderDateFrom] = useState<Dayjs | null>(null);
     const [orderDateTo, setOrderDateTo] = useState<Dayjs | null>(null);
     const [search, setSearch] = useState<string>("");
+    const [openOrderDialog, setOpenOrderDialog] = useState(false);
+    const [selectedOrder, setSelectedOrder] = useState<OrderModel | null>(null);
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -197,6 +201,7 @@ const Invoice = () => {
                                 <MenuItem value="PROCESSING">Đã được xác nhận</MenuItem>
                                 <MenuItem value="SHIPPING">Đang vận chuyển</MenuItem>
                                 <MenuItem value="DELIVERED">Đã giao</MenuItem>
+                                <MenuItem value="RECEIVED">Đã nhận</MenuItem>
                                 <MenuItem value="CANCELLED">Đã hủy</MenuItem>
                             </Select>
                         </FormControl>
@@ -236,18 +241,20 @@ const Invoice = () => {
                                         '&:last-child td, &:last-child th': { border: 0 }, position: 'relative',
                                         ':hover': { background: navbarHover, color: 'white', cursor: 'pointer' }
                                     }}
-                                    onClick={() =>
-                                        navigate(`/order-details/${order.id}`, {
-                                            state: {
-                                                pageNoState,
-                                                sort,
-                                                search,
-                                                status,
-                                                orderDateFrom: orderDateFrom ? orderDateFrom.format('YYYY-MM-DD') : null,
-                                                orderDateTo: orderDateTo ? orderDateTo.format('YYYY-MM-DD') : null,
-                                            }
-                                        })
-                                    }
+                                    onClick={() => {
+                                        setSelectedOrder(order);
+                                        setOpenOrderDialog(true);
+                                        // navigate(`/order-details/${order.id}`, {
+                                        //     state: {
+                                        //         pageNoState,
+                                        //         sort,
+                                        //         search,
+                                        //         status,
+                                        //         orderDateFrom: orderDateFrom ? orderDateFrom.format('YYYY-MM-DD') : null,
+                                        //         orderDateTo: orderDateTo ? orderDateTo.format('YYYY-MM-DD') : null,
+                                        //     }
+                                        // });
+                                    }}
                                 >
                                     <TableCell component="th" scope="row">
                                         {order.id}
@@ -287,6 +294,13 @@ const Invoice = () => {
                                 </TableRow>
                             ))}
                         </TableBody>
+                        {openOrderDialog && selectedOrder && (
+                            <DialogOrderDetails
+                                open={openOrderDialog}
+                                onClose={() => setOpenOrderDialog(false)}
+                                order={selectedOrder}
+                            />
+                        )}
                     </Table>
                 </TableContainer>
                 <Box sx={{

@@ -20,6 +20,7 @@ const orderStatusMap: Record<OrderStatus, string> = {
     [OrderStatus.PROCESSING]: "Đã xác nhận đơn hàng", // ~ Đã xác nhận
     [OrderStatus.SHIPPING]: "Đang vận chuyển",
     [OrderStatus.DELIVERED]: "Đã giao",
+    [OrderStatus.RECEIVED]: "Đã nhận",
     [OrderStatus.CANCELLED]: "Đã hủy"
 };
 

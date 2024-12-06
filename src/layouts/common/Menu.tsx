@@ -12,10 +12,6 @@ export const UserMenu = [
         href: '/promotions'
     },
     {
-        title: 'Thương hiệu',
-        href: '/brands'
-    },
-    {
         title: 'Giới thiệu',
         href: '/introduces'
     }

@@ -4,6 +4,7 @@ import { CartItemModel } from "../../../models/cart.model";
 import Grid from '@mui/material/Grid2';
 import { ConvertPrice } from "../../../utils/convert.price";
 import DialogFeedback from "../../../components/user/dialogs/DialogFeedback";
+import { useNavigate } from "react-router-dom";
 
 type Props = {
     item: CartItemModel,
@@ -14,6 +15,7 @@ const OrderItemCard = ({ item, status }: Props) => {
     const [quantity] = useState<number>(item.quantity);
     const [openDialogFeedback, setOpenDialogFeedback] = useState(false);
     const [isEvaluate, setIsEvaluate] = useState<boolean>(localStorage.getItem(`isEvaluate_${item.productDetail.product?.id}`) === "true");
+    const navigate = useNavigate();
 
     const handleCloseDialogFeedback = () => {
         setOpenDialogFeedback(false);
@@ -34,7 +36,9 @@ const OrderItemCard = ({ item, status }: Props) => {
             ":hover": {
                 backgroundColor: '#f0f0f0',
             }
-        }}>
+        }}
+        onClick={() => navigate(`/products/${item.productDetail.product?.id}`)}
+        >
             <Grid
                 container
                 sx={{
@@ -85,7 +89,7 @@ const OrderItemCard = ({ item, status }: Props) => {
                     </Box>
                 </Grid>
                 <Grid size={1} >
-                    {status === "DELIVERED" ? (
+                    {status === "DELIVERED" || status === "RECEIVED" ? (
                         isEvaluate ? (
                             <Typography variant="subtitle1" color="success">
                                 Đã đánh giá

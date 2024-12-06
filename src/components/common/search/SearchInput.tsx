@@ -1,7 +1,7 @@
 import { Box, Input, Tooltip } from "@mui/material";
 import IconButtonGradient from "../../common/IconButtonGradient.tsx";
 import SearchIcon from "@mui/icons-material/Search";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { removeVietnameseTones } from "../../../utils/remove-vietnamese-tones.ts";
 
 type Props = {
@@ -26,6 +26,8 @@ const SearchInput = ({ placeHolder, handleSearch }: Props) => {
             handleSearch(""); // Gọi handleSearch với giá trị trống khi văn bản bị xóa
         }
     };
+
+    useEffect(() => { }, [valueSearch]);
 
     return (
         <Box sx={{ display: "flex", width: '100%' }}>

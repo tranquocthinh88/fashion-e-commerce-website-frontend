@@ -17,12 +17,11 @@ type Props = {
     status?: string;
 }
 
-const ProductCardAdmin = ({ productId, productName, inputPrice, productPrice, fNavigate, thumbnail, totalQuantity, status, productPriceFinal }: Props) => {
+const ProductCardAdmin = ({ productId, productName, inputPrice, productPrice, fNavigate, thumbnail, totalQuantity, productPriceFinal }: Props) => {
     const isMobile = useMediaQuery('(max-width:600px)');
 
     const [isDialogOpen, setIsDialogOpen] = useState(false);
     const [isSwitchChecked, setIsSwitchChecked] = useState(false);
-    const [productStatus, setProductStatus] = useState<string | undefined>(status ? 'ACTIVE' : 'INACTIVE'); // Thêm state để lưu trạng thái sản phẩm
 
     const formattedPrice = `${productPrice.toLocaleString('vi-VN')}đ`;
 
@@ -98,13 +97,13 @@ const ProductCardAdmin = ({ productId, productName, inputPrice, productPrice, fN
                         <EditIcon sx={{
                             fontSize: 10,
                         }} />
-                        Edit
+                        Chỉnh sửa
                     </Fab>
                     <Fab variant="extended" size="small" color={"error"} sx={{ fontSize: 10 }} onClick={handleDeleteClick}>
                         <DeleteIcon sx={{
                             fontSize: 10,
                         }} />
-                        Delete
+                        Xóa
                     </Fab>
                 </CardActions>
             </Card >

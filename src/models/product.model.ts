@@ -21,4 +21,5 @@ export type ProductModel = {
     totalQuantity?: number
     createdAt?: Date
     importDate?: Date
+    productNameConvert?: string
 }

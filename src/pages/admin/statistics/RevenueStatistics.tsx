@@ -98,7 +98,7 @@ const RevenueStatistics = () => {
                                 value: selectedEndDate.endOf('day').format('YYYY-MM-DD'),
                             });
                             const response: ResponseSuccess<PageResponse<OrderModel[]>> =
-                                await getOrdersForAdmin(1, 100, searchParams, []);
+                                await getOrdersForAdmin(1, 1000, searchParams, []);
                             setOrders(response.data.data.filter(order => order.status !== OrderStatus.NOT_PROCESSED_YET));
                             setTotalPrice(response.data.data
                                 .filter(order => order.status !== OrderStatus.NOT_PROCESSED_YET && order.status !== OrderStatus.CANCELLED)
@@ -120,7 +120,7 @@ const RevenueStatistics = () => {
                             value: `${selectedYear}-${selectedMonth}-31`,
                         });
                         const response: ResponseSuccess<PageResponse<OrderModel[]>> =
-                            await getOrdersForAdmin(1, 100, searchParams, []);
+                            await getOrdersForAdmin(1, 1000, searchParams, []);
                         if (response.status === 200) {
                             setOrders(response.data.data.filter(order => order.status !== OrderStatus.NOT_PROCESSED_YET));
                             setTotalPrice(response.data.data
@@ -144,7 +144,7 @@ const RevenueStatistics = () => {
                             value: `${selectedYear}-12-31`,
                         });
                         const response: ResponseSuccess<PageResponse<OrderModel[]>> =
-                            await getOrdersForAdmin(1, 100, searchParams, []);
+                            await getOrdersForAdmin(1, 1000, searchParams, []);
                         setOrders(response.data.data.filter(order => order.status !== OrderStatus.NOT_PROCESSED_YET));
                         setTotalPrice(response.data.data
                             .filter(order => order.status !== OrderStatus.NOT_PROCESSED_YET && order.status !== OrderStatus.CANCELLED)
@@ -161,7 +161,7 @@ const RevenueStatistics = () => {
                     });
 
                     const response: ResponseSuccess<PageResponse<OrderModel[]>> =
-                        await getOrdersForAdmin(1, 100, searchParamsDefault, []);
+                        await getOrdersForAdmin(1, 1000, searchParamsDefault, []);
                     setOrders(response.data.data.filter(order => order.status !== OrderStatus.NOT_PROCESSED_YET));
                     setTotalPrice(response.data.data
                         .filter(order => order.status !== OrderStatus.NOT_PROCESSED_YET && order.status !== OrderStatus.CANCELLED)

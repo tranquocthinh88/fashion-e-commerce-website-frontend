@@ -128,7 +128,7 @@ const DialogCreateVoucher = ({ open, handleClose, addVoucher, showAlert }: Props
                     fullWidth
                     variant="standard"
                 >
-                    <MenuItem value={VoucherType.FOR_PRODUCT}>Giảm cho sản phẩm</MenuItem>
+                    <MenuItem value={VoucherType.FOR_PRODUCT}>Giảm cho tổng hóa đơn</MenuItem>
                     <MenuItem value={VoucherType.FOR_DELIVERY}>Giảm cho vận chuyển</MenuItem>
                 </TextField>
                 <TextField
@@ -163,7 +163,7 @@ const DialogCreateVoucher = ({ open, handleClose, addVoucher, showAlert }: Props
                     margin="dense"
                     id="scope"
                     name="scope"
-                    label="Scope"
+                    label="Phạm vi áp dụng"
                     select
                     value={scope}
                     onChange={(e) => setScope(e.target.value as Scope)}
@@ -171,7 +171,7 @@ const DialogCreateVoucher = ({ open, handleClose, addVoucher, showAlert }: Props
                     variant="standard"
                 >
                     <MenuItem value={Scope.ALL}>Tất cả</MenuItem>
-                    <MenuItem value={Scope.FOR_USER}>Người dùng</MenuItem>
+                    <MenuItem value={Scope.FOR_USER}>Người dùng cụ thể</MenuItem>
                 </TextField>
                 <TextField
                     margin="dense"

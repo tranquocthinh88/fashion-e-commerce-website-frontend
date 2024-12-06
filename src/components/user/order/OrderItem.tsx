@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { ConvertPrice } from "../../../utils/convert.price";
 import { OrderModel } from "../../../models/order.model";
 import { OrderStatus } from "../../../models/enum/order.status";
-import { updateStatusCancel } from "../../../services/order.service";
+import { updateStatusCancel, updateStatusReceived } from "../../../services/order.service";
 
 type Props = {
     item: OrderModel,
@@ -16,6 +16,7 @@ const orderStatusMap: Record<OrderStatus, string> = {
     [OrderStatus.PROCESSING]: "Đã xác nhận đơn hàng", // ~ Đã xác nhận
     [OrderStatus.SHIPPING]: "Đang vận chuyển",
     [OrderStatus.DELIVERED]: "Đã giao",
+    [OrderStatus.RECEIVED]: "Đã nhận",
     [OrderStatus.CANCELLED]: "Đã hủy"
 };
 const OrderItem = ({ item }: Props) => {
@@ -28,9 +29,18 @@ const OrderItem = ({ item }: Props) => {
         return hoursDifference > 2 || item.status !== OrderStatus.PENDING;
     })();
 
+    const isReceivedDisabled = (() => {
+        return item.status !== OrderStatus.DELIVERED;
+    })();
+
     const handleCancel = async () => {
         const response = await updateStatusCancel(item.id as string);
         console.log("Cancel response: ", response);
+    }
+
+    const handleReceived = async () => {
+        const response = await updateStatusReceived(item.id as string);
+        console.log("Received response: ", response);
     }
 
     return (
@@ -43,17 +53,27 @@ const OrderItem = ({ item }: Props) => {
                 <TableCell>{ConvertPrice(Number(item.discountPrice) ?? 0)}</TableCell>
                 <TableCell>{new Date(item.estimatedDeliveryDate).toLocaleDateString()}</TableCell>
                 <TableCell colSpan={2}>
-                    <Button color="error" variant="contained"
+                    <Button sx={{ textTransform: 'none'}} color="error" variant="contained"
                         disabled={isCancelDisabled}
                         onClick={handleCancel}>Hủy đơn</Button>
-                    <Button sx={{ ml: 2 }} color="success" variant="contained" onClick={() => { navigate(`/order-details/${item.id}`) }}>Chi tiết</Button>
+                    <Button sx={{ ml: 1, textTransform: 'none' }} color="warning" variant="contained"
+                        disabled={isReceivedDisabled}
+                        onClick={handleReceived}>Xác nhận</Button>
+                    <Button sx={{ ml: 1, textTransform: 'none' }} color="success" variant="contained" onClick={() => {
+                         navigate(`/order-details/${item.id}`) 
+                        //  setSelectedOrder(item);
+                        //                 setOpenOrderDialog(true);
+                         }}>Chi tiết</Button>
                 </TableCell>
             </TableRow>
+            {/* {openOrderDialog && selectedOrder && (
+                            <DialogOrderDetails
+                                open={openOrderDialog}
+                                onClose={() => setOpenOrderDialog(false)}
+                                order={selectedOrder}
+                            />
+                        )} */}
         </>
-
-
-        //  onClick={() => { navigate(`/user/${item.user.email}/orders/${item.id}`) }}>Hủy đơn</Button>
-
     )
 }
 

@@ -98,7 +98,9 @@ export const DialogOrderDetails = ({ open, onClose, order }: Props) => {
                             <Grid item xs={2}>
                                 <Typography>{ConvertPrice((orderDetail.priceAtCreateOrder ?? 0) * (orderDetail.quantity ?? 0))}</Typography>
                             </Grid>
+                           
                         </Grid>
+                       
                     </Box>
                 ))}
 
