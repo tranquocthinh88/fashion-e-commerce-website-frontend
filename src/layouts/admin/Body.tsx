@@ -4,8 +4,8 @@ import newOrder from '../../assets/neworder.png';
 import newUser from '../../assets/newuser.png';
 import sale from '../../assets/sales.png';
 import '../admin/Body.scss'
-import ColumnChartCustom from "../../components/admin/chart/ColumnChartCustom";
-import CircleChartCustom from "../../components/admin/chart/CircleChartCustom";
+// import ColumnChartCustom from "../../components/admin/chart/ColumnChartCustom";
+// import CircleChartCustom from "../../components/admin/chart/CircleChartCustom";
 import { useEffect, useState } from "react";
 import { OrderModel } from "../../models/order.model";
 import { getOrdersForAdmin } from "../../services/order.service";
@@ -53,7 +53,7 @@ const Body = () => {
 
     }, []);
 
-    return <Box sx={{ background: bodyAdminColor, pt: 1, pb: 2, pl: 1, height: '100%', width: '100%' }}>
+    return <Box sx={{ background: bodyAdminColor, pt: 1, pb: 2, pl: 1, height: '100vh', width: '100%' }}>
         <Box sx={{ fontSize: 30, fontWeight: 'bold' }}>Trang chủ !</Box>
         <Box sx={{ display: 'flex', justifyContent: 'space-around', marginTop: 3 }}>
             <Box sx={{
@@ -93,14 +93,14 @@ const Body = () => {
                 <img src={newUser} alt="New User" className="new-user-item" />
             </Box>
         </Box>
-        <Box sx={{ display: 'flex', alignItems: 'center' }}>
+        {/* <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Box sx={{ width: '80%' }}>
                 <ColumnChartCustom />
             </Box>
             <Box sx={{ width: '40%' }}>
                 <CircleChartCustom />
             </Box>
-        </Box>
+        </Box> */}
     </Box>
 }
 export default Body;

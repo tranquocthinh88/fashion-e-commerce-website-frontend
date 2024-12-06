@@ -31,7 +31,7 @@ const UserLayout = ({ children }: UserLayoutProps) => {
                     sx={{
                         width: "100%",
                         backgroundColor: "#f0f0f0",
-                        zIndex: 500,
+                        zIndex: 1,
                         position: 'relative',
                     }}
                 >

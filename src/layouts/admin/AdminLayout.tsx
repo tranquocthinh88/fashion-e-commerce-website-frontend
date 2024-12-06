@@ -14,18 +14,22 @@ const AdminLayout = ({ children }: Props) => {
         setIsOpenNavbar(!isOpenNavbar);
     }
     return (
-        <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+        <Box sx={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
             <Box sx={{ display: "flex" }}>
-                <Box sx={{height: 'auto'}}>
+                <Box sx={{ height: '100vh', position: 'sticky', top: 0, overflow: 'hidden' }}>
                     <Navbar isOpenNavbar={isOpenNavbar}></Navbar>
                 </Box>
 
                 <Box sx={{ display: 'flex', flexDirection: 'column', flex: 1, borderLeft: '1px solid #e4e4e4', }}>
-                    <Header handleOpenNavbar={handleOpenNavbar}></Header>
+                    <Box sx={{ position: 'sticky', top: 0, zIndex: 10 }}>
+                        <Header handleOpenNavbar={handleOpenNavbar}></Header>
+                    </Box>
+
                     <Box sx={{ flex: 1 }}>{children}</Box>
+                    <Footer></Footer>
                 </Box>
             </Box>
-            <Footer></Footer>
+            {/* <Footer></Footer> */}
         </Box>
     );
 }

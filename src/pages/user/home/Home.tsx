@@ -1,4 +1,4 @@
-import { Alert, Box, Button, Container, Snackbar, Typography } from "@mui/material";
+import { Alert, Box, Container, Snackbar, Typography } from "@mui/material";
 import { useEffect, useState } from "react";
 import Slide from "../../../components/Slide";
 import ProductCard from "../../../components/user/product/ProductCard";
@@ -9,9 +9,6 @@ import 'slick-carousel/slick/slick-theme.css';
 import Slider from "react-slick";
 import CustomArrow from "../../../components/user/customs/CustomArrow ";
 import { useLocation } from "react-router-dom";
-import ProtectRouter from "../../../routes/ProtectRoutes";
-import { Role } from "../../../models/user.model";
-import ChatAI from "../chat/ChatAI";
 
 const Home = () => {
     const [productSales, setProductSales] = useState<ProductUserResponse[]>([]);
@@ -19,12 +16,6 @@ const Home = () => {
     const [productSolds, setProductSolds] = useState<ProductUserResponse[]>([]);
     const [isVisible, setIsVisible] = useState(true);
     const location = useLocation();
-
-    const [isChatOpen, setIsChatOpen] = useState(false);
-
-    const toggleChat = () => {
-        setIsChatOpen(!isChatOpen);
-    }
 
     const settings = {
         dots: true, // Hiển thị nút chỉ báo trang
@@ -34,7 +25,7 @@ const Home = () => {
         slidesToScroll: 5, // Số sản phẩm khi cuộn mỗi lần
         prevArrow: <CustomArrow type="prev" />,
         nextArrow: <CustomArrow type="next" />,
-        initialSlide: 0,
+        initialSlide: -1,
         responsive: [
             {
                 breakpoint: 1024,
@@ -187,17 +178,6 @@ const Home = () => {
                     </Container>
                 </Box>
             </Box>
-            {/* <Box sx={{position: 'fixed', right: '5%', bottom: '5%', zIndex: 100}}>
-                <Button variant="contained" sx={{display: 'flex', flexDirection: 'column', width: 30,}} onClick={toggleChat}>
-                    <img src="https://img.icons8.com/ios/452/robot-2.png" 
-                    style={{width: 40, height: 40}} alt="Trợ lý AI" 
-                    />
-                    Chat</Button>
-            </Box>
-            {isChatOpen &&
-                <ProtectRouter role={Role.ROLE_USER}> <ChatAI /></ProtectRouter>
-
-            } */}
             <Snackbar
                 anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
                 open={openAlert.show}
