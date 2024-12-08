@@ -318,18 +318,11 @@ const Payment = () => {
                 const purchasedProductIds = selectedItems.map(item => item.productDetail.id);
 
                 const currentCart: CartItemModel[] = JSON.parse(localStorage.getItem('cart') ?? '[]');
-                console.log("Current cart: ", currentCart);
-                
                 const updatedCart = currentCart.filter(
                     (cartItem) => !purchasedProductIds.includes(cartItem.productDetail.id)
                 );
 
-                console.log("Updated cart: ", updatedCart);
-                
-                // Cập nhật lại giỏ hàng trong localStorage
                 localStorage.setItem('cart', JSON.stringify(updatedCart));
-
-                // Cập nhật trạng thái giỏ hàng
                 dispatch(updateCartState());
 
                 if (order.paymentMethod === PaymentMethod.CC) {
@@ -535,7 +528,15 @@ const Payment = () => {
 
                                             {/* Cột chứa thông tin sản phẩm */}
                                             <Grid item xs={isMobile ? 12 : 6} >
-                                                <Typography variant="subtitle1" fontWeight="bold" >
+                                                <Typography variant="subtitle1" fontWeight="bold"
+                                                    sx={{
+                                                        display: "-webkit-box",
+                                                        WebkitBoxOrient: "vertical",
+                                                        overflow: "hidden",
+                                                        textOverflow: "ellipsis",
+                                                        WebkitLineClamp: 2, // Giới hạn số dòng
+                                                    }}
+                                                >
                                                     {cartItem.productDetail?.product?.productName}
                                                 </Typography>
                                                 <Typography variant="body2" color="textSecondary">
@@ -560,36 +561,40 @@ const Payment = () => {
                                 </Button>
                                 <Dialog onClose={handleClose} open={open} sx={{ '& .MuiDialog-paper': { width: '30%' } }} >
                                     <DialogTitle>Danh sách mã giảm giá</DialogTitle>
-                                    <List sx={{ pt: 0 }}>
-                                        {vouchers.map((item, index) => {
-                                            const isUsed = userVoucher.some(uv => uv.voucher.id === item.id && uv.isUsed);
-                                            const isApplied = appliedVouchers.includes(item.id);
-                                            return (
-                                                <ListItem component="div" key={index} sx={{ display: 'flex', justifyContent: 'space-between' }}>
-                                                    <Box>
-                                                        <Typography variant="h6" sx={{ fontSize: 16 }}>{item.name}</Typography>
-                                                        <Typography sx={{ fontSize: 12 }}>Giảm tối đa {ConvertPrice(item.maxDiscountAmount)}</Typography>
-                                                        <Typography sx={{ fontSize: 12 }}>Cho đơn tối thiểu {ConvertPrice(item.minOrderAmount)}</Typography>
-                                                        {isUsed && (
-                                                            <Typography sx={{ fontSize: 12, color: 'green' }}>Đã sử dụng</Typography>
-                                                        )}
-                                                        {isApplied && (
-                                                            <Typography sx={{ fontSize: 12, color: 'blue' }}>Voucher đã áp dụng</Typography>
-                                                        )}
-                                                    </Box>
-                                                    <Button
-                                                        variant="outlined"
-                                                        color="primary"
-                                                        onClick={() => handleSelectVoucher(item)}
-                                                        disabled={isUsed || isApplied}
-                                                    >
-                                                        Áp dụng
-                                                    </Button>
-                                                </ListItem>
-                                            );
-                                        })}
-                                        {error && <Typography color="error">{error}</Typography>}
-                                    </List>
+                                    {vouchers.length === 0 ? <>
+                                        <Typography sx={{ paddingLeft: 4 }}>Bạn không có mã giảm giá nào!</Typography>
+                                    </> : <>
+                                        <List sx={{ pt: 0 }}>
+                                            {vouchers.map((item, index) => {
+                                                const isUsed = userVoucher.some(uv => uv.voucher.id === item.id && uv.isUsed);
+                                                const isApplied = appliedVouchers.includes(item.id);
+                                                return (
+                                                    <ListItem component="div" key={index} sx={{ display: 'flex', justifyContent: 'space-between' }}>
+                                                        <Box>
+                                                            <Typography variant="h6" sx={{ fontSize: 16 }}>{item.name}</Typography>
+                                                            <Typography sx={{ fontSize: 12 }}>Giảm tối đa {ConvertPrice(item.maxDiscountAmount)}</Typography>
+                                                            <Typography sx={{ fontSize: 12 }}>Cho đơn tối thiểu {ConvertPrice(item.minOrderAmount)}</Typography>
+                                                            {isUsed && (
+                                                                <Typography sx={{ fontSize: 12, color: 'green' }}>Đã sử dụng</Typography>
+                                                            )}
+                                                            {isApplied && (
+                                                                <Typography sx={{ fontSize: 12, color: 'blue' }}>Voucher đã áp dụng</Typography>
+                                                            )}
+                                                        </Box>
+                                                        <Button
+                                                            variant="outlined"
+                                                            color="primary"
+                                                            onClick={() => handleSelectVoucher(item)}
+                                                            disabled={isUsed || isApplied}
+                                                        >
+                                                            Áp dụng
+                                                        </Button>
+                                                    </ListItem>
+                                                );
+                                            })}
+                                            {error && <Typography color="error">{error}</Typography>}
+                                        </List>
+                                    </>}
                                 </Dialog>
                             </ListItem>
                             <Divider />

@@ -12,6 +12,7 @@ import { ProductModel } from "../../../models/product.model";
 import { ProductDetailModel } from "../../../models/product-detail.model";
 import { subMonths, format } from 'date-fns';
 import { useNavigate } from "react-router-dom";
+import ExcelJS from 'exceljs';
 
 const useStyles = makeStyles({
     dataGridBox: {
@@ -193,6 +194,76 @@ const Stoke = () => {
 
     const classes = useStyles();
 
+    const handleExportToExcel = async () => {
+        const dataToExport = transformedProducts.map((item) => ({
+            "Mã sản phẩm": item.id,
+            "Tên sản phẩm": item.productName,
+            "Ngày nhập": item.importDate
+                ? new Date(item.importDate).toLocaleDateString("vi-VN")
+                : "N/A",
+            "Tồn kho": item.totalQuantity,
+            "Số lượng bán": item.buyQuantity,
+            "Giá nhập": item.inputPrice,
+        }));
+
+        const totalRows = dataToExport.length;
+
+        const workbook = new ExcelJS.Workbook();
+        const worksheet = workbook.addWorksheet('Danh sách sản phẩm tồn kho');
+
+        // Thêm tiêu đề và ngày xuất
+        worksheet.mergeCells('A1:H1');
+        worksheet.getCell('A1').value = "Báo cáo danh sách sản phẩm tồn kho";
+        worksheet.getCell('A1').font = { bold: true, size: 14 };
+        worksheet.getCell('A1').alignment = { horizontal: 'center' };
+
+        worksheet.mergeCells('A2:H2');
+        worksheet.getCell('A2').value = `Ngày xuất: ${new Date().toLocaleDateString("vi-VN")} - ${new Date().toLocaleTimeString("vi-VN")}`;
+        worksheet.getCell('A2').font = { italic: true, size: 12 };
+        worksheet.getCell('A2').alignment = { horizontal: 'center' };
+
+        // Thêm header cho các cột
+        const headerRow = [
+            "Mã sản phẩm",
+            "Tên sản phẩm",
+            "Ngày nhập",
+            "Tồn kho",
+            "Số lượng bán",
+            "Giá nhập",
+        ];
+        worksheet.addRow(headerRow);
+
+        const header = worksheet.getRow(3);
+        header.font = { bold: true };
+        header.alignment = { horizontal: 'center' };
+
+        // Thêm dữ liệu từ `dataToExport`
+        dataToExport.forEach((data) => {
+            worksheet.addRow([
+                data["Mã sản phẩm"],
+                data["Tên sản phẩm"],
+                data["Ngày nhập"],
+                data["Tồn kho"],
+                data["Số lượng bán"],
+                data["Giá nhập"],
+            ]);
+        });
+
+        // Thêm tổng số dòng ở cuối dữ liệu
+        worksheet.addRow([]);
+        worksheet.addRow([`Tổng số mẫu sản phẩm tồn kho: ${totalRows}`]);
+        const totalRow = worksheet.getRow(worksheet.lastRow?.number ?? 0);
+        totalRow.font = { bold: true };
+
+        // Xuất file Excel
+        const buffer = await workbook.xlsx.writeBuffer();
+        const blob = new Blob([buffer], { type: 'application/octet-stream' });
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        link.download = 'danh-sach-san-pham-ton-kho.xlsx';
+        link.click();
+    };
+
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', ml: 4, mr: 1, width: '100%' }}>
             <Box sx={{ mt: 1 }}>
@@ -220,6 +291,11 @@ const Stoke = () => {
                     }}
                     pageSizeOptions={[10]}
                 />
+            </Box>
+            <Box sx={{ mt: 2, display: "flex", justifyContent: "space-between" }}>
+                <Button variant="contained" color="primary" onClick={handleExportToExcel}>
+                    Xuất Excel (Danh sách sản phẩm)
+                </Button>
             </Box>
             {selectedProductId && (
                 <Box sx={{ mt: 2, width: '93%' }}>
