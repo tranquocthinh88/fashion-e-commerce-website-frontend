@@ -40,7 +40,7 @@ const OrderManagementTab = () => {
       setOrders(response.data);
       console.log("Orders: ", response.data);
     })();
-  }, [handleStatusChange]);
+  }, []);
 
   return (
     <>

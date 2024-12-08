@@ -8,6 +8,7 @@ import { useDispatch } from 'react-redux';
 import { updateCartState } from '../../../redux/reducers/cart.reducer';
 import { UserModel } from '../../../models/user.model';
 import { getUserFromLocalStorage } from '../../../services/user.service';
+import { CartItemModel } from '../../../models/cart.model';
 
 const PaymentSuccess = () => {
     const location = useLocation();
@@ -16,6 +17,36 @@ const PaymentSuccess = () => {
     const dispatch = useDispatch();
     const navigate = useNavigate();
     const user: UserModel | null = getUserFromLocalStorage();
+
+
+    // useEffect(() => {
+    //     const queryParams: Record<string, string> = {};
+    //     new URLSearchParams(location.search).forEach((value, key) => {
+    //         queryParams[key] = value;
+    //     });
+
+    //     const fetchPaymentStatus = async () => {
+    //         try {
+    //             const result = await getPaymentSuccess(queryParams);
+    //             if (result.status === 200 && result.data !== 'Payment failed with code: 24') {
+    //                 setPaymentStatus("thành công"); // Đặt trạng thái thành công
+    //                 await updateOrderStatusPending(queryParams.orderId);
+    //                 localStorage.removeItem('cart');
+    //                 dispatch(updateCartState());
+    //             } else {
+    //                 console.warn("Thanh toán không thành công: ", result.data);
+    //                 await revokeQuantityByOrderId(queryParams.orderId);
+    //                 setPaymentStatus(`thất bại: ${result.message}`);
+    //             }
+    //         } catch (error) {
+    //             console.error("Có lỗi xảy ra trong quá trình thanh toán:", error);
+    //         } finally {
+    //             setLoading(false); // Kết thúc quá trình loading
+    //         }
+    //     };
+
+    //     fetchPaymentStatus();
+    // }, [location.search]);
 
     useEffect(() => {
         const queryParams: Record<string, string> = {};
@@ -29,7 +60,9 @@ const PaymentSuccess = () => {
                 if (result.status === 200 && result.data !== 'Payment failed with code: 24') {
                     setPaymentStatus("thành công"); // Đặt trạng thái thành công
                     await updateOrderStatusPending(queryParams.orderId);
-                    localStorage.removeItem('cart');
+                    const currentCart: CartItemModel[] = JSON.parse(localStorage.getItem('cart') || '[]');
+                    const updatedCart = currentCart.filter(item => item.productDetail.id !== queryParams.productId);
+                    localStorage.setItem('cart', JSON.stringify(updatedCart));
                     dispatch(updateCartState());
                 } else {
                     console.warn("Thanh toán không thành công: ", result.data);
@@ -51,8 +84,8 @@ const PaymentSuccess = () => {
     }
 
     const handelSuccess = () => {
-        navigate(`/user/${user?.email}/orders`); 
-    }   
+        navigate(`/user/${user?.email}/orders`);
+    }
 
     const handleFail = () => {
         navigate(`/cart`);

@@ -315,7 +315,22 @@ const Payment = () => {
                 const order: OrderModel = response.data;
 
                 // Lấy danh sách `productDetailId` đã mua
-                const purchasedProductIds = values.productsOrderDtos.map((item) => item.productDetailId);
+                const purchasedProductIds = selectedItems.map(item => item.productDetail.id);
+
+                const currentCart: CartItemModel[] = JSON.parse(localStorage.getItem('cart') ?? '[]');
+                console.log("Current cart: ", currentCart);
+                
+                const updatedCart = currentCart.filter(
+                    (cartItem) => !purchasedProductIds.includes(cartItem.productDetail.id)
+                );
+
+                console.log("Updated cart: ", updatedCart);
+                
+                // Cập nhật lại giỏ hàng trong localStorage
+                localStorage.setItem('cart', JSON.stringify(updatedCart));
+
+                // Cập nhật trạng thái giỏ hàng
+                dispatch(updateCartState());
 
                 if (order.paymentMethod === PaymentMethod.CC) {
                     alert('Đã đặt hàng thành công, vui lòng chuyển tiền qua đây: ');
@@ -328,22 +343,17 @@ const Payment = () => {
 
                         console.log(paymentUrl);
                         window.location.href = paymentUrl; // Chuyển hướng đến trang thanh toán
+                        return;
                     } catch (error) {
                         console.error('Error getting payment URL:', error);
                     }
                 }
-
-                const currentCart: CartItemModel[] = JSON.parse(localStorage.getItem('cart') ?? '[]');
-                const updatedCart = currentCart.filter(
-                    (cartItem) => cartItem.productDetail.id && !purchasedProductIds.includes(cartItem.productDetail.id)
-                );
-                localStorage.setItem('cart', JSON.stringify(updatedCart));
-                dispatch(updateCartState());
-
-                showAlert('success', 'Đơn hàng đã được tạo thành công.');
-                setTimeout(() => {
-                    navigate(`/user/${values.email}/orders`);
-                }, 2000);
+                else {
+                    showAlert('success', 'Đơn hàng đã được tạo thành công.');
+                    setTimeout(() => {
+                        navigate(`/user/${values.email}/orders`);
+                    }, 2000);
+                }
             } catch (error) {
                 setError("Mua hàng thất bại");
                 showAlert('error', 'Đã có lỗi xảy ra. Vui lòng thử lại sau.');
