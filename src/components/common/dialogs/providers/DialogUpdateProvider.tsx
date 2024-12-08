@@ -3,10 +3,7 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
-    DialogTitle, FormControl,
-    InputLabel,
-    MenuItem,
-    Select,
+    DialogTitle,
     TextField
 } from "@mui/material";
 import { useEffect, useState } from "react";
@@ -27,7 +24,7 @@ const DialogUpdateProvider = ({ open, handleClose, provider, updateProvider, sho
     const [errorText, setErrorText] = useState('');
     const [phoneNumber, setPhoneNumber] = useState(provider?.phoneNumber || '');
     const [email, setEmail] = useState(provider?.email || '');
-    const [addressId, setAddressId] = useState<number | null>(provider?.address?.id ?? null);
+    const [address, setAddress] = useState<string>(provider?.address ?? '');
     const [status, setStatus] = useState(provider?.status?.toString()
         ?? Status.ACTIVE.toString());
     const handleSubmit = async () => {
@@ -41,7 +38,7 @@ const DialogUpdateProvider = ({ open, handleClose, provider, updateProvider, sho
                     providerName: providerName,
                     phoneNumber: phoneNumber,
                     email: email,
-                    addressId: addressId ?? 0,
+                    address: address ?? '',
                     status: Status.ACTIVE
                 }
                 const response: ResponseSuccess<ProviderModel> = await updateProviderAPI(provider?.id, value);
@@ -60,7 +57,7 @@ const DialogUpdateProvider = ({ open, handleClose, provider, updateProvider, sho
             setProviderName(provider.providerName || '');
             setPhoneNumber(provider.phoneNumber || '');
             setEmail(provider.email || '');
-            setAddressId(addressId ?? null);
+            setAddress(provider.address || '');
             setStatus(provider.status?.toString() ?? Status.ACTIVE.toString());
         }
     }, [provider]);
@@ -159,9 +156,9 @@ const DialogUpdateProvider = ({ open, handleClose, provider, updateProvider, sho
                 <TextField
                     autoFocus
                     margin="dense"
-                    id="address_id"
-                    name="address_id"
-                    label="address_id"
+                    id="address"
+                    name="address"
+                    label="Địa chỉ"
                     error={errorText !== ''}
                     helperText={errorText}
                     InputLabelProps={
@@ -169,17 +166,17 @@ const DialogUpdateProvider = ({ open, handleClose, provider, updateProvider, sho
                             shrink: true,
                         }
                     }
-                    value={addressId}
+                    value={address}
                     type="text"
                     fullWidth
                     variant="standard"
                     onChange={(e) => {
-                        setAddressId(Number(e.target.value));
+                        setAddress(e.target.value);
                         setErrorText('');
                     }}
                 />
             </DialogContent>
-            <DialogContent>
+            {/* <DialogContent>
                 <FormControl fullWidth>
                     <InputLabel id="status">Trạng thái</InputLabel>
                     <Select
@@ -195,7 +192,7 @@ const DialogUpdateProvider = ({ open, handleClose, provider, updateProvider, sho
                         <MenuItem value={Status.INACTIVE.toString()}>Ngưng hoạt động</MenuItem>
                     </Select>
                 </FormControl>
-            </DialogContent>
+            </DialogContent> */}
             <DialogActions>
                 <Button onClick={handleClose}>Hủy</Button>
                 <Button onClick={handleSubmit}>Cập nhật</Button>

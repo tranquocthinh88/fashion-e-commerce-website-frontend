@@ -4,6 +4,7 @@ export type ProviderDto = {
     providerName?: string
     phoneNumber: string,
     email: string,
-    addressId: number,
+    // addressId: number,
+    address: string,
     status?: Status
 }

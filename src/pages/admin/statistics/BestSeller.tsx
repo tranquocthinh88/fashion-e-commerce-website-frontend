@@ -175,7 +175,16 @@ const BestSeller: React.FC = () => {
             </Box>
             <Box className={classes.container}>
                 <Box className={classes.dataGridBox}>
-                    <DataGrid rows={products} columns={columns} autoHeight />
+                    <DataGrid rows={products} columns={columns} autoHeight 
+                    initialState={{
+                        pagination: {
+                          paginationModel: {
+                            pageSize: 10,
+                          },
+                        },
+                      }}
+                      pageSizeOptions={[10]}
+                    />
                 </Box>
                 <Box className={classes.chartBox}>
                     <Typography variant="h6" gutterBottom>

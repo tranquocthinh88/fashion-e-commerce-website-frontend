@@ -6,6 +6,7 @@ import { DeliveryMethod } from "./shipping.dto";
 export type ProductsOrderDto = {
     productDetailId: string;
     quantity: number;
+    isSelected?: boolean;
 }
 
 export type OrderDto = {

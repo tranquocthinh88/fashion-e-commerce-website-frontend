@@ -18,6 +18,7 @@ import { Role, UserModel } from './models/user.model.ts'
 import { getUserFromLocalStorage } from './services/user.service.ts'
 import ProtectRouter from './routes/ProtectRoutes.tsx'
 import ChatAI from './pages/user/chat/ChatAI.tsx'
+// import chatbot from './assets/images/chatbot1.jpg'
 
 // ReactDOM.createRoot(document.getElementById('root')!).render(
 //   <ProviderRedux  store={store}>
@@ -100,6 +101,7 @@ const App = () => {
     >
       <img
         src="https://img.icons8.com/ios/452/robot-2.png"
+        // src={chatbot}
         style={{ width: 40, height: 40 }}
         alt="Trợ lý AI"
       />

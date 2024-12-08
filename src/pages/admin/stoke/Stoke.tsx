@@ -11,66 +11,7 @@ import { parse } from 'date-fns';
 import { ProductModel } from "../../../models/product.model";
 import { ProductDetailModel } from "../../../models/product-detail.model";
 import { subMonths, format } from 'date-fns';
-
-const columns: GridColDef[] = [
-    {
-        field: 'thumbnail',
-        headerName: 'Hình ảnh',
-        width: 100,
-        renderCell: (params) => <img src={params.value} alt="" style={{ width: 60, height: 60 }} />,
-    },
-    { field: 'id', headerName: 'Mã sản phẩm', width: 150 },
-    { field: 'productName', headerName: 'Tên sản phẩm', width: 320 },
-    {
-        field: 'importDate', headerName: 'Ngày nhập', type: 'date', width: 120,
-        valueGetter: (params: { row: ProductModel }) => {
-            const importDate = params;
-            if (!importDate) {
-                return new Date();
-            }
-            try {
-                return parse(importDate.toString(), 'yyyy-MM-dd HH:mm:ss', new Date());
-            } catch (e) {
-                console.error("Error parsing importDate: ", importDate);
-                return new Date();
-            }
-        }
-    },
-    { field: 'totalQuantity', headerName: 'Tồn kho', type: 'number', width: 120 },
-    { field: 'buyQuantity', headerName: 'Số lượng bán', type: 'number', width: 120 },
-    { field: 'inputPrice', headerName: 'Giá nhập', type: 'number', width: 150 },
-    {
-        field: 'action',
-        headerName: 'Thao tác',
-        width: 150,
-        renderCell: () => (
-            <Button variant="contained" color="success">
-                Xả kho
-            </Button>
-        ),
-    },
-];
-
-const detailColumns: GridColDef[] = [
-    { field: 'id', headerName: 'Mã chi tiết', width: 150 },
-    { field: 'color', headerName: 'Màu', width: 220 },
-    { field: 'size', headerName: 'Kích thước', type: 'string', width: 120 },
-    { field: 'quantity', headerName: 'Số lượng tồn kho', type: 'number', width: 150 },
-    { field: 'importDate', headerName: 'Ngày nhập', type: 'date', width: 120,
-        valueGetter: (params: { row: ProductDetailModel }) => {
-            const importDate = params;
-            if (!importDate) {
-                return new Date();
-            }
-            try {
-                return parse(importDate.toString(), 'yyyy-MM-dd HH:mm:ss', new Date());
-            } catch (e) {
-                console.error("Error parsing importDate: ", importDate);
-                return new Date();
-            }
-        }
-    },
-];
+import { useNavigate } from "react-router-dom";
 
 const useStyles = makeStyles({
     dataGridBox: {
@@ -84,15 +25,80 @@ const Stoke = () => {
     const [selectedProductDetails, setSelectedProductDetails] = useState<ProductDetailModel[]>([]);
     const [selectedProductId, setSelectedProductId] = useState<string | null>(null);
 
+    const navigate = useNavigate();
+
+    const columns: GridColDef[] = [
+        {
+            field: 'thumbnail',
+            headerName: 'Hình ảnh',
+            width: 100,
+            renderCell: (params) => <img src={params.value} alt="" style={{ width: 60, height: 60 }} />,
+        },
+        { field: 'id', headerName: 'Mã sản phẩm', width: 150 },
+        { field: 'productName', headerName: 'Tên sản phẩm', width: 320 },
+        {
+            field: 'importDate', headerName: 'Ngày nhập', type: 'date', width: 120,
+            valueGetter: (params: { row: ProductModel }) => {
+                const importDate = params;
+                if (!importDate) {
+                    return new Date();
+                }
+                try {
+                    return parse(importDate.toString(), 'yyyy-MM-dd HH:mm:ss', new Date());
+                } catch (e) {
+                    console.error("Error parsing importDate: ", importDate);
+                    return new Date();
+                }
+            }
+        },
+        { field: 'totalQuantity', headerName: 'Tồn kho', type: 'number', width: 120 },
+        { field: 'buyQuantity', headerName: 'Số lượng bán', type: 'number', width: 120 },
+        { field: 'inputPrice', headerName: 'Giá nhập', type: 'number', width: 150 },
+        {
+            field: 'action',
+            headerName: 'Thao tác',
+            width: 150,
+            renderCell: (params) => (
+                <Button variant="contained" color="success"
+                    onClick={() => navigate(`/admin/products/update/${params.row.id}`)}
+                >
+                    Xả kho
+                </Button>
+            ),
+        },
+    ];
+
+    const detailColumns: GridColDef[] = [
+        { field: 'id', headerName: 'Mã chi tiết', width: 150 },
+        { field: 'color', headerName: 'Màu', width: 220 },
+        { field: 'size', headerName: 'Kích thước', type: 'string', width: 120 },
+        { field: 'quantity', headerName: 'Số lượng tồn kho', type: 'number', width: 150 },
+        {
+            field: 'importDate', headerName: 'Ngày nhập', type: 'date', width: 120,
+            valueGetter: (params: { row: ProductDetailModel }) => {
+                const importDate = params;
+                if (!importDate) {
+                    return new Date();
+                }
+                try {
+                    return parse(importDate.toString(), 'yyyy-MM-dd HH:mm:ss', new Date());
+                } catch (e) {
+                    console.error("Error parsing importDate: ", importDate);
+                    return new Date();
+                }
+            }
+        },
+    ];
+
     useEffect(() => {
         (async () => {
             try {
-                const threeMonthsAgo = subMonths(new Date(), 1);
+                const threeMonthsAgo = subMonths(new Date(), 2);
                 const formattedDate = format(threeMonthsAgo, 'yyyy-MM-dd');
 
                 const filters = [
                     {
-                        field: 'createdAt',
+                        field: 'importDate',
                         operator: '<=',
                         value: formattedDate,
                     },
@@ -109,7 +115,7 @@ const Stoke = () => {
                     filters,
                     [
                         {
-                            field: 'createdAt',
+                            field: 'importDate',
                             order: 'asc',
                         },
                     ]
@@ -152,7 +158,7 @@ const Stoke = () => {
                 thumbnail: item.product.thumbnail,
                 importDate: item.product.importDate,
                 totalQuantity: item.product.totalQuantity,
-                buyQuantity: item.product.buyQuantity,
+                buyQuantity: item.product.buyQuantity ?? 0,
                 inputPrice: item.product.inputPrice,
             };
         });
@@ -163,14 +169,14 @@ const Stoke = () => {
     const transformedProductDetails = (productId: string) => {
         const details = productDetails[productId] || [];
         console.log('Sản phẩm được chọn: ', selectedProductDetails);
-        
+
 
         return Array.isArray(details)
             ? details.map((detail) => ({
                 id: detail.id,
                 color: detail.color.colorName,
                 size: detail.size?.numberSize || detail.size?.textSize,
-                quantity: detail.quantity,
+                quantity: detail.quantity ?? 0,
                 importDate: detail.importDate,
             }))
             : [];
@@ -205,6 +211,14 @@ const Stoke = () => {
                         handleRowClick(param.id.toString());
                     }}
                     autoHeight
+                    initialState={{
+                        pagination: {
+                            paginationModel: {
+                                pageSize: 10,
+                            },
+                        },
+                    }}
+                    pageSizeOptions={[10]}
                 />
             </Box>
             {selectedProductId && (
@@ -214,6 +228,14 @@ const Stoke = () => {
                         rows={transformedProductDetails(selectedProductId)}
                         columns={detailColumns}
                         autoHeight
+                        initialState={{
+                            pagination: {
+                                paginationModel: {
+                                    pageSize: 5,
+                                },
+                            },
+                        }}
+                        pageSizeOptions={[5]}
                     />
                 </Box>
             )}

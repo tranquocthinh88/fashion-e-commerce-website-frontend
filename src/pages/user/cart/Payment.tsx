@@ -317,18 +317,6 @@ const Payment = () => {
                 // Lấy danh sách `productDetailId` đã mua
                 const purchasedProductIds = values.productsOrderDtos.map((item) => item.productDetailId);
 
-                // Lấy giỏ hàng hiện tại từ localStorage
-                const currentCart: CartItemModel[] = JSON.parse(localStorage.getItem('cart') ?? '[]');
-
-                // Lọc bỏ các sản phẩm đã mua khỏi giỏ hàng
-                const updatedCart = currentCart.filter(
-                    (cartItem) => cartItem.productDetail.id && !purchasedProductIds.includes(cartItem.productDetail.id)
-                );
-
-                // Cập nhật lại localStorage và Redux store
-                localStorage.setItem('cart', JSON.stringify(updatedCart));
-                dispatch(updateCartState());
-
                 if (order.paymentMethod === PaymentMethod.CC) {
                     alert('Đã đặt hàng thành công, vui lòng chuyển tiền qua đây: ');
 
@@ -344,6 +332,13 @@ const Payment = () => {
                         console.error('Error getting payment URL:', error);
                     }
                 }
+
+                const currentCart: CartItemModel[] = JSON.parse(localStorage.getItem('cart') ?? '[]');
+                const updatedCart = currentCart.filter(
+                    (cartItem) => cartItem.productDetail.id && !purchasedProductIds.includes(cartItem.productDetail.id)
+                );
+                localStorage.setItem('cart', JSON.stringify(updatedCart));
+                dispatch(updateCartState());
 
                 showAlert('success', 'Đơn hàng đã được tạo thành công.');
                 setTimeout(() => {

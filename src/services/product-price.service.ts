@@ -5,8 +5,6 @@ import { ProductPriceModel } from "../models/product-price.model";
 
 export const getAllProductPricesByProductId = async (productId : string): Promise<ResponseSuccess<ProductPriceModel[]>> => {
     try {
-        console.log('đã lấy đc id: ', productId);
-        
         const response = await requestConfig(
             `productPrices/products/${productId}`,
             Method.GET,
@@ -14,8 +12,6 @@ export const getAllProductPricesByProductId = async (productId : string): Promis
             ContentType.JSON,
             true
         );
-        console.log('dữ liệu đã vào: ', response.data);
-        
         return response.data;
     } catch (error) {
         return Promise.reject(error);
@@ -24,8 +20,6 @@ export const getAllProductPricesByProductId = async (productId : string): Promis
 
 export const createProductPrice = async (productPriceDto: ProductPriceDto): Promise<ResponseSuccess<ProductPriceModel>> => {
     try {
-        console.log("Giá trị gửi: ", productPriceDto);
-        
         const response = await requestConfig(
             'productPrices',
             Method.POST,

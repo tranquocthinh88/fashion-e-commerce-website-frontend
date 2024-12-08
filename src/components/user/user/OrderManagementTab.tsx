@@ -40,7 +40,7 @@ const OrderManagementTab = () => {
       setOrders(response.data);
       console.log("Orders: ", response.data);
     })();
-  }, []);
+  }, [handleStatusChange]);
 
   return (
     <>
@@ -53,7 +53,7 @@ const OrderManagementTab = () => {
         }}
       >
         <Typography variant="h6">Danh sách đơn hàng</Typography>
-        <FormControl variant="standard" sx={{ minWidth: 200, marginTop: 2 }}>
+        <FormControl variant="standard" sx={{ minWidth: 200, marginTop: 2, ml: 2 }}>
           <InputLabel id="status-filter-label">Trạng thái đơn hàng</InputLabel>
           <Select
             labelId="status-filter-label"
