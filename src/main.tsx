@@ -18,6 +18,7 @@ import { Role, UserModel } from './models/user.model.ts'
 import { getUserFromLocalStorage } from './services/user.service.ts'
 import ProtectRouter from './routes/ProtectRoutes.tsx'
 import ChatAI from './pages/user/chat/ChatAI.tsx'
+import ChatContainer from './pages/user/chat/ChatContainer.tsx'
 // import chatbot from './assets/images/chatbot1.jpg'
 
 // ReactDOM.createRoot(document.getElementById('root')!).render(
@@ -107,9 +108,10 @@ const App = () => {
       />
       Chat
     </Button>
+    <ChatContainer />
     {isChatOpen && (
       <ProtectRouter role={Role.ROLE_USER}>
-        <ChatAI />
+        <ChatAI onSwitch={toggleChat} />
       </ProtectRouter>
     )}</> : <></>}
       

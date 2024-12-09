@@ -157,6 +157,7 @@ const Header = () => {
                                         border: '1px solid #ccc',
                                         zIndex: 10,
                                         overflowY: 'auto',
+                                        maxHeight: '300px',
                                     }}
                                 >
                                     {searchResult.map((product: ProductUserResponse) => (
@@ -174,6 +175,10 @@ const Header = () => {
                                                     cursor: 'pointer',
                                                     transform: 'scale(0.95)',
                                                 },
+                                                WebkitBoxOrient: "vertical",
+                                                overflow: "hidden",
+                                                textOverflow: "ellipsis",
+                                                WebkitLineClamp: 2,
                                             }}
                                             onClick={() => { handleClick(); window.location.href = `/products/${product.product.id}`; }}
                                         >
@@ -324,7 +329,7 @@ const Header = () => {
             </Box>
 
             {isChatOpen &&
-                <ProtectRouter role={Role.ROLE_USER}> <RoomChat /></ProtectRouter>
+                <ProtectRouter role={Role.ROLE_USER}> <RoomChat onSwitch={toggleChat} /></ProtectRouter>
             }
         </Box>
     )

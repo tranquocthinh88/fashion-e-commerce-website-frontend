@@ -1,9 +1,6 @@
-import { Box, IconButton, Input, Typography, Snackbar, Alert } from "@mui/material";
+import { Box, IconButton, Input, Typography, Snackbar, Alert, Button } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import SendIcon from '@mui/icons-material/Send';
-import AttachFileIcon from '@mui/icons-material/AttachFile';
-import ImageIcon from '@mui/icons-material/Image';
-import OndemandVideoIcon from '@mui/icons-material/OndemandVideo';
 import { useEffect, useState, useRef } from "react";
 import { getAllMessageByUserIdAndChatbotId, sendMessage } from "../../../services/chatbot.service";
 import { UserModel } from "../../../models/user.model";
@@ -11,7 +8,11 @@ import { getUserFromLocalStorage } from "../../../services/user.service";
 import { ResponseSuccess } from "../../../dtos/responses/response.success";
 import { MessageChatbotModel } from "../../../models/chatbot/messages.chatbot";
 
-const ChatAI = () => {
+interface ChatAIProps {
+    onSwitch: () => void;
+}
+
+const ChatAI = ({ onSwitch }: ChatAIProps) => {
     const [isOpen, setIsOpen] = useState(true);
     const [messagesChatbotList, setMessagesChatbotList] = useState<MessageChatbotModel[]>([]); // Lưu trữ tin nhắn
     const [inputMessage, setInputMessage] = useState(""); // Tin nhắn đang nhập
@@ -100,6 +101,42 @@ const ChatAI = () => {
         }
     };
 
+    const extractLinksFromText = (text: string) => {
+        const urlRegex = /http[s]?:\/\/[^\s]+/g;
+        const matches: string[] | null = text.match(urlRegex);
+
+        return matches ? matches.map((link) => link.replace(/[^\w\/-]$/, '')) : [];
+    }
+
+    const renderContentWithLinks = (content: string) => {
+        const links = extractLinksFromText(content);
+
+        if (links.length === 0) {
+            return content;
+        }
+
+        return (
+            <>
+                {content.split(/(http[s]?:\/\/[^\s]+)/g).map((part, index) => {
+                    const cleanedPart = part.replace(/[^\w\/-]$/, '');
+                    return links.includes(cleanedPart) ? (
+                        <a
+                            href={cleanedPart}
+                            key={index}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            style={{ color: 'blue', textDecoration: 'underline' }}
+                        >
+                            {cleanedPart}
+                        </a>
+                    ) : (
+                        part
+                    );
+                })}
+            </>
+        );
+    }
+
     return (
         <>
             {isOpen && (
@@ -119,6 +156,9 @@ const ChatAI = () => {
                 }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
                         <Typography variant="h6" gutterBottom>Trao đổi với AI</Typography>
+                        <Button onClick={onSwitch}>
+                            <Typography sx={{textTransform: 'none'}}>Chat với nhân viên</Typography>
+                        </Button>
                         <IconButton color="primary" size="small" onClick={closeChat}>
                             <CloseIcon />
                         </IconButton>
@@ -152,7 +192,8 @@ const ChatAI = () => {
                                     }}
                                 >
                                     <Typography align={msg.role === 'user' ? 'right' : 'left'}>
-                                        {msg.content}
+                                        {/* {msg.content} */}
+                                        {renderContentWithLinks(msg.content)}
                                     </Typography>
                                     <Typography>
                                         {msg.timestamp ? msg.timestamp.toString() : ''}
@@ -178,6 +219,7 @@ const ChatAI = () => {
                                 <SendIcon />
                             </IconButton>
                         </Box>
+                        {/*}
                         <Box sx={{ mt: 1 }}>
                             <IconButton color="primary" size="small">
                                 <AttachFileIcon />
@@ -189,6 +231,7 @@ const ChatAI = () => {
                                 <OndemandVideoIcon />
                             </IconButton>
                         </Box>
+                        */}
                     </Box>
 
                     {/* Thông báo lỗi */}
