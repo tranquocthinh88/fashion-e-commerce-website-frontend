@@ -19,17 +19,6 @@ import { getUserFromLocalStorage } from './services/user.service.ts'
 import ProtectRouter from './routes/ProtectRoutes.tsx'
 import ChatAI from './pages/user/chat/ChatAI.tsx'
 import ChatContainer from './pages/user/chat/ChatContainer.tsx'
-// import chatbot from './assets/images/chatbot1.jpg'
-
-// ReactDOM.createRoot(document.getElementById('root')!).render(
-//   <ProviderRedux  store={store}>
-//     <CssVarsProvider>
-//       <CssBaseline />
-//       <RouterProvider router={router}></RouterProvider>
-//     </CssVarsProvider>
-//   </ProviderRedux>
-// )
-
 
 const App = () => {
   const dispatch = useDispatch();

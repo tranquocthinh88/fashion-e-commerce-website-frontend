@@ -48,3 +48,35 @@ export const markNotificationAsRead = async ( notificationId: number, userId: nu
         return Promise.reject(error);
     }
 }
+
+
+export const deleteNotificationUser = async ( notificationId: number, userId: number,): Promise<ResponseSuccess<string[]>> => {
+    try {
+        const response = await requestConfig(
+            `notifications/delete/${notificationId}/user/${userId}`,
+            Method.DELETE,
+            [],
+            ContentType.JSON,
+            true
+        );
+        return response.data;
+    } catch (error) {
+        return Promise.reject(error);
+    }
+}
+
+
+export const deleteAllNotificationsUser = async ( userId: number,): Promise<ResponseSuccess<string[]>> => {
+    try {
+        const response = await requestConfig(
+            `notifications/delete-all/user/${userId}`,
+            Method.DELETE,
+            [],
+            ContentType.JSON,
+            true
+        );
+        return response.data;
+    } catch (error) {
+        return Promise.reject(error);
+    }
+}
