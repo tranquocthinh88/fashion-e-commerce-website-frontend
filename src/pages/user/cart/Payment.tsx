@@ -363,6 +363,10 @@ const Payment = () => {
         formilCreateOrder.handleSubmit();
     }
 
+    useEffect(() => {
+        document.title = "Total Trendsetter - Thanh toán";
+    }, []);
+
     return (
         <Container maxWidth="lg" sx={{ mt: 4 }}>
             <Grid container spacing={4}>

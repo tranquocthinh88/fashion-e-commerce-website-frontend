@@ -1,4 +1,4 @@
-import { Box, IconButton, Input, Typography, Snackbar, Alert, Button } from "@mui/material";
+import { Box, IconButton, Input, Typography, Snackbar, Alert } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import SendIcon from '@mui/icons-material/Send';
 import { useEffect, useState, useRef } from "react";
@@ -8,11 +8,7 @@ import { getUserFromLocalStorage } from "../../../services/user.service";
 import { ResponseSuccess } from "../../../dtos/responses/response.success";
 import { MessageChatbotModel } from "../../../models/chatbot/messages.chatbot";
 
-interface ChatAIProps {
-    onSwitch: () => void;
-}
-
-const ChatAI = ({ onSwitch }: ChatAIProps) => {
+const ChatAI = () => {
     const [isOpen, setIsOpen] = useState(true);
     const [messagesChatbotList, setMessagesChatbotList] = useState<MessageChatbotModel[]>([]); // Lưu trữ tin nhắn
     const [inputMessage, setInputMessage] = useState(""); // Tin nhắn đang nhập
@@ -155,10 +151,10 @@ const ChatAI = ({ onSwitch }: ChatAIProps) => {
                     flexDirection: 'column',
                 }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <Typography variant="h6" gutterBottom>Trao đổi với AI</Typography>
-                        <Button onClick={onSwitch}>
+                        <Typography variant="h6" gutterBottom>Chat với trợ lý</Typography>
+                        {/* <Button onClick={onSwitch}>
                             <Typography sx={{textTransform: 'none'}}>Chat với nhân viên</Typography>
-                        </Button>
+                        </Button> */}
                         <IconButton color="primary" size="small" onClick={closeChat}>
                             <CloseIcon />
                         </IconButton>
@@ -170,6 +166,8 @@ const ChatAI = ({ onSwitch }: ChatAIProps) => {
                             overflowY: 'auto',
                             border: '1px solid #ddd',
                             p: 1,
+                            backgroundColor: '#99CCFF',
+                            borderRadius: '5px',
                         }}
                     >
                         {messagesChatbotList?.map((msg, index) => (

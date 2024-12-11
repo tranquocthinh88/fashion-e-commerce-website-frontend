@@ -158,7 +158,7 @@ const Header = () => {
                                 value={search}
                                 onChange={e => setSearch(e.target.value)}
                             />
-                            {searchResult.length > 0 && (
+                            {search.trim() && searchResult.length > 0 ? (
                                 <Box
                                     sx={{
                                         position: 'absolute',
@@ -201,6 +201,9 @@ const Header = () => {
                                         </Box>
                                     ))}
                                 </Box>
+                            ) : 
+                            (
+                               search.trim() && <Typography sx={{ color: 'red', fontSize: '16px' }}>Không tìm thấy sản phẩm phù hợp!</Typography>
                             )}
                         </Box>
                     </Box>
@@ -216,7 +219,7 @@ const Header = () => {
                     }}>
                         <Tooltip title="tin nhắn">
                             <IconButton onClick={toggleChat}>
-                                <Badge badgeContent={4} color="primary">
+                                <Badge color="primary">
                                     <MailIcon />
                                 </Badge>
                             </IconButton>
@@ -245,13 +248,12 @@ const Header = () => {
                             }}
                             sx={{ maxHeight: "50%" }}
                         >
-                            {notifications.length === 0 ? <Typography sx={{ pl: 2, pr: 2 }}>Danh sách thông báo trống !</Typography>
-                                :
-                                <>
-                                    <Button onClick={handleDeleteAll}>
-                                        <Typography>Xóa tất cả thông báo</Typography>
-                                    </Button>
-                                </>}
+                            {notifications.length === 0 && <Typography sx={{ pl: 2, pr: 2 }}>Danh sách thông báo trống !</Typography>}
+                            {notifications.length > 0 && <Button onClick={handleDeleteAll}>
+                                <Typography>Xóa tất cả thông báo</Typography>
+                            </Button>
+                            }
+
                             {notifications.map((notification) => (
                                 <NotificationView key={notification.id} notification={notification} />
                             ))}
@@ -349,7 +351,7 @@ const Header = () => {
             </Box>
 
             {isChatOpen &&
-                <ProtectRouter role={Role.ROLE_USER}> <RoomChat onSwitch={toggleChat} /></ProtectRouter>
+                <ProtectRouter role={Role.ROLE_USER}> <RoomChat /></ProtectRouter>
             }
         </Box>
     )

@@ -218,6 +218,9 @@ const BestSeller: React.FC = () => {
         link.click();
     };
 
+    useEffect(() => {
+        document.title = "Thống kê sản phẩm bán chạy - Admin";
+    }, []);
 
     return (
         <Box sx={{ width: '100%', ml: 1 }}>

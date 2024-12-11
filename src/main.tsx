@@ -18,7 +18,6 @@ import { Role, UserModel } from './models/user.model.ts'
 import { getUserFromLocalStorage } from './services/user.service.ts'
 import ProtectRouter from './routes/ProtectRoutes.tsx'
 import ChatAI from './pages/user/chat/ChatAI.tsx'
-import ChatContainer from './pages/user/chat/ChatContainer.tsx'
 
 const App = () => {
   const dispatch = useDispatch();
@@ -97,10 +96,10 @@ const App = () => {
       />
       Chat
     </Button>
-    <ChatContainer />
+    {/* <ChatContainer /> */}
     {isChatOpen && (
       <ProtectRouter role={Role.ROLE_USER}>
-        <ChatAI onSwitch={toggleChat} />
+        <ChatAI />
       </ProtectRouter>
     )}</> : <></>}
       

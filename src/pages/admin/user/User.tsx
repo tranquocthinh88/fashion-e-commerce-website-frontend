@@ -89,6 +89,11 @@ const User = () => {
             handleSearchClick();
         }
     };
+
+    useEffect(() => {
+        document.title = "Quản lý người dùng - Admin";
+    }, []);
+
     return (
         <Box sx={{ background: bodyAdminColor, width: '100%', height: '100%' }}>
             <Box sx={{ fontSize: 30, fontWeight: 'bold', ml: 2 }}>Người dùng</Box>

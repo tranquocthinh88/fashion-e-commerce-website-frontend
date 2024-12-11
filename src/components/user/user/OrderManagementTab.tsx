@@ -42,6 +42,10 @@ const OrderManagementTab = () => {
     })();
   }, []);
 
+  useEffect(() => {
+    document.title = "Quản lý đơn hàng";
+}, []);
+
   return (
     <>
       <Box

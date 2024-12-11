@@ -1,7 +1,6 @@
 import { Box, Button, Typography } from "@mui/material";
 import { makeStyles } from "@mui/styles";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import SearchInput from "../../../components/common/search/SearchInput";
 import { useEffect, useState } from "react";
 import { ResponseSuccess } from "../../../dtos/responses/response.success";
 import { PageResponse } from "../../../dtos/responses/page.response";
@@ -112,7 +111,7 @@ const Stoke = () => {
 
                 const response: ResponseSuccess<PageResponse<ProductUserResponse[]>> = await getPageProducts(
                     1,
-                    15,
+                    150,
                     filters,
                     [
                         {
@@ -264,16 +263,20 @@ const Stoke = () => {
         link.click();
     };
 
+    useEffect(() => {
+        document.title = "Quản lý tồn kho - Admin";
+    }, []);
+
     return (
         <Box sx={{ display: 'flex', flexDirection: 'column', ml: 4, mr: 1, width: '100%' }}>
             <Box sx={{ mt: 1 }}>
                 <Typography variant="h5" gutterBottom>
-                    Quản lý kho
+                    Quản lý tồn kho
                 </Typography>
             </Box>
-            <Box sx={{ width: '25%', mt: 2, mb: 2 }}>
+            {/* <Box sx={{ width: '25%', mt: 2, mb: 2 }}>
                 <SearchInput placeHolder={'Nhập tên sản phẩm'} />
-            </Box>
+            </Box> */}
             <Box className={classes.dataGridBox}>
                 <DataGrid
                     rows={transformedProducts}

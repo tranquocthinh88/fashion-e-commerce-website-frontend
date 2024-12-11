@@ -1,4 +1,4 @@
-import { Box, IconButton, Input, Typography, Snackbar, Alert, useMediaQuery, Button } from "@mui/material";
+import { Box, IconButton, Input, Typography, Snackbar, Alert, useMediaQuery } from "@mui/material";
 import CloseIcon from '@mui/icons-material/Close';
 import SendIcon from '@mui/icons-material/Send';
 import ImageIcon from '@mui/icons-material/Image';
@@ -10,11 +10,7 @@ import { MessageModel } from "../../../models/message.model";
 import { UserModel } from "../../../models/user.model";
 import { getUserFromLocalStorage } from "../../../services/user.service";
 
-interface RoomChatProps {
-    onSwitch: () => void;
-}
-
-const RoomChat = ({ onSwitch }: RoomChatProps) => {
+const RoomChat = () => {
     const user: UserModel | null = getUserFromLocalStorage();
     const [isOpen, setIsOpen] = useState(true);
     const [messages, setMessages] = useState<MessageModel[]>([]);
@@ -155,10 +151,10 @@ const RoomChat = ({ onSwitch }: RoomChatProps) => {
                     flexDirection: 'column',
                 }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <Typography variant="h6" gutterBottom sx={{ fontSize: isMobile ? '16px' : '20px' }}>Trao đổi với nhân viên</Typography>
-                        <Button onClick={onSwitch}>
-                            <Typography sx={{textTransform: 'none'}}>Chat với AI</Typography>
-                        </Button>
+                        <Typography variant="h6" gutterBottom sx={{ fontSize: isMobile ? '16px' : '20px' }}>Chat với nhân viên</Typography>
+                        {/* <Button onClick={onSwitch}>
+                            <Typography sx={{textTransform: 'none'}}>Chat với trợ lý</Typography>
+                        </Button> */}
                         <IconButton color="primary" size="small" onClick={closeChat}>
                             <CloseIcon />
                         </IconButton>

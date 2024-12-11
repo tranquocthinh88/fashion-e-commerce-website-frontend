@@ -69,6 +69,10 @@ const UserDetails = () => {
         fetchUser();
     }, []);
 
+    useEffect(() => {
+        document.title = "Quản lý người dùng - Admin";
+    }, []);
+
     return (
         <>
             <Box sx={{ p: 2 }}>

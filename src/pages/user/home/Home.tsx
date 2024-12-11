@@ -91,6 +91,10 @@ const Home = () => {
         }
     }, [location.state]);
 
+    useEffect(() => {
+        document.title = "Trang chủ - Total Trendsetter";
+    }, []);
+
     return (
         <Box sx={{mt: 4}}>
             <Slide />
