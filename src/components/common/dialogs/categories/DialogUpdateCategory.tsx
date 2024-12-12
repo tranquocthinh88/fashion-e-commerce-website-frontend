@@ -3,10 +3,7 @@ import {
     Dialog,
     DialogActions,
     DialogContent,
-    DialogTitle, FormControl,
-    InputLabel,
-    MenuItem,
-    Select,
+    DialogTitle,
     TextField
 } from "@mui/material";
 import {useState} from "react";
@@ -24,8 +21,8 @@ type Props = {
 const DialogUpdateCategory = ({open, handleClose, category, updateCategory, showAlert}: Props) => {
     const [categoryName, setCategoryName] = useState(category?.categoryName);
     const [errorText, setErrorText] = useState('');
-    const [status, setStatus] = useState(category?.status?.toString()
-        ?? Status.ACTIVE.toString());
+    // const [status, setStatus] = useState(category?.status?.toString()
+    //     ?? Status.ACTIVE.toString());
     const handleSubmit = async () => {
         let newStatus: Status = Status.INACTIVE;
         if (status === 'ACTIVE') {
@@ -88,7 +85,7 @@ const DialogUpdateCategory = ({open, handleClose, category, updateCategory, show
                     }}
                 />
             </DialogContent>
-            <DialogContent>
+            {/* <DialogContent>
                 <FormControl fullWidth>
                     <InputLabel id="status">Trạng thái</InputLabel>
                     <Select
@@ -104,7 +101,7 @@ const DialogUpdateCategory = ({open, handleClose, category, updateCategory, show
                         <MenuItem value={Status.INACTIVE.toString()}>Ngưng hoạt động</MenuItem>
                     </Select>
                 </FormControl>
-            </DialogContent>
+            </DialogContent> */}
             <DialogActions>
                 <Button onClick={handleClose}>Hủy</Button>
                 <Button onClick={handleSubmit}>Cập nhật</Button>

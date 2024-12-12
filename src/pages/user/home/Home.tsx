@@ -25,7 +25,7 @@ const Home = () => {
         slidesToScroll: 5, // Số sản phẩm khi cuộn mỗi lần
         prevArrow: <CustomArrow type="prev" />,
         nextArrow: <CustomArrow type="next" />,
-        initialSlide: -1,
+        initialSlide: 0,
         responsive: [
             {
                 breakpoint: 1024,
@@ -90,6 +90,10 @@ const Home = () => {
             });
         }
     }, [location.state]);
+
+    useEffect(() => {
+        document.title = "Trang chủ - Total Trendsetter";
+    }, []);
 
     return (
         <Box sx={{mt: 4}}>

@@ -5,4 +5,5 @@ export type NotificationModel = {
     content: string;
     notificationTime: Date;
     scope: Scope;
+    isRead?: boolean;
 }

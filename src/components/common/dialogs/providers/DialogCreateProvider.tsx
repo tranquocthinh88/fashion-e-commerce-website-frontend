@@ -18,22 +18,22 @@ const DialogCreateProvider = ({ open, handleClose, addProvider, showAlert }: Pro
     const [errorText, setErrorText] = useState('');
     const [phoneNumber, setPhoneNumber] = useState('');
     const [email, setEmail] = useState('');
-    const [addressId, setAddressId] = useState<number | null>(null);
+    // const [addressId, setAddressId] = useState<number | null>(null);
+    const [address, setAddress] = useState<string>('');
     const handleSubmit = async () => {
         if (providerName === '') {
             setErrorText('Vui lòng điền vào trường này');
         } else if (email === '' || phoneNumber === '') {
             setErrorText('Vui lòng nhập email và số điện thoại');
         }
-        else if (addressId === null || isNaN(Number(addressId))) {
-            setErrorText('Vui lòng nhập địa chỉ ID hợp lệ');
-        } else {
+        else {
             try {
                 const value: ProviderDto = {
                     providerName: providerName,
                     phoneNumber: phoneNumber,
                     email: email,
-                    addressId: addressId,
+                    // addressId: addressId,
+                    address: address,
                     status: Status.ACTIVE
                 }
                 const response: ResponseSuccess<ProviderModel> = await create(value);
@@ -128,9 +128,9 @@ const DialogCreateProvider = ({ open, handleClose, addProvider, showAlert }: Pro
                 <TextField
                     autoFocus
                     margin="dense"
-                    id="address_id"
-                    name="address_id"
-                    label="address_id"
+                    id="address"
+                    name="address"
+                    label="Địa chỉ"
                     error={errorText !== ''}
                     helperText={errorText}
                     InputLabelProps={
@@ -142,7 +142,7 @@ const DialogCreateProvider = ({ open, handleClose, addProvider, showAlert }: Pro
                     fullWidth
                     variant="standard"
                     onChange={(e) => {
-                        setAddressId(Number(e.target.value));
+                        setAddress(e.target.value);
                         setErrorText('');
                     }}
                 />

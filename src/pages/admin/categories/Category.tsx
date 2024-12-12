@@ -21,8 +21,8 @@ import { getAllCategories } from "../../../services/category.service.ts";
 import IconButtonGradient from "../../../components/common/IconButtonGradient.tsx";
 import { pinkGradient } from "../../../theme.tsx";
 import AddIcon from '@mui/icons-material/Add';
-import { Status } from "../../../models/enum/status.enum.ts";
-import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
+// import { Status } from "../../../models/enum/status.enum.ts";
+// import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import AlertCustom from "../../../components/common/AlertCustom.tsx";
 import { useNavigate } from "react-router-dom";
 
@@ -123,7 +123,7 @@ const Category = () => {
                         <TableRow>
                             <TableCell >Id</TableCell>
                             <TableCell >Tên loại sản phẩm</TableCell>
-                            <TableCell >Trạng thái</TableCell>
+                            {/* <TableCell >Trạng thái</TableCell> */}
                             <TableCell align="center">Thao tác</TableCell>
                         </TableRow>
                     </TableHead>
@@ -136,7 +136,7 @@ const Category = () => {
                             }}>
                                 <TableCell >{category.id}</TableCell>
                                 <TableCell >{category.categoryName}</TableCell>
-                                <TableCell >
+                                {/* <TableCell >
                                     {category.status === Status.ACTIVE ?
                                         <Box sx={{
                                             display: 'flex',
@@ -145,7 +145,7 @@ const Category = () => {
                                         <Box sx={{
                                             display: 'flex',
                                             alignItems: 'center', gap: '5px'
-                                        }}><FiberManualRecordIcon fontSize="small" color="error" />Ngưng hoạt động</Box>}</TableCell>
+                                        }}><FiberManualRecordIcon fontSize="small" color="error" />Ngưng hoạt động</Box>}</TableCell> */}
                                 <TableCell align="center">
                                     <Button sx={{
                                         width: '80px',

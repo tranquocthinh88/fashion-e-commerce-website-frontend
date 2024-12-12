@@ -69,7 +69,7 @@ export const DialogFeedback = ({ open, onClose, item, setIsEvaluate }: Props) =>
     });
     const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const files = event.target.files ? Array.from(event.target.files) : [];
-        formik.setFieldValue('medias', files); 
+        formik.setFieldValue('medias', files);
     };
 
     return (
@@ -77,6 +77,7 @@ export const DialogFeedback = ({ open, onClose, item, setIsEvaluate }: Props) =>
             <Dialog
                 open={open}
                 onClose={onClose}
+                onClick={(e) => e.stopPropagation}
                 aria-labelledby="alert-dialog-title"
                 aria-describedby="alert-dialog-description"
                 PaperProps={{
@@ -130,8 +131,14 @@ export const DialogFeedback = ({ open, onClose, item, setIsEvaluate }: Props) =>
                         <input type="file" multiple onChange={handleFileChange} />
                     </Box>
                     <Box sx={{ display: 'flex', justifyContent: 'center', gap: 2 }}>
-                        <Button variant="contained" color="warning" onClick={onClose}>Hủy</Button>
-                        <Button variant="contained" color="primary" onClick={formik.submitForm}>Gửi đánh giá</Button>
+                        <Button variant="contained" color="warning" onClick={(e) => {
+                            e.stopPropagation();
+                            onClose();
+                        }}>Hủy</Button>
+                        <Button variant="contained" color="primary" onClick={(e) => {
+                            e.stopPropagation();
+                            formik.submitForm();
+                        }}>Gửi đánh giá</Button>
                     </Box>
                 </Box>
             </Dialog>

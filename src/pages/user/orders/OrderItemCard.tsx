@@ -37,7 +37,11 @@ const OrderItemCard = ({ item, status }: Props) => {
                 backgroundColor: '#f0f0f0',
             }
         }}
-        onClick={() => navigate(`/products/${item.productDetail.product?.id}`)}
+        onClick={() => {
+            if (!openDialogFeedback) {
+                navigate(`/products/${item.productDetail.product?.id}`);
+            }
+        }}
         >
             <Grid
                 container
@@ -98,7 +102,10 @@ const OrderItemCard = ({ item, status }: Props) => {
                             <Button
                                 variant="contained"
                                 color="warning"
-                                onClick={() => setOpenDialogFeedback(true)}
+                                onClick={(e) => {setOpenDialogFeedback(true);
+                                e.stopPropagation();  
+                                }
+                                }
                             >
                                 Đánh giá
                             </Button>

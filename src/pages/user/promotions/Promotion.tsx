@@ -9,7 +9,7 @@ import { getAllCategories } from "../../../services/category.service";
 const Promotion = () => {
 
     const [productSales, setProductSales] = useState<ProductUserResponse[]>([]);
-    const [displayedCount, setDisplayedCount] = useState(5);
+    const [displayedCount, setDisplayedCount] = useState(10);
     const [categories, setCategories] = useState<CategoryModel[]>([]);
     const [selectedCategory, setSelectedCategory] = useState<string>("");
     
@@ -18,13 +18,13 @@ const Promotion = () => {
 
 
     const handleShowMore = () => {
-        setDisplayedCount((prevCount) => prevCount + 5);
+        setDisplayedCount((prevCount) => prevCount + 10);
     };
 
     useEffect(() => {
         (async () => {
             try {
-                const response = await getProductsDiscount(1, 40, [], [])
+                const response = await getProductsDiscount(1, 50, [], [])
                 setProductSales(response.data.data);
             } catch (error) {
                 console.log(error);
@@ -39,7 +39,7 @@ const Promotion = () => {
                 if (selectedCategory) {
                     search.push({ field: "category.categoryName", operator: ":", value: selectedCategory });
                 }
-                const response = await getProductsDiscount(1, 40, search, []);
+                const response = await getProductsDiscount(1, 50, search, []);
                 setProductSales(response.data.data);
             } catch (error) {
                 console.error(error);

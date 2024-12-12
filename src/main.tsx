@@ -19,16 +19,6 @@ import { getUserFromLocalStorage } from './services/user.service.ts'
 import ProtectRouter from './routes/ProtectRoutes.tsx'
 import ChatAI from './pages/user/chat/ChatAI.tsx'
 
-// ReactDOM.createRoot(document.getElementById('root')!).render(
-//   <ProviderRedux  store={store}>
-//     <CssVarsProvider>
-//       <CssBaseline />
-//       <RouterProvider router={router}></RouterProvider>
-//     </CssVarsProvider>
-//   </ProviderRedux>
-// )
-
-
 const App = () => {
   const dispatch = useDispatch();
   const user: UserModel | null = getUserFromLocalStorage();
@@ -100,11 +90,13 @@ const App = () => {
     >
       <img
         src="https://img.icons8.com/ios/452/robot-2.png"
+        // src={chatbot}
         style={{ width: 40, height: 40 }}
         alt="Trợ lý AI"
       />
       Chat
     </Button>
+    {/* <ChatContainer /> */}
     {isChatOpen && (
       <ProtectRouter role={Role.ROLE_USER}>
         <ChatAI />

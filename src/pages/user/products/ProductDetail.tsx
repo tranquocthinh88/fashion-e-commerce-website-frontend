@@ -25,6 +25,7 @@ import ProductCard from "../../../components/user/product/ProductCard";
 import CustomArrow from "../../../components/user/customs/CustomArrow ";
 import Slider from "react-slick";
 import { isLoginAccount } from "../../../services/user.service";
+import { ConvertPrice } from "../../../utils/convert.price";
 
 const SizeColorBox = ({ text, onClick, selected }: { text: string | number, onClick(): void, selected: boolean }) => {
     return (
@@ -302,13 +303,13 @@ const ProductDetail = () => {
                         {
                             productUserResponse?.priceFinal == productUserResponse?.product.price ?
                                 <>
-                                    <Typography variant="h5" sx={{ color: 'red', fontWeight: '700', }}>{productResponse?.price}</Typography>
+                                    <Typography variant="h5" sx={{ color: 'red', fontWeight: '700', }}>{ConvertPrice(productResponse?.price ?? 0)}</Typography>
                                 </>
                                 : <>
-                                    <Typography variant="h5" sx={{ color: 'red', fontWeight: '700', }}>{productUserResponse?.priceFinal}</Typography>
+                                    <Typography variant="h5" sx={{ color: 'red', fontWeight: '700', }}>{ConvertPrice(productUserResponse?.priceFinal ?? 0)}</Typography>
                                     <Typography variant="h5"
                                         sx={{ color: 'gray', fontWeight: '400', textDecoration: 'line-through' }}>
-                                        {productUserResponse?.product?.price}
+                                        {ConvertPrice(productUserResponse?.product?.price ?? 0)}
                                     </Typography>
                                 </>
                         }

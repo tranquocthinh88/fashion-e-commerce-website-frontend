@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Box, Typography, TextField, Button, Backdrop, CircularProgress, RadioGroup, FormControlLabel, Radio, FormControl, FormLabel, Snackbar, Alert } from '@mui/material';
 import { DemoContainer } from '@mui/x-date-pickers/internals/demo';
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
@@ -137,6 +137,10 @@ const AccountInfoTab = ({ showAlert }: { showAlert: (status: string, message: st
             setIsUpdating(false);
         }
     };
+
+    useEffect(() => {
+        document.title = "Thông tin tài khoản";
+    }, []);
 
     return (
         <Box sx={{ flexGrow: 1, bgcolor: 'background.paper', display: 'flex' }}>

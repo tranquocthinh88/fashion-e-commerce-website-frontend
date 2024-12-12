@@ -21,15 +21,21 @@ export const notificationSlice = createSlice({
             console.log("Setting notifications:", actions.payload);
             state.items = actions.payload;
         },
-        removeNotification: (state, actions) => {
+        removeNotification: (state, actions: PayloadAction<number>) => {
             state.items = state.items.filter(item => item.id !== actions.payload);
         },
         clearNotification: (state) => {
             state.items = [];
         },
+        updateNotificationStatus: (state, action: PayloadAction<{ id: number; isRead: boolean }>) => {
+            const notification = state.items.find(item => item.id === action.payload.id);
+            if (notification) {
+                notification.isRead = action.payload.isRead; // Cập nhật trạng thái đã đọc
+            }
+        },
     }
 })
 
-export const { addNotification, setNotification, removeNotification, clearNotification } = notificationSlice.actions
+export const { addNotification, setNotification, removeNotification, clearNotification, updateNotificationStatus } = notificationSlice.actions
 
 export default notificationSlice.reducer

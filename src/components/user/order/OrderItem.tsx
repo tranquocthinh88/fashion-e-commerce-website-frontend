@@ -7,6 +7,7 @@ import { updateStatusCancel, updateStatusReceived } from "../../../services/orde
 
 type Props = {
     item: OrderModel,
+    onRefresh: () => void;
 }
 
 
@@ -19,7 +20,7 @@ const orderStatusMap: Record<OrderStatus, string> = {
     [OrderStatus.RECEIVED]: "Đã nhận",
     [OrderStatus.CANCELLED]: "Đã hủy"
 };
-const OrderItem = ({ item }: Props) => {
+const OrderItem = ({ item, onRefresh}: Props) => {
     const navigate = useNavigate();
 
     const isCancelDisabled = (() => {
@@ -35,13 +36,17 @@ const OrderItem = ({ item }: Props) => {
 
     const handleCancel = async () => {
         const response = await updateStatusCancel(item.id as string);
-        console.log("Cancel response: ", response);
-    }
-
-    const handleReceived = async () => {
+        if (response.status == 201) { 
+          onRefresh(); 
+        }
+      };
+    
+      const handleReceived = async () => {
         const response = await updateStatusReceived(item.id as string);
-        console.log("Received response: ", response);
-    }
+        if (response.status == 201) { 
+          onRefresh(); 
+        }
+      };
 
     return (
         <>

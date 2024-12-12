@@ -121,7 +121,7 @@ const RoomChat = () => {
         }
     }, [messages]);
 
-    useEffect(() => {   
+    useEffect(() => {
         if (mediaFile) {
             console.log("Media file: ", mediaFile);
         }
@@ -151,7 +151,10 @@ const RoomChat = () => {
                     flexDirection: 'column',
                 }}>
                     <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <Typography variant="h6" gutterBottom sx={{fontSize: isMobile ? '16px' : '20px'}}>Trao đổi với nhân viên</Typography>
+                        <Typography variant="h6" gutterBottom sx={{ fontSize: isMobile ? '16px' : '20px' }}>Chat với nhân viên</Typography>
+                        {/* <Button onClick={onSwitch}>
+                            <Typography sx={{textTransform: 'none'}}>Chat với trợ lý</Typography>
+                        </Button> */}
                         <IconButton color="primary" size="small" onClick={closeChat}>
                             <CloseIcon />
                         </IconButton>

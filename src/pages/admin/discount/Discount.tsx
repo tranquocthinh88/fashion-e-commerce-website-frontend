@@ -122,6 +122,10 @@ const Discount = () => {
         })();
     }, []);
 
+    useEffect(() => {
+        document.title = "Quản lý Khuyến mãi - Admin";
+    }, []);
+
     return (
         <Box sx={{ backgroundColor: 'white', width: '100%', height: '100%', display: 'flex', flexDirection: 'column', p: 1.5 }}>
             <Box sx={{ fontSize: 30, fontWeight: 'bold' }}>Voucher !</Box>

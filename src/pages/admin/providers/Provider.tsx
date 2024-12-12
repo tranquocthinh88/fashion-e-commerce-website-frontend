@@ -4,8 +4,8 @@ import { pinkGradient } from "../../../theme";
 import { useNavigate } from "react-router-dom";
 import DialogCreateProvider from "../../../components/common/dialogs/providers/DialogCreateProvider";
 import { ProviderModel } from "../../../models/provider.model";
-import { Status } from "../../../models/enum/status.enum";
-import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
+// import { Status } from "../../../models/enum/status.enum";
+// import FiberManualRecordIcon from '@mui/icons-material/FiberManualRecord';
 import { ResponseSuccess } from "../../../dtos/responses/response.success";
 import { getAllProviders } from "../../../services/provider.service";
 import AlertCustom from "../../../components/common/AlertCustom";
@@ -107,7 +107,7 @@ const Provider = () => {
                         <TableRow>
                             <TableCell>Id</TableCell>
                             <TableCell>Tên nhà cung cấp</TableCell>
-                            <TableCell>Trạng thái</TableCell>
+                            {/* <TableCell>Trạng thái</TableCell> */}
                         </TableRow>
                     </TableHead>
                     <TableBody>
@@ -119,7 +119,7 @@ const Provider = () => {
                             }}>
                                 <TableCell >{provider.id}</TableCell>
                                 <TableCell >{provider.providerName}</TableCell>
-                                <TableCell >
+                                {/* <TableCell >
                                     {provider.status === Status.ACTIVE ?
                                         <Box sx={{
                                             display: 'flex',
@@ -128,7 +128,7 @@ const Provider = () => {
                                         <Box sx={{
                                             display: 'flex',
                                             alignItems: 'center', gap: '5px'
-                                        }}><FiberManualRecordIcon fontSize="small" color="error" />Ngưng hoạt động</Box>}</TableCell>
+                                        }}><FiberManualRecordIcon fontSize="small" color="error" />Ngưng hoạt động</Box>}</TableCell> */}
                                 <TableCell align="center">
                                     <Button sx={{
                                         width: '80px',

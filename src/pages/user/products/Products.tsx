@@ -10,6 +10,7 @@ import { CategoryModel } from "../../../models/category.model";
 import { getAllCategories } from "../../../services/category.service";
 import { BrandModel } from "../../../models/brand.model";
 import { getAllBrands } from "../../../services/brand.service";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Products = () => {
     const isMobile = useMediaQuery('(max-width:768px)');
@@ -23,6 +24,33 @@ const Products = () => {
     const [priceMax, setPriceMax] = useState<number | undefined>(undefined);
     const [category, setCategory] = useState<string | undefined>(undefined);
     const [brand, setBrand] = useState<string | undefined>(undefined);
+    const location = useLocation();
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        const params = new URLSearchParams(location.search);
+
+        setPriceMin(params.get("priceMin") ? Number(params.get("priceMin")) : undefined);
+        setPriceMax(params.get("priceMax") ? Number(params.get("priceMax")) : undefined);
+        setCategory(params.get("category") || undefined);
+        setBrand(params.get("brand") || undefined);
+        setSort(params.get("sort") || "");
+        setPageNo(Number(params.get("pageNo")) || 1);
+    }, []);
+
+    // Update queryParams in URL
+    useEffect(() => {
+        const params = new URLSearchParams();
+
+        if (priceMin !== undefined) params.set("priceMin", String(priceMin));
+        if (priceMax !== undefined) params.set("priceMax", String(priceMax));
+        if (category) params.set("category", category);
+        if (brand) params.set("brand", brand);
+        if (sort) params.set("sort", sort);
+        params.set("pageNo", String(pageNo));
+
+        navigate({ search: params.toString() || '' }, { replace: true });
+    }, [priceMin, priceMax, category, brand, sort, pageNo, navigate]);
 
     useEffect(() => {
         const fetchCategoriesAndBrands = async () => {
@@ -80,6 +108,10 @@ const Products = () => {
             if (name === "priceMax") setPriceMax(Number(value));
         }
     };
+
+    useEffect(() => {
+        document.title = "Total Trendsetter - Sản phẩm";
+    }, []);
 
     return (
         <>

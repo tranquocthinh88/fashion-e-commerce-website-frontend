@@ -1,4 +1,4 @@
-import { Avatar, Box, Button, IconButton, Menu, MenuItem, TextField, Tooltip } from "@mui/material";
+import { Avatar, Box, Button, IconButton, Menu, MenuItem, Tooltip } from "@mui/material";
 import ReorderIcon from '@mui/icons-material/Reorder';
 import { navbarHover } from "../../theme";
 import { useState } from "react";
@@ -62,13 +62,13 @@ const Header = ({ handleOpenNavbar }: HeaderProps) => {
                 flexDirection: "row",
                 justifyContent: "space-between",
                 alignItems: "center",
-                pt: 2, pb: 2,
+                pt: 1, pb: 1,
             }}>
                 <Box sx={{
                     display: "flex",
                     marginLeft: 10,
                     width: 50,
-                    height: 50,
+                    height: 40,
                     alignItems: 'center',
                     justifyContent: 'center',
                     ':hover': {
@@ -79,15 +79,6 @@ const Header = ({ handleOpenNavbar }: HeaderProps) => {
                     }
                 }} onClick={handleOpenNavbar}>
                     <ReorderIcon sx={{ fontSize: 40 }} />
-                </Box>
-
-                <Box sx={{ width: "35%", marginRight: 40 }}>
-                    <TextField
-                        id="search"
-                        label="Tìm kiếm..."
-                        variant="outlined"
-                        sx={{ width: "100%" }}
-                    />
                 </Box>
 
                 <Box sx={{
@@ -123,10 +114,10 @@ const Header = ({ handleOpenNavbar }: HeaderProps) => {
                                     horizontal: 'right',
                                 }}
                             >
-                                <MenuItem onClick={() => {
+                                {/* <MenuItem onClick={() => {
                                     navigate(`/admin/account`);
                                     handleAccountClose();
-                                }}>Quản lý tài khoản</MenuItem>
+                                }}>Quản lý tài khoản</MenuItem> */}
                                 <MenuItem onClick={handleLogout}>Đăng xuất</MenuItem>
                             </Menu>
                         </>

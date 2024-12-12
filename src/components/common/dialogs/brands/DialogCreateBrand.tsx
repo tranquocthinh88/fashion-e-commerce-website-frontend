@@ -37,7 +37,7 @@ const DialogCreateBrand = ({open, handleClose, addBrand, showAlert}: Props) => {
                 component: 'form',
             }}
         >
-            <DialogTitle>Thêm màu sắc</DialogTitle>
+            <DialogTitle>Thêm thương hiệu</DialogTitle>
             <DialogContent>
                 <TextField
                     autoFocus

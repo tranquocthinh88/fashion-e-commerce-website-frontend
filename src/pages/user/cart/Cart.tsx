@@ -44,6 +44,10 @@ const Cart = () => {
         );
     };
 
+    useEffect(() => {
+        document.title = "Total Trendsetter - Giỏ hàng";
+    }, []);
+
     return (
         <Container>
             {cart.length > 0 ? <>

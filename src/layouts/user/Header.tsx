@@ -8,7 +8,6 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import MailIcon from '@mui/icons-material/Mail';
 import { Notifications } from "@mui/icons-material";
 import { useEffect, useState } from "react";
-import RoomChat from "../../pages/user/chat/RoomChat";
 import ProtectRouter from "../../routes/ProtectRoutes";
 import { Role, UserModel } from "../../models/user.model";
 import { getUserFromLocalStorage, isLoginAccount } from "../../services/user.service";
@@ -24,6 +23,10 @@ import { ResponseSuccess } from "../../dtos/responses/response.success";
 import { PageResponse } from "../../dtos/responses/page.response";
 import { ConvertPrice } from "../../utils/convert.price";
 import { removeVietnameseTones } from "../../utils/remove-vietnamese-tones";
+import RoomChat from "../../pages/user/chat/RoomChat";
+import { deleteAllNotificationsUser } from "../../services/notification.service";
+import { useDispatch } from "react-redux";
+import { setNotification } from "../../redux/reducers/notification.reducer";
 
 const Header = () => {
     const navigate = useNavigate();
@@ -32,6 +35,7 @@ const Header = () => {
     const user: UserModel | null = getUserFromLocalStorage();
     const cart = useSelector((state: RootState) => state.cart.items);
     const notifications = useSelector((state: RootState) => state.notification.items);
+    const dispatch = useDispatch();
 
     const [isChatOpen, setIsChatOpen] = useState(false);
 
@@ -115,6 +119,15 @@ const Header = () => {
         setSearchResult([]);
     }
 
+    const handleDeleteAll = async () => {
+        try {
+            await deleteAllNotificationsUser(user!.id!);
+            dispatch(setNotification([]));
+        } catch (error) {
+            console.log(error);
+        }
+    }
+
     return (
         <Box>
             <Box>
@@ -131,9 +144,9 @@ const Header = () => {
                     {/* Logo và Search */}
                     <Box sx={{ display: "flex", alignItems: "center", width: isMobile ? "100%" : "60%", gap: 2 }}>
                         <Box sx={{ display: "flex", justifyContent: "center" }}>
-                            <Button onClick={() => {navigate('/')}}>
-                                <img style={{ width: isMobile ? '40px' : '80px', height: isMobile ? '40px' : '80px' }} 
-                                src={logo} alt="Logo" className="logo_shop-item" />
+                            <Button onClick={() => { navigate('/') }}>
+                                <img style={{ width: isMobile ? '40px' : '80px', height: isMobile ? '40px' : '80px' }}
+                                    src={logo} alt="Logo" className="logo_shop-item" />
                             </Button>
 
                         </Box>
@@ -145,7 +158,7 @@ const Header = () => {
                                 value={search}
                                 onChange={e => setSearch(e.target.value)}
                             />
-                            {searchResult.length > 0 && (
+                            {search.trim() && searchResult.length > 0 ? (
                                 <Box
                                     sx={{
                                         position: 'absolute',
@@ -157,6 +170,7 @@ const Header = () => {
                                         border: '1px solid #ccc',
                                         zIndex: 10,
                                         overflowY: 'auto',
+                                        maxHeight: '300px',
                                     }}
                                 >
                                     {searchResult.map((product: ProductUserResponse) => (
@@ -174,6 +188,10 @@ const Header = () => {
                                                     cursor: 'pointer',
                                                     transform: 'scale(0.95)',
                                                 },
+                                                WebkitBoxOrient: "vertical",
+                                                overflow: "hidden",
+                                                textOverflow: "ellipsis",
+                                                WebkitLineClamp: 2,
                                             }}
                                             onClick={() => { handleClick(); window.location.href = `/products/${product.product.id}`; }}
                                         >
@@ -183,6 +201,9 @@ const Header = () => {
                                         </Box>
                                     ))}
                                 </Box>
+                            ) : 
+                            (
+                               search.trim() && <Typography sx={{ color: 'red', fontSize: '16px' }}>Không tìm thấy sản phẩm phù hợp!</Typography>
                             )}
                         </Box>
                     </Box>
@@ -198,7 +219,7 @@ const Header = () => {
                     }}>
                         <Tooltip title="tin nhắn">
                             <IconButton onClick={toggleChat}>
-                                <Badge badgeContent={4} color="primary">
+                                <Badge color="primary">
                                     <MailIcon />
                                 </Badge>
                             </IconButton>
@@ -212,7 +233,7 @@ const Header = () => {
                         </Tooltip>
                         <Tooltip title="thông báo">
                             <IconButton onClick={handleClickNotify}>
-                                <Badge badgeContent={notifications.length} color="primary">
+                                <Badge badgeContent={notifications.filter(notification => !notification.isRead).length} color="primary">
                                     <Notifications fontSize="small" />
                                 </Badge>
                             </IconButton>
@@ -227,6 +248,12 @@ const Header = () => {
                             }}
                             sx={{ maxHeight: "50%" }}
                         >
+                            {notifications.length === 0 && <Typography sx={{ pl: 2, pr: 2 }}>Danh sách thông báo trống !</Typography>}
+                            {notifications.length > 0 && <Button onClick={handleDeleteAll}>
+                                <Typography>Xóa tất cả thông báo</Typography>
+                            </Button>
+                            }
+
                             {notifications.map((notification) => (
                                 <NotificationView key={notification.id} notification={notification} />
                             ))}

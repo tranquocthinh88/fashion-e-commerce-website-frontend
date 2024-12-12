@@ -42,6 +42,15 @@ const OrderManagementTab = () => {
     })();
   }, []);
 
+  const refreshOrders = async () => {
+    const response = await getOrdersByUser(user?.email ?? "");
+    setOrders(response.data);
+  };
+
+  useEffect(() => {
+    document.title = "Quản lý đơn hàng";
+  }, []);
+
   return (
     <>
       <Box
@@ -53,7 +62,7 @@ const OrderManagementTab = () => {
         }}
       >
         <Typography variant="h6">Danh sách đơn hàng</Typography>
-        <FormControl variant="standard" sx={{ minWidth: 200, marginTop: 2 }}>
+        <FormControl variant="standard" sx={{ minWidth: 200, marginTop: 2, ml: 2 }}>
           <InputLabel id="status-filter-label">Trạng thái đơn hàng</InputLabel>
           <Select
             labelId="status-filter-label"
@@ -99,7 +108,7 @@ const OrderManagementTab = () => {
               <TableBody>
                 {/* Hiển thị các đơn hàng */}
                 {filteredOrders.map((order) => (
-                  <OrderItem key={order.id as React.Key} item={order} />
+                  <OrderItem key={order.id as React.Key} item={order}  onRefresh={refreshOrders}/>
                 ))}
               </TableBody>
             </Table>

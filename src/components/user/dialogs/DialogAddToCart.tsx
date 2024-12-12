@@ -15,6 +15,7 @@ import { ProductDetailModel } from "../../../models/product-detail.model";
 import { addToCartLocalStorage } from "../../../utils/cart.handle";
 import { updateCartState } from "../../../redux/reducers/cart.reducer";
 import { useDispatch } from "react-redux";
+import { ConvertPrice } from "../../../utils/convert.price";
 
 type Props = {
     open: boolean;
@@ -191,11 +192,11 @@ const DiaLogAddToCart = ({ open, handleClose, productUserResponse }: Props) => {
                                     fontSize: isMobile ? '14px' : '18px'
                                 }}
                             >Giá: </Typography>
-                            <Typography variant="h5" sx={{ color: 'red', fontWeight: '600', fontSize: isMobile ? '15px' : '20px' }}>{productUserResponse.priceFinal}</Typography>
+                            <Typography variant="h5" sx={{ color: 'red', fontWeight: '600', fontSize: isMobile ? '15px' : '20px' }}>{ConvertPrice(productUserResponse.priceFinal)}</Typography>
                             {productUserResponse.priceFinal != productUserResponse.product.price &&
                                 <Typography variant="h5"
                                     sx={{ color: 'gray', fontWeight: '300', textDecoration: 'line-through' }}>
-                                    {productUserResponse.product?.price}
+                                    {ConvertPrice(productUserResponse.product?.price ?? 0)}
                                 </Typography>
                             }
                         </Box>

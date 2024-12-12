@@ -176,6 +176,10 @@ const Message = () => {
         }
     };
 
+    useEffect(() => {
+        document.title = "Quản lý tin nhắn - Admin";
+    }, []);
+
     return (
         <>
             <Box

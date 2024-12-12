@@ -150,6 +150,9 @@ const Invoice = () => {
         setOrderDateTo(orderDateTo);
     }, [location.search]);
 
+    useEffect(() => {
+        document.title = "Quản lý hóa đơn - Admin";
+    }, []);
 
     return (
         <Box sx={{ background: bodyAdminColor, width: '100%', height: '100%' }}>
