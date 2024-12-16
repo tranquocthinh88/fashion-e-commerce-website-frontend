@@ -128,6 +128,10 @@ const Header = () => {
         }
     }
 
+    const sortedNotifications = [...notifications].sort(
+        (a, b) => new Date(b.notificationTime).getTime() - new Date(a.notificationTime).getTime()
+      );
+
     return (
         <Box>
             <Box>
@@ -201,10 +205,10 @@ const Header = () => {
                                         </Box>
                                     ))}
                                 </Box>
-                            ) : 
-                            (
-                               search.trim() && <Typography sx={{ color: 'red', fontSize: '16px' }}>Không tìm thấy sản phẩm phù hợp!</Typography>
-                            )}
+                            ) :
+                                (
+                                    search.trim() && <Typography sx={{ color: 'red', fontSize: '16px' }}>Không tìm thấy sản phẩm phù hợp!</Typography>
+                                )}
                         </Box>
                     </Box>
 
@@ -253,8 +257,8 @@ const Header = () => {
                                 <Typography>Xóa tất cả thông báo</Typography>
                             </Button>
                             }
-
-                            {notifications.map((notification) => (
+                            
+                            {sortedNotifications.map((notification) => (
                                 <NotificationView key={notification.id} notification={notification} />
                             ))}
                         </Menu>

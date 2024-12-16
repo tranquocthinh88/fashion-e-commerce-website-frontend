@@ -46,6 +46,7 @@ const AccountInfoTab = ({ showAlert }: { showAlert: (status: string, message: st
         gender: user.gender || "",
         dateOfBirth: dayjs(user.dateOfBirth) || dayjs('1990-01-01'),
         street: user.address?.street || "",
+        ward: user.address?.ward || "",
         district: user.address?.district || "",
         city: user.address?.city || ""
     } : null;
@@ -56,6 +57,7 @@ const AccountInfoTab = ({ showAlert }: { showAlert: (status: string, message: st
     const [gender, setGender] = useState<string>(initialUser?.gender || "");
     const [dateOfBirth, setDateOfBirth] = useState<Dayjs | null>(initialUser?.dateOfBirth || dayjs('1990-01-01'));
     const [street, setStreet] = useState<string>(initialUser?.street || "");
+    const [ward, setWard] = useState<string>(initialUser?.ward || "");
     const [district, setDistrict] = useState<string>(initialUser?.district || "");
     const [city, setCity] = useState<string>(initialUser?.city || "");
 
@@ -115,6 +117,7 @@ const AccountInfoTab = ({ showAlert }: { showAlert: (status: string, message: st
                 phone: phone,
                 address: {
                     street: street,
+                    ward: ward,
                     district: district,
                     city: city
                 },
@@ -235,7 +238,7 @@ const AccountInfoTab = ({ showAlert }: { showAlert: (status: string, message: st
                                         display: 'flex',
                                         flexGrow: 1
                                     }}
-                                    value={`${street}, ${district}, ${city}`}
+                                    value={`${street}, ${ward}, ${district}, ${city}`}
                                     label="Địa chỉ"
                                     name="address"
                                     disabled
@@ -258,6 +261,18 @@ const AccountInfoTab = ({ showAlert }: { showAlert: (status: string, message: st
                                     label="Tên đường"
                                     name="street"
                                     onChange={(e) => setStreet(e.target.value)}
+
+                                />
+                                <TextField
+                                    sx={{
+                                        flexBasis: '200px',
+                                        display: 'flex',
+                                        flexGrow: 1
+                                    }}
+                                    value={ward}
+                                    label="Tên phường/xã"
+                                    name="ward"
+                                    onChange={(e) => setWard(e.target.value)}
 
                                 />
                                 <TextField

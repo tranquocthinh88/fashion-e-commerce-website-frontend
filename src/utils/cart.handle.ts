@@ -1,65 +1,53 @@
 import { CartItemModel } from "../models/cart.model";
 
-export const getCartLocalStorage = (): CartItemModel[] => {
-    const cart = localStorage.getItem('cart');
+export const getCartLocalStorage = (userId: number): CartItemModel[] => {
+    const cart = localStorage.getItem(`cart_${userId}`);
     if (cart) {
         return JSON.parse(cart);
     }
     return [];
 };
 
-export const addToCartLocalStorage = (item: any) => {
-    if (checkItemInCart(item)) {
-        addQuantity(item)
+export const addToCartLocalStorage = (item: CartItemModel, userId: number) => {
+    if (checkItemInCart(item, userId)) {
+        addQuantity(item, userId);
     } else {
-        pushItemCart(item)
+        pushItemCart(item, userId);
     }
-    
-}
+};
 
-const checkItemInCart = (item: CartItemModel): boolean => {
-    const cart = getCartLocalStorage();
-    if (cart.length > 0) {
-        const filter = cart.filter((cartItem: CartItemModel) => cartItem.productDetail.id === item.productDetail.id);
-        if (filter.length > 0) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-    return false;
-}
+const checkItemInCart = (item: CartItemModel, userId: number): boolean => {
+    const cart = getCartLocalStorage(userId);
+    return cart.some((cartItem: CartItemModel) => cartItem.productDetail.id === item.productDetail.id);
+};
 
-const addQuantity = (item: CartItemModel) => {
-    const cart = getCartLocalStorage()
+const addQuantity = (item: CartItemModel, userId: number) => {
+    const cart = getCartLocalStorage(userId);
     const newCart = cart.map(cartItem => {
         if (cartItem.productDetail.id === item.productDetail.id) {
-            cartItem.quantity += item.quantity
+            cartItem.quantity += item.quantity;
         }
-        return cartItem
-    })
-    localStorage.setItem('cart', JSON.stringify(newCart))
-}
+        return cartItem;
+    });
+    localStorage.setItem(`cart_${userId}`, JSON.stringify(newCart));
+};
 
+const pushItemCart = (item: CartItemModel, userId: number) => {
+    const cart = getCartLocalStorage(userId);
+    cart.push(item);
+    localStorage.setItem(`cart_${userId}`, JSON.stringify(cart));
+};
 
-const pushItemCart = (item: CartItemModel) => {
-    const cart = getCartLocalStorage()
-    cart.push(item)
-    localStorage.setItem('cart', JSON.stringify(cart))
-}
+export const updateQuantityProduct = (item: CartItemModel, userId: number) => {
+    const cart = getCartLocalStorage(userId);
+    const newCart = cart.map((cartItem: CartItemModel) => 
+        cartItem.productDetail.id === item.productDetail.id ? { ...cartItem, quantity: item.quantity } : cartItem
+    );
+    localStorage.setItem(`cart_${userId}`, JSON.stringify(newCart));
+};
 
-export const updateQuantityProduct = (item: CartItemModel) => {
-    const cart = getCartLocalStorage();
-    const filter = cart.filter((cartItem: CartItemModel) => cartItem.productDetail.id === item.productDetail.id);
-    if(filter.length > 0) {
-        filter[0].quantity = item.quantity;
-        localStorage.setItem('cart', JSON.stringify(cart));
-    }
-}
-
-export const removeProductFromCart = (item: CartItemModel) => {
-    const cart = getCartLocalStorage();
-    const newCart = cart.filter(cartItem => cartItem.productDetail.id !== item.productDetail.id)
-    localStorage.setItem('cart', JSON.stringify(newCart))
-}
+export const removeProductFromCart = (item: CartItemModel, userId: number) => {
+    const cart = getCartLocalStorage(userId);
+    const newCart = cart.filter(cartItem => cartItem.productDetail.id !== item.productDetail.id);
+    localStorage.setItem(`cart_${userId}`, JSON.stringify(newCart));
+};

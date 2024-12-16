@@ -296,9 +296,9 @@ const Payment = () => {
             address: {
                 city: selectedProvince,
                 district: selectedDistrict,
-                street: selectedWard
+                ward: selectedWard
             },
-            addressDetail: '',
+            addressDetail: `${user?.address?.street}, ${user?.address?.ward}, ${user?.address?.district}, ${user?.address?.city}`,
             productsOrderDtos: selectedItems.map((item) => ({
                 productDetailId: item.productDetail.id ?? '',
                 quantity: item.quantity,
@@ -317,13 +317,13 @@ const Payment = () => {
                 // Lấy danh sách `productDetailId` đã mua
                 const purchasedProductIds = selectedItems.map(item => item.productDetail.id);
 
-                const currentCart: CartItemModel[] = JSON.parse(localStorage.getItem('cart') ?? '[]');
+                const currentCart: CartItemModel[] = JSON.parse(localStorage.getItem(`cart_`+ user?.id) ?? '[]');
                 const updatedCart = currentCart.filter(
                     (cartItem) => !purchasedProductIds.includes(cartItem.productDetail.id)
                 );
 
-                localStorage.setItem('cart', JSON.stringify(updatedCart));
-                dispatch(updateCartState());
+                localStorage.setItem(`cart_` + user?.id, JSON.stringify(updatedCart));
+                dispatch(updateCartState(user?.id ?? 0));
 
                 if (order.paymentMethod === PaymentMethod.CC) {
                     alert('Đã đặt hàng thành công, vui lòng chuyển tiền qua đây: ');

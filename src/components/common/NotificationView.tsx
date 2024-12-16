@@ -69,7 +69,7 @@ const NotificationView = ({ notification }: Props) => {
         style={{ backgroundColor: notificationUser?.isRead ? 'white' : '#cccccc' }}
       >
         <Box sx={{ width: '100%', display: 'flex', justifyContent: 'space-between' }}>
-          <Box sx={{ mr: 2 }}>
+          <Box sx={{ mr: 2, width: '100%' }}> 
             <Typography variant="body2">{notification.content}</Typography>
             <Typography variant="body1" sx={{ display: 'flex', justifyContent: 'flex-end', right: 0 }}>
               {new Date(notification.notificationTime).toLocaleDateString()} {new Date(notification.notificationTime).toLocaleTimeString()}

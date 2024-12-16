@@ -1,4 +1,4 @@
-import { Box, FormControl, MenuItem, Select, TextField, InputLabel, Stack, Pagination } from "@mui/material";
+import { Box, FormControl, MenuItem, Select, TextField, InputLabel, Stack, Pagination, Button } from "@mui/material";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -26,8 +26,20 @@ const orderStatusMap: Record<OrderStatus, string> = {
     [OrderStatus.PROCESSING]: "Đã xác nhận đơn hàng", // ~ Đã xác nhận
     [OrderStatus.SHIPPING]: "Đang vận chuyển",
     [OrderStatus.DELIVERED]: "Đã giao",
+    [OrderStatus.WAITING_FOR_CUSTOMER]: "Chờ xác nhận",
     [OrderStatus.RECEIVED]: "Đã nhận",
     [OrderStatus.CANCELLED]: "Đã hủy"
+};
+
+const orderStatusColorMap: Record<OrderStatus, string> = {
+    [OrderStatus.NOT_PROCESSED_YET]: "error.main", 
+    [OrderStatus.PENDING]: "primary", 
+    [OrderStatus.PROCESSING]: "orange", 
+    [OrderStatus.SHIPPING]: "primary.main", 
+    [OrderStatus.DELIVERED]: "success.main", 
+    [OrderStatus.WAITING_FOR_CUSTOMER]: "warning.dark", 
+    [OrderStatus.RECEIVED]: "success.dark", 
+    [OrderStatus.CANCELLED]: "error.dark" 
 };
 
 const Invoice = () => {
@@ -78,7 +90,7 @@ const Invoice = () => {
                     field: 'buyerName',
                     operator: ':',
                     value: search,
-                });
+                });  
             }
 
             console.log("Search params: ", searchParams);
@@ -86,7 +98,7 @@ const Invoice = () => {
                 sort ? [{ field: sort.split(':')[0], order: sort.split(':')[1] }] : []);
 
             console.log(response.data);
-            setOrders(response.data.data);
+            setOrders(response.data.data.filter(order => order.status !== OrderStatus.NOT_PROCESSED_YET));
             setTotalPage(response.data.totalPage);
         };
         fetchProducts();
@@ -150,6 +162,17 @@ const Invoice = () => {
         setOrderDateTo(orderDateTo);
     }, [location.search]);
 
+    const getNextStatus = (currentStatus: OrderStatus): OrderStatus => {
+        const currentIndex = Object.keys(orderStatusMap).indexOf(currentStatus);
+        const nextStatusIndex = currentIndex + 1;
+
+        if (nextStatusIndex < Object.keys(orderStatusMap).length) {
+            return Object.keys(orderStatusMap)[nextStatusIndex] as OrderStatus;
+        } else {
+            return currentStatus;
+        }
+    }
+
     useEffect(() => {
         document.title = "Quản lý hóa đơn - Admin";
     }, []);
@@ -199,7 +222,7 @@ const Invoice = () => {
                                 value={status}
                                 onChange={(e) => setStatus(e.target.value)}
                             >
-                                <MenuItem value="">Tất cả</MenuItem>
+                                <MenuItem value="ALL">Tất cả</MenuItem>
                                 <MenuItem value="PENDING">Đang chờ xử lý</MenuItem>
                                 <MenuItem value="PROCESSING">Đã được xác nhận</MenuItem>
                                 <MenuItem value="SHIPPING">Đang vận chuyển</MenuItem>
@@ -213,7 +236,7 @@ const Invoice = () => {
                         <TextField
                             id="standard-textarea"
                             label="Tìm kiếm"
-                            placeholder="Nhập tên người mua..."
+                            placeholder="Nhập tên người mua hoặc mã hóa đơn..."
                             multiline
                             variant="standard"
                             sx={{ width: 300 }}
@@ -221,7 +244,6 @@ const Invoice = () => {
                         />
                     </Box>
                 </Box>
-
             </Box>
             <Box sx={{ width: '100%', height: '100vh', mt: 2 }}>
                 <TableContainer sx={{ height: '90%' }}>
@@ -247,16 +269,6 @@ const Invoice = () => {
                                     onClick={() => {
                                         setSelectedOrder(order);
                                         setOpenOrderDialog(true);
-                                        // navigate(`/order-details/${order.id}`, {
-                                        //     state: {
-                                        //         pageNoState,
-                                        //         sort,
-                                        //         search,
-                                        //         status,
-                                        //         orderDateFrom: orderDateFrom ? orderDateFrom.format('YYYY-MM-DD') : null,
-                                        //         orderDateTo: orderDateTo ? orderDateTo.format('YYYY-MM-DD') : null,
-                                        //     }
-                                        // });
                                     }}
                                 >
                                     <TableCell component="th" scope="row">
@@ -267,32 +279,22 @@ const Invoice = () => {
                                     <TableCell>{ConvertPrice(Number(order.discountPrice))}</TableCell>
                                     <TableCell>{order?.paymentMethod == "CC" ? "Thanh toán VNPay" : "Thanh toán tiền mặt"}</TableCell>
                                     <TableCell>
-                                        <Select
-                                            value={order.status}
-                                            onChange={(e) => {
-                                                const newStatus = e.target.value as OrderStatus;
-                                                handleUpdateStatus(order.id.toString(), newStatus);
+                                        <Button
+                                            variant="contained"
+                                            onClick={() => handleUpdateStatus(order.id.toString(), getNextStatus(order.status))}
+                                            disabled={!getNextStatus(order.status as OrderStatus) ||
+                                                [OrderStatus.DELIVERED, OrderStatus.RECEIVED, OrderStatus.CANCELLED].includes(order.status as OrderStatus)}
+                                            sx={{
+                                                textTransform: 'none',
+                                                backgroundColor: orderStatusColorMap[getNextStatus(order.status as OrderStatus)] || "grey.500",
+                                                color: "white", 
+                                                '&:hover': {
+                                                    backgroundColor: orderStatusColorMap[getNextStatus(order.status as OrderStatus)] || "grey.700"
+                                                }
                                             }}
-
-                                            disabled={(order.status as OrderStatus) === OrderStatus.NOT_PROCESSED_YET ||
-                                                (order.status as OrderStatus) === OrderStatus.CANCELLED
-                                            }
-                                            fullWidth
-                                            variant="outlined"
-                                            size="small"
                                         >
-                                            {Object.entries(orderStatusMap)
-                                                .map(([key, label]) => (
-                                                    <MenuItem key={key} value={key}
-                                                        onMouseDown={(e) => {
-                                                            e.stopPropagation();  // Ngăn sự kiện MouseDown bọt lên thẻ Card
-                                                        }}
-                                                        disabled={key === OrderStatus.NOT_PROCESSED_YET}
-                                                    >
-                                                        {label}
-                                                    </MenuItem>
-                                                ))}
-                                        </Select>
+                                            {orderStatusMap[getNextStatus(order.status as OrderStatus)] || "Không khả dụng"}
+                                        </Button>
                                     </TableCell>
                                 </TableRow>
                             ))}
