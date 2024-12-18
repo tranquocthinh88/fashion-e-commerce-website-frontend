@@ -18,6 +18,7 @@ import { PageResponse } from "../../../dtos/responses/page.response";
 import { useLocation, useNavigate } from "react-router-dom";
 import { OrderStatus } from "../../../models/order.model";
 import DialogOrderDetails from "../../../components/user/dialogs/DialogOrderDetails";
+import AlertCustom from "../../../components/common/AlertCustom";
 
 
 const orderStatusMap: Record<OrderStatus, string> = {
@@ -32,17 +33,17 @@ const orderStatusMap: Record<OrderStatus, string> = {
 };
 
 const orderStatusColorMap: Record<OrderStatus, string> = {
-    [OrderStatus.NOT_PROCESSED_YET]: "error.main", 
-    [OrderStatus.PENDING]: "primary", 
-    [OrderStatus.PROCESSING]: "orange", 
-    [OrderStatus.SHIPPING]: "primary.main", 
-    [OrderStatus.DELIVERED]: "success.main", 
-    [OrderStatus.WAITING_FOR_CUSTOMER]: "warning.dark", 
-    [OrderStatus.RECEIVED]: "success.dark", 
-    [OrderStatus.CANCELLED]: "error.dark" 
+    [OrderStatus.NOT_PROCESSED_YET]: "error.main",
+    [OrderStatus.PENDING]: "primary",
+    [OrderStatus.PROCESSING]: "orange",
+    [OrderStatus.SHIPPING]: "primary.main",
+    [OrderStatus.DELIVERED]: "success.main",
+    [OrderStatus.WAITING_FOR_CUSTOMER]: "warning.dark",
+    [OrderStatus.RECEIVED]: "success.dark",
+    [OrderStatus.CANCELLED]: "error.dark"
 };
 
-const Invoice = () => {
+const Order = () => {
     const navigate = useNavigate();
     const [orders, setOrders] = useState<OrderModel[]>([]);
     const [sort, setSort] = useState<string>("");
@@ -57,6 +58,21 @@ const Invoice = () => {
     const [search, setSearch] = useState<string>("");
     const [openOrderDialog, setOpenOrderDialog] = useState(false);
     const [selectedOrder, setSelectedOrder] = useState<OrderModel | null>(null);
+    const [openAlert, setOpenAlert] = useState({
+        show: false,
+        status: '',
+        message: ''
+    });
+
+    const colseAlert = () => {
+        setOpenAlert(
+            {
+                show: false,
+                status: '',
+                message: ''
+            }
+        )
+    }
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -90,7 +106,7 @@ const Invoice = () => {
                     field: 'buyerName',
                     operator: ':',
                     value: search,
-                });  
+                });
             }
 
             console.log("Search params: ", searchParams);
@@ -134,15 +150,46 @@ const Invoice = () => {
 
     const handleUpdateStatus = async (orderId: string, newStatus: OrderStatus) => {
         try {
+            const selectedOrder = orders.find(order => order.id === orderId);
+            if (!selectedOrder) {
+                console.log("Order not found");
+                return;
+            }
+
+            const today = dayjs();
+            const deliveryDate = dayjs(selectedOrder.estimatedDeliveryDate); // Giả sử `deliveryDate` là ngày giao hàng dự kiến
+
+            if (newStatus === OrderStatus.DELIVERED && today.isBefore(deliveryDate.subtract(1, 'day'))) {
+                setOpenAlert(
+                    {
+                        show: true,
+                        status: 'error',
+                        message: 'Đơn hàng chưa thể cập nhật "đã giao"'
+                    }
+                )
+                console.log("Không thể cập nhật trạng thái thành 'Đã nhận' vì chưa qua ngày yêu cầu.");
+                return;
+            }
+
             const response = await updateStatusForAdmin(orderId, { orderStatus: newStatus });
-            setOrders(prevOrders => prevOrders.map(order =>
-                order.id === orderId ? { ...order, status: newStatus } : order
-            ));
+            setOrders(prevOrders =>
+                prevOrders.map(order =>
+                    order.id === orderId ? { ...order, status: newStatus } : order
+                )
+            );
+            setOpenAlert(
+                {
+                    show: true,
+                    status: 'success',
+                    message: 'Đơn hàng đã được chuyển trạng thái sang ' + orderStatusMap[newStatus]
+                }
+            )
             console.log(response);
         } catch (error) {
             console.log(error);
         }
-    }
+    };
+
 
     useEffect(() => {
         const queryParams = new URLSearchParams(location.search);
@@ -174,19 +221,20 @@ const Invoice = () => {
     }
 
     useEffect(() => {
-        document.title = "Quản lý hóa đơn - Admin";
+        document.title = "Quản lý đơn hàng - Admin";
     }, []);
 
     return (
         <Box sx={{ background: bodyAdminColor, width: '100%', height: '100%' }}>
             <Box sx={{ display: 'flex', alignItems: 'center', flexDirection: 'column', mb: 2 }}>
                 <Box sx={{ display: 'flex', width: '90%', justifyContent: 'space-between', mb: 2 }}>
-                    <Box sx={{ fontSize: 17, fontWeight: 'bold', mt: 2, display: 'flex', }}>Lọc theo ngày:
+                    <Box sx={{ fontSize: 17, fontWeight: 'bold', mt: 4, display: 'flex', alignItems: 'center' }}>Lọc theo ngày:
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                             <DatePicker
                                 label="Từ ngày"
                                 value={orderDateFrom}
                                 onChange={(newValue) => setOrderDateFrom(newValue)}
+                                sx={{ ml: 2, mr: 2 }}
                             />
                             <DatePicker
                                 label="Đến ngày"
@@ -236,7 +284,7 @@ const Invoice = () => {
                         <TextField
                             id="standard-textarea"
                             label="Tìm kiếm"
-                            placeholder="Nhập tên người mua hoặc mã hóa đơn..."
+                            placeholder="Nhập tên người mua ..."
                             multiline
                             variant="standard"
                             sx={{ width: 300 }}
@@ -250,7 +298,7 @@ const Invoice = () => {
                     <Table sx={{ minWidth: 650 }} aria-label="simple table" >
                         <TableHead >
                             <TableRow className="sticky-header" sx={{ position: 'sticky', top: 0, zIndex: 2 }}>
-                                <TableCell>Mã hóa đơn</TableCell>
+                                <TableCell>Mã đơn hàng</TableCell>
                                 <TableCell>Người mua</TableCell>
                                 <TableCell>Ngày mua</TableCell>
                                 <TableCell>Tổng tiền</TableCell>
@@ -281,13 +329,17 @@ const Invoice = () => {
                                     <TableCell>
                                         <Button
                                             variant="contained"
-                                            onClick={() => handleUpdateStatus(order.id.toString(), getNextStatus(order.status))}
+                                            // onClick={() => handleUpdateStatus(order.id.toString(), getNextStatus(order.status))}
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                handleUpdateStatus(order.id.toString(), getNextStatus(order.status));
+                                            }}
                                             disabled={!getNextStatus(order.status as OrderStatus) ||
                                                 [OrderStatus.DELIVERED, OrderStatus.RECEIVED, OrderStatus.CANCELLED].includes(order.status as OrderStatus)}
                                             sx={{
                                                 textTransform: 'none',
                                                 backgroundColor: orderStatusColorMap[getNextStatus(order.status as OrderStatus)] || "grey.500",
-                                                color: "white", 
+                                                color: "white",
                                                 '&:hover': {
                                                     backgroundColor: orderStatusColorMap[getNextStatus(order.status as OrderStatus)] || "grey.700"
                                                 }
@@ -308,6 +360,7 @@ const Invoice = () => {
                         )}
                     </Table>
                 </TableContainer>
+                {openAlert.show && <AlertCustom alert={openAlert} colseAlert={colseAlert} />}
                 <Box sx={{
                     display: 'flex', alignItems: 'center',
                     width: '100%', justifyContent: 'center',
@@ -321,4 +374,4 @@ const Invoice = () => {
         </Box>
     )
 };
-export default Invoice;
+export default Order;

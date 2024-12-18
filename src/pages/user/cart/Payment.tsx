@@ -50,6 +50,7 @@ import CustomTextField from "../../../components/common/TextFieldCustom";
 import { getUserVoucherByUserId } from "../../../services/user-voucher.service";
 import { UserVoucherModel } from "../../../models/user.voucher.model";
 import { getVnpPaymentUrl } from "../../../services/payment.service";
+import { Status } from "../../../models/enum/status.enum";
 
 const Payment = () => {
 
@@ -177,13 +178,21 @@ const Payment = () => {
         (async () => {
             try {
                 const responseVoucher: ResponseSuccess<VoucherModel[]> = await getAllVouchers();
-                setVouchers(responseVoucher.data.filter(voucher => new Date(voucher.expiredDate) > new Date()));
-
+    
+                const filteredVouchers = responseVoucher.data.filter(voucher => {
+                    const expiredDate = new Date(voucher.expiredDate);
+                    const startDate = new Date(voucher.startDate);
+                    const today = new Date();
+    
+                    return expiredDate > today && startDate <= today && voucher.status === Status.ACTIVE;
+                });
+    
+                setVouchers(filteredVouchers);
+    
                 const responseUserVoucher = await getUserVoucherByUserId(user?.id ?? 0);
-
                 setUserVoucher(responseUserVoucher.data);
             } catch (error) {
-                console.log("Lỗi : ", error);
+                console.log("Lỗi: ", error);
             }
         })();
     }, []);
@@ -298,7 +307,13 @@ const Payment = () => {
                 district: selectedDistrict,
                 ward: selectedWard
             },
-            addressDetail: `${user?.address?.street}, ${user?.address?.ward}, ${user?.address?.district}, ${user?.address?.city}`,
+            // addressDetail: `${user?.address?.street}, ${user?.address?.ward}, ${user?.address?.district}, ${user?.address?.city}`,
+            addressDetail: [
+                user?.address?.street ?? '',
+                user?.address?.ward ?? '',
+                user?.address?.district ?? '',
+                user?.address?.city ?? ''
+            ].filter(Boolean).join(', '),
             productsOrderDtos: selectedItems.map((item) => ({
                 productDetailId: item.productDetail.id ?? '',
                 quantity: item.quantity,

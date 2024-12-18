@@ -72,9 +72,25 @@ export const createVoucher = async (voucherDto: voucherDto): Promise<ResponseSuc
 export const deleteVoucher = async (id: number = -1): Promise<ResponseSuccess<string>> => {
     try {
         const response = await requestConfig(
-            `vouchers/${id}`,
-            Method.DELETE,
+            `vouchers/delete/${id}`,
+            Method.PUT,
             [],
+            ContentType.JSON,
+            true
+        );
+        return response.data;
+    } catch (error) {
+        return Promise.reject(error);
+    }
+}
+
+
+export const updateVoucher = async (id: number = -1, voucherDto: voucherDto): Promise<ResponseSuccess<VoucherModel>> => {
+    try {
+        const response = await requestConfig(
+            `vouchers/${id}`,
+            Method.PUT,
+            voucherDto,
             ContentType.JSON,
             true
         );

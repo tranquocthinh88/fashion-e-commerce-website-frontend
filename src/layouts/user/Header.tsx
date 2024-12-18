@@ -26,7 +26,7 @@ import { removeVietnameseTones } from "../../utils/remove-vietnamese-tones";
 import RoomChat from "../../pages/user/chat/RoomChat";
 import { deleteAllNotificationsUser } from "../../services/notification.service";
 import { useDispatch } from "react-redux";
-import { setNotification } from "../../redux/reducers/notification.reducer";
+import { clearNotification } from "../../redux/reducers/notification.reducer";
 
 const Header = () => {
     const navigate = useNavigate();
@@ -122,7 +122,8 @@ const Header = () => {
     const handleDeleteAll = async () => {
         try {
             await deleteAllNotificationsUser(user!.id!);
-            dispatch(setNotification([]));
+            
+            dispatch(clearNotification());
         } catch (error) {
             console.log(error);
         }

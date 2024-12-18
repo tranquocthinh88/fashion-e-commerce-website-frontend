@@ -36,7 +36,7 @@ export const createProductPrice = async (productPriceDto: ProductPriceDto): Prom
 export const deleteProductPrice = async (id: number): Promise<ResponseSuccess<string>> => {
     try {
         const response = await requestConfig(
-            `productPrices/${id}`,
+            `productPrices/delete/${id}`,
             Method.DELETE,
             [],
             ContentType.JSON,

@@ -7,63 +7,9 @@ import AlertCustom from "../../../components/common/AlertCustom";
 import DialogCreateVoucher from "../../../components/common/dialogs/vouchers/DialogCreateVoucher";
 import { VoucherModel } from "../../../models/voucher.model";
 import { ResponseSuccess } from "../../../dtos/responses/response.success";
-import { getAllVouchers } from "../../../services/voucher.service";
-
-const voucherTypeToVietnamese = (type: string): string => {
-    const map: { [key: string]: string } = {
-        FOR_PRODUCT: "Giảm giá cho hóa đơn",
-        FOR_DELIVERY: "Giảm giá cho vận chuyển",
-    };
-    return map[type] || "Không xác định"; // Trả về "Không xác định" nếu không tìm thấy
-};
-
-const columns: GridColDef[] = [
-    { field: 'id', headerName: 'Mã voucher', width: 100 },
-    { field: 'name', headerName: 'Tên voucher', type: 'string', width: 150 },
-    {
-        field: 'startDate',
-        headerName: 'Ngày bắt đầu',
-        type: 'date', width: 100,
-        valueGetter: (params: { row: VoucherModel }) => {
-            const startDate = params;
-            if (!startDate) {
-                return new Date(); 
-            }
-            try {
-                return parse(startDate.toString(), 'yyyy-MM-dd HH:mm:ss', new Date());
-            } catch (e) {
-                console.error("Error parsing startDate: ", startDate);
-                return new Date(); 
-            }
-        }
-    },
-    {
-        field: 'expiredDate',
-        headerName: 'Ngày kết thúc',
-        type: 'date', width: 100,
-        valueGetter: (params: { row: VoucherModel }) => {
-            const startDate = params;
-            if (!startDate) {
-                return new Date();
-            }
-            try {
-                return parse(startDate.toString(), 'yyyy-MM-dd HH:mm:ss', new Date());
-            } catch (e) {
-                console.error("Error parsing startDate: ", startDate);
-                return new Date();
-            }
-        }
-    },
-    { field: 'voucherType', headerName: 'Loại voucher', type: 'string', 
-        renderCell: (params) => voucherTypeToVietnamese(params.value as string),
-        width: 190
-    },
-    { field: 'quantity', headerName: 'Số lượng', type: 'number', width: 80 },
-    { field: 'discount', headerName: 'Phần trăm', type: 'number', width: 100 },
-    { field: 'maxDiscountAmount', headerName: 'Tiền giảm tối đa', type: 'number', width: 130 },
-    { field: 'minOrderAmount', headerName: 'Hóa đơn tối thiểu', type: 'number', width: 130 },
-    { field: 'note', headerName: 'Ghi chú', type: 'string', width: 200 },
-];
+import { deleteVoucher, getAllVouchers, updateVoucher } from "../../../services/voucher.service";
+import { Status } from "../../../models/enum/status.enum";
+import VoucherDetailsDialog from "../../../components/common/dialogs/vouchers/DialogDetailVoucher";
 
 const useStyles = makeStyles({
     dataGridBox: {
@@ -76,6 +22,8 @@ const Discount = () => {
     const classes = useStyles();
     const [open, setOpen] = useState(false);
     const [vouchers, setVouchers] = useState<VoucherModel[]>([]);
+    const [openDetails, setOpenDetails] = useState(false);
+    const [selectedVoucher, setSelectedVoucher] = useState<VoucherModel | null>(null);
     const [openAlert, setOpenAlert] = useState({
         show: false,
         status: '',
@@ -105,22 +53,169 @@ const Discount = () => {
     const addVoucher = (voucher: VoucherModel) => {
         setVouchers(prev => [...prev, voucher]);
     }
+
+    const fetchVouchers = async () => {
+        try {
+            const response: ResponseSuccess<VoucherModel[]> = await getAllVouchers();
+
+            const filteredVouchers = response.data.filter(voucher => {
+                const expiredDate = new Date(voucher.expiredDate);
+                return expiredDate > new Date() && voucher.status === Status.ACTIVE;
+            });
+
+            setVouchers(filteredVouchers);
+        } catch (error) {
+            console.log(error);
+        }
+    };
+
     useEffect(() => {
-        (async () => {
-            try {
-                const response: ResponseSuccess<VoucherModel[]> = await getAllVouchers();
-                
-                const filteredVouchers = response.data.filter(voucher => {
-                    const expiredDate = new Date(voucher.expiredDate); 
-                    return expiredDate > new Date(); 
-                });
-    
-                setVouchers(filteredVouchers); 
-            } catch (error) {
-                console.log(error);
-            }
-        })();
+       fetchVouchers();
     }, []);
+
+    const handleRowClick = (params: { row: VoucherModel }) => {
+        setSelectedVoucher(params.row);
+        setOpenDetails(true);
+    };
+
+    const handleUpdate = async (updatedVoucher: VoucherModel) => {
+        try {
+            const formattedStartDate =
+                typeof updatedVoucher.startDate === "string"
+                    ? updatedVoucher.startDate.replace(" ", "T") // Thay khoảng trắng bằng "T"
+                    : updatedVoucher.startDate;
+
+            const formattedExpiredDate =
+                typeof updatedVoucher.expiredDate === "string"
+                    ? updatedVoucher.expiredDate.replace(" ", "T") // Thay khoảng trắng bằng "T"
+                    : updatedVoucher.expiredDate;
+
+            await updateVoucher(updatedVoucher.id, {
+                name: updatedVoucher.name,
+                startDate: formattedStartDate,
+                expiredDate: formattedExpiredDate,
+                quantity: updatedVoucher.quantity,
+                discount: updatedVoucher.discount,
+                note: updatedVoucher.note,
+                maxDiscountAmount: updatedVoucher.maxDiscountAmount,
+                minOrderAmount: updatedVoucher.minOrderAmount,
+                voucherType: updatedVoucher.voucherType,
+                scope: updatedVoucher.scope,
+            });
+            setOpenAlert(
+                {
+                    show: true,
+                    status: 'success',
+                    message: 'Bạn đã cập nhật thành công'
+                }
+            )
+            fetchVouchers();
+            
+        } catch (error) {
+            console.error("Cập nhật thất bại", error);
+            setOpenAlert(
+                {
+                    show: true,
+                    status: 'error',
+                    message: 'Bạn đã cập nhật thất bại'
+                }
+            )
+        }
+    };
+
+    const handleDelete = async (id: number) => {
+        try {
+            await deleteVoucher(id);
+            setVouchers(prev => prev.filter(p => p.id !== id));
+            setOpenAlert(
+                {
+                    show: true,
+                    status: 'success',
+                    message: 'Bạn đã xóa thành công'
+                }
+            )
+        } catch (error) {
+            setOpenAlert(
+                {
+                    show: true,
+                    status: 'error',
+                    message: 'Bạn đã xóa thất bại'
+                }
+            )
+            console.log(error);
+        }
+    }
+
+
+    const voucherTypeToVietnamese = (type: string): string => {
+        const map: { [key: string]: string } = {
+            FOR_PRODUCT: "Giảm giá cho hóa đơn",
+            FOR_DELIVERY: "Giảm giá cho vận chuyển",
+        };
+        return map[type] || "Không xác định"; 
+    };
+
+    const columns: GridColDef[] = [
+        { field: 'id', headerName: 'Mã voucher', width: 100 },
+        { field: 'name', headerName: 'Tên voucher', type: 'string', width: 150 },
+        {
+            field: 'startDate',
+            headerName: 'Ngày bắt đầu',
+            type: 'date', width: 100,
+            valueGetter: (params: { row: VoucherModel }) => {
+                const startDate = params;
+                if (!startDate) {
+                    return new Date();
+                }
+                try {
+                    return parse(startDate.toString(), 'yyyy-MM-dd HH:mm:ss', new Date());
+                } catch (e) {
+                    console.error("Error parsing startDate: ", startDate);
+                    return new Date();
+                }
+            }
+        },
+        {
+            field: 'expiredDate',
+            headerName: 'Ngày kết thúc',
+            type: 'date', width: 100,
+            valueGetter: (params: { row: VoucherModel }) => {
+                const startDate = params;
+                if (!startDate) {
+                    return new Date();
+                }
+                try {
+                    return parse(startDate.toString(), 'yyyy-MM-dd HH:mm:ss', new Date());
+                } catch (e) {
+                    console.error("Error parsing startDate: ", startDate);
+                    return new Date();
+                }
+            }
+        },
+        {
+            field: 'voucherType', headerName: 'Loại voucher', type: 'string',
+            renderCell: (params) => voucherTypeToVietnamese(params.value as string),
+            width: 190
+        },
+        { field: 'quantity', headerName: 'Số lượng', type: 'number', width: 80 },
+        { field: 'discount', headerName: 'Phần trăm', type: 'number', width: 100 },
+        { field: 'maxDiscountAmount', headerName: 'Tiền giảm tối đa', type: 'number', width: 130 },
+        { field: 'minOrderAmount', headerName: 'Hóa đơn tối thiểu', type: 'number', width: 130 },
+        {
+            field: 'action',
+            headerName: 'Thao tác',
+            width: 150,
+            renderCell: (params) => (
+                <Button
+                    variant="contained"
+                    color="primary"
+                    onClick={() => handleRowClick(params)}
+                >
+                    Chi tiết
+                </Button>
+            ),
+        },
+    ];
 
     useEffect(() => {
         document.title = "Quản lý Khuyến mãi - Admin";
@@ -155,6 +250,14 @@ const Discount = () => {
                         <DataGrid rows={vouchers} columns={columns} autoHeight />
                     </Box>
                 </Box>
+                <VoucherDetailsDialog
+                    open={openDetails}
+                    onClose={() => setOpenDetails(false)}
+                    voucher={selectedVoucher}
+                    setVoucher={setSelectedVoucher}
+                    handleUpdate={handleUpdate}
+                    handleDelete={handleDelete}
+                />
             </Box>
         </Box>
     )
