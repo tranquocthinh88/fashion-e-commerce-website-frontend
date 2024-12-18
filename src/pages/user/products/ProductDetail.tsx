@@ -24,8 +24,9 @@ import { connect, disconnect, subscribe } from "../../../configs/websocket";
 import ProductCard from "../../../components/user/product/ProductCard";
 import CustomArrow from "../../../components/user/customs/CustomArrow ";
 import Slider from "react-slick";
-import { isLoginAccount } from "../../../services/user.service";
+import { getUserFromLocalStorage, isLoginAccount } from "../../../services/user.service";
 import { ConvertPrice } from "../../../utils/convert.price";
+import { UserModel } from "../../../models/user.model";
 
 const SizeColorBox = ({ text, onClick, selected }: { text: string | number, onClick(): void, selected: boolean }) => {
     return (
@@ -50,6 +51,7 @@ const SizeColorBox = ({ text, onClick, selected }: { text: string | number, onCl
 }
 const ProductDetail = () => {
     const { id } = useParams();
+    const user : UserModel | null = getUserFromLocalStorage();
     const [productResponse, setProductResponse] = useState<ProductModel>();
     const [productImages, setProductImages] = useState<ProductImageModel[]>([]);
     const [productDetails, setProductDetails] = useState<ProductDetailModel[]>([]);
@@ -184,17 +186,23 @@ const ProductDetail = () => {
             alert('Số lượng sản phẩm không đủ');
             return;
         }
+
+        if(buyQuantity <= 0) {
+            alert('Số lượng sản phẩm phải lớn hơn 0');
+            return;
+        }
+
         const productDetail = getProductDetailByColorIdAndSizeId();
         if (productDetail) {
             addToCartLocalStorage({
                 productDetail: productDetail,
                 quantity: buyQuantity,
                 priceFinal: productUserResponse?.priceFinal ?? 0
-            })
+            }, user?.id ?? 0);
             setAvailableQuantity(availableQuantity - buyQuantity);
             setBuyQuantity(1);
         }
-        dispatch(updateCartState())
+        dispatch(updateCartState(user?.id));
     }
 
     const handleChange = (_event: React.ChangeEvent<unknown>, value: number) => {

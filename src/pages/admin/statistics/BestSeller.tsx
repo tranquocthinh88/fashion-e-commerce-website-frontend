@@ -60,6 +60,90 @@ const BestSeller: React.FC = () => {
     const [products, setProducts] = useState<Product[]>([]);
 
 
+    // useEffect(() => {
+    //     const fetchProducts = async () => {
+    //         try {
+    //             const searchParams = [];
+    //             if (selectedStartDate) {
+    //                 searchParams.push({
+    //                     field: 'orderDate',
+    //                     operator: '>=',
+    //                     value: selectedStartDate.format('YYYY-MM-DD'),
+    //                 });
+    //             }
+    //             if (selectedEndDate) {
+    //                 searchParams.push({
+    //                     field: 'orderDate',
+    //                     operator: '<=',
+    //                     value: selectedEndDate.format('YYYY-MM-DD'),
+    //                 });
+    //             }
+
+    //             // Gọi API lấy đơn hàng theo khoảng thời gian
+    //             const responseOrders = await getOrdersForAdmin(1, 1000, searchParams, []);
+    //             const orders = responseOrders.data.data.filter(
+    //                 (order: OrderModel) =>
+    //                     order.status !== OrderStatus.NOT_PROCESSED_YET && order.status !== OrderStatus.CANCELLED
+    //             );
+
+    //             // Tổng hợp số lượng bán của từng sản phẩm
+    //             const productSales: { [key: string]: { product: ProductModel; quantity: number, revenue: number } } = {};
+
+    //             for (const order of orders) {
+    //                 const responseOrderDetails = await getOrderDetailsByOrderId(order.id as string);
+    //                 responseOrderDetails.data.forEach((detail) => {
+    //                     const fullProductId = detail.productDetail?.id;
+    //                     if (fullProductId) {
+    //                         // Gộp ID bằng cách lấy tiền tố `PD_<id>` trừ đi thông tin chi tiết sau `_`
+    //                         const productPrefixMatch = fullProductId.match(/^PD_\d+/); // Trích tiền tố chung từ ID
+    //                         if (productPrefixMatch) {
+    //                             const productPrefix = productPrefixMatch[0];
+
+    //                             const quantity = detail.quantity ?? 0;
+    //                             const priceAtCreateOrder = detail.priceAtCreateOrder ?? 0;
+
+    //                             // Kiểm tra và gộp theo tiền tố ID
+    //                             if (productSales[productPrefix]) {
+    //                                 productSales[productPrefix].quantity += quantity;
+    //                                 productSales[productPrefix].revenue += priceAtCreateOrder * quantity;
+    //                             } else {
+    //                                 productSales[productPrefix] = {
+    //                                     product: {
+    //                                         id: productPrefix,
+    //                                         productName: detail.productDetail?.product?.productName,
+    //                                         thumbnail: detail.productDetail?.product?.thumbnail,
+    //                                         productStatus: detail.productDetail?.product?.productStatus || ''
+    //                                     },
+    //                                     quantity,
+    //                                     revenue: priceAtCreateOrder * quantity,
+    //                                 };
+    //                             }
+    //                         }
+    //                     }
+    //                 });
+    //             }
+
+    //             const sortedProducts = Object.values(productSales).sort((a, b) => b.quantity - a.quantity);
+
+    //             const topProducts = sortedProducts.slice(0, 10).map((item) => ({
+    //                 id: item.product.id,
+    //                 productName: item.product.productName,
+    //                 thumbnail: item.product.thumbnail,
+    //                 sold: item.quantity,
+    //                 revenue: item.revenue,
+    //             }));
+
+    //             setProducts(topProducts);
+    //             setPieData(generatePieData(topProducts));
+
+    //         } catch (error) {
+    //             console.log('Error:', error);
+    //         }
+    //     };
+
+    //     fetchProducts();
+    // }, [selectedStartDate, selectedEndDate]);
+
     useEffect(() => {
         const fetchProducts = async () => {
             try {
@@ -78,32 +162,31 @@ const BestSeller: React.FC = () => {
                         value: selectedEndDate.format('YYYY-MM-DD'),
                     });
                 }
-
+    
                 // Gọi API lấy đơn hàng theo khoảng thời gian
                 const responseOrders = await getOrdersForAdmin(1, 1000, searchParams, []);
                 const orders = responseOrders.data.data.filter(
                     (order: OrderModel) =>
-                        order.status !== OrderStatus.NOT_PROCESSED_YET && order.status !== OrderStatus.CANCELLED
+                        order.status !== OrderStatus.NOT_PROCESSED_YET &&
+                        order.status !== OrderStatus.CANCELLED
                 );
-
+    
                 // Tổng hợp số lượng bán của từng sản phẩm
-                const productSales: { [key: string]: { product: ProductModel; quantity: number, revenue: number } } = {};
-
+                const productSales: {
+                    [key: string]: { product: ProductModel; quantity: number; revenue: number };
+                } = {};
+    
                 for (const order of orders) {
                     const responseOrderDetails = await getOrderDetailsByOrderId(order.id as string);
-                    console.log(`Chi tiết đơn hàng ${order.id}:`, responseOrderDetails.data);
                     responseOrderDetails.data.forEach((detail) => {
                         const fullProductId = detail.productDetail?.id;
                         if (fullProductId) {
-                            // Gộp ID bằng cách lấy tiền tố `PD_<id>` trừ đi thông tin chi tiết sau `_`
-                            const productPrefixMatch = fullProductId.match(/^PD_\d+/); // Trích tiền tố chung từ ID
+                            const productPrefixMatch = fullProductId.match(/^PD_\d+/);
                             if (productPrefixMatch) {
                                 const productPrefix = productPrefixMatch[0];
-
                                 const quantity = detail.quantity ?? 0;
                                 const priceAtCreateOrder = detail.priceAtCreateOrder ?? 0;
-
-                                // Kiểm tra và gộp theo tiền tố ID
+    
                                 if (productSales[productPrefix]) {
                                     productSales[productPrefix].quantity += quantity;
                                     productSales[productPrefix].revenue += priceAtCreateOrder * quantity;
@@ -113,7 +196,8 @@ const BestSeller: React.FC = () => {
                                             id: productPrefix,
                                             productName: detail.productDetail?.product?.productName,
                                             thumbnail: detail.productDetail?.product?.thumbnail,
-                                            productStatus: detail.productDetail?.product?.productStatus || ''
+                                            productStatus:
+                                                detail.productDetail?.product?.productStatus || '',
                                         },
                                         quantity,
                                         revenue: priceAtCreateOrder * quantity,
@@ -123,10 +207,11 @@ const BestSeller: React.FC = () => {
                         }
                     });
                 }
-
-                console.log('Tổng hợp số lượng bán của từng sản phẩm:', productSales);
-                const sortedProducts = Object.values(productSales).sort((a, b) => b.quantity - a.quantity);
-
+    
+                const sortedProducts = Object.values(productSales).sort(
+                    (a, b) => b.quantity - a.quantity
+                );
+    
                 const topProducts = sortedProducts.slice(0, 10).map((item) => ({
                     id: item.product.id,
                     productName: item.product.productName,
@@ -134,17 +219,18 @@ const BestSeller: React.FC = () => {
                     sold: item.quantity,
                     revenue: item.revenue,
                 }));
-
+    
                 setProducts(topProducts);
                 setPieData(generatePieData(topProducts));
-
             } catch (error) {
                 console.log('Error:', error);
             }
         };
-
+    
         fetchProducts();
-    }, [selectedStartDate, selectedEndDate]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selectedStartDate, selectedEndDate]); // Chỉ phụ thuộc vào các biến cần thiết
+    
 
     const generatePieData = (products: Product[]) => {
         const colors = ['#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF', '#FF9F40', '#FF6633', '#FF33FF', '#33FF99', '#33CCFF'];

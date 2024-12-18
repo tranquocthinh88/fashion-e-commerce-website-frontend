@@ -140,7 +140,7 @@ const UpdateProduct = () => {
             providerId: product ? product.product.provider?.id : "",
             description: product ? product.product.description : "",
             status: product ? product.product.productStatus : Status.ACTIVE,
-            brandId: product ? product.product.brand.id ?? "" : "",
+            brandId: product ? product.product.brand?.id ?? "" : "",
         },
         enableReinitialize: true,
         validationSchema: validationProductSchema,

@@ -16,6 +16,8 @@ import { addToCartLocalStorage } from "../../../utils/cart.handle";
 import { updateCartState } from "../../../redux/reducers/cart.reducer";
 import { useDispatch } from "react-redux";
 import { ConvertPrice } from "../../../utils/convert.price";
+import { UserModel } from "../../../models/user.model";
+import { getUserFromLocalStorage } from "../../../services/user.service";
 
 type Props = {
     open: boolean;
@@ -59,6 +61,7 @@ const DiaLogAddToCart = ({ open, handleClose, productUserResponse }: Props) => {
     const [availableQuantity, setAvailableQuantity] = useState<number>(0);
     const [productResponse, setProductResponse] = useState<ProductModel>();
     const [productDetails, setProductDetails] = useState<ProductDetailModel[]>([]);
+    const user : UserModel | null = getUserFromLocalStorage();
     const dispatch = useDispatch();
 
     useEffect(() => {
@@ -135,11 +138,11 @@ const DiaLogAddToCart = ({ open, handleClose, productUserResponse }: Props) => {
                 productDetail: productDetail,
                 quantity: buyQuantity,
                 priceFinal: productUserResponse?.priceFinal ?? 0 
-            })
+            }, user?.id ?? 0);
             setAvailableQuantity(availableQuantity - buyQuantity);
             setBuyQuantity(1);
         }
-        dispatch(updateCartState())
+        dispatch(updateCartState(user?.id));
     }
 
     return (

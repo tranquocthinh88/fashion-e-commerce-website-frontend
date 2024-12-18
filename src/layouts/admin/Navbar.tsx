@@ -32,6 +32,7 @@ const Navbar = ({ isOpenNavbar }: NavbarProps) => {
         { icon: <Home />, label: 'Trang chủ', path: '/admin/dashboard' },
         { icon: <ProductionQuantityLimitsIcon />, label: 'Sản phẩm', path: '/admin/products' },
         { icon: <PeopleAltIcon />, label: 'Người dùng', path: '/admin/users' },
+        { icon: <ReceiptIcon />, label: 'Đơn hàng', path: '/admin/orders' },
         { icon: <ReceiptIcon />, label: 'Hóa đơn', path: '/admin/invoices' },
         { icon: <StackedLineChartIcon />, label: 'Thống kê' },
         { icon: <MarkUnreadChatAltIcon />, label: 'Tin nhắn', path: '/admin/messages' },

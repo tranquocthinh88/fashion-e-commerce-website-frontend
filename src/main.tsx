@@ -18,6 +18,7 @@ import { Role, UserModel } from './models/user.model.ts'
 import { getUserFromLocalStorage } from './services/user.service.ts'
 import ProtectRouter from './routes/ProtectRoutes.tsx'
 import ChatAI from './pages/user/chat/ChatAI.tsx'
+import { updateCartState } from './redux/reducers/cart.reducer.ts'
 
 const App = () => {
   const dispatch = useDispatch();
@@ -70,6 +71,10 @@ const App = () => {
       console.log(error);
     }
   }
+
+  useEffect(() => {
+    dispatch(updateCartState(user?.id));
+}, []);
 
   return (
     <CssVarsProvider>

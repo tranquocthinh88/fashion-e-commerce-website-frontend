@@ -431,7 +431,8 @@ const RevenueStatistics = () => {
                 <Grid item xs={12}>
                     <Paper elevation={3} sx={{ p: 3, display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
                         <Typography variant="h6" gutterBottom>
-                            Doanh thu từng ngày của tháng {selectedMonth}/{selectedYear}
+                            {filterOption === "RevenueStatisticsDay" ? `Doanh thu từ ngày ${selectedStartDate?.format('DD-MM-YYYY')} đến ngày ${selectedEndDate?.format('DD-MM-YYYY')}`  : filterOption === "RevenueStatisticsMonth" ? `Doanh thu tháng ${selectedMonth}/${selectedYear}` : `Doanh thu năm ${selectedYear}`}
+                            {/* Doanh thu từng ngày của tháng {selectedMonth}/{selectedYear} */}
                         </Typography>
                         <Box sx={{ width: '100%', maxWidth: 1000, height: 'auto' }}>
                             <Bar

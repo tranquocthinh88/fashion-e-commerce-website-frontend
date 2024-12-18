@@ -3,19 +3,21 @@ import { getCartLocalStorage } from "../../utils/cart.handle"
 import { CartItemModel } from "../../models/cart.model"
 
 export type Cart = {
-    items: CartItemModel[]
+    items: CartItemModel[],
 }
 
 const initialState: Cart = {
-    items: getCartLocalStorage()
+    items: []
 }
+
 
 export const cartSlice = createSlice({
     name: 'cart',
     initialState,
     reducers: {
-        updateCartState: (state) => {
-            state.items = getCartLocalStorage()
+        updateCartState: (state, action) => {
+            const userId = action.payload; // Nhận userId từ payload
+            state.items = getCartLocalStorage(userId);
         }
     },
 })

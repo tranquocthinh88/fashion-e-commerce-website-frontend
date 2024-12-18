@@ -45,11 +45,12 @@ export const DialogOrderDetails = ({ open, onClose, order }: Props) => {
             }}
         >
             <Box sx={{ p: 2 }}>
-                <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#3f51b5', textAlign: 'center' }}>Chi tiết hóa đơn</Typography>
+                <Typography variant="h4" sx={{ fontWeight: 'bold', color: '#3f51b5', textAlign: 'center' }}>Chi tiết đơn hàng</Typography>
 
                 <Box sx={{ mt: 1 }}>
                     <Typography variant="h6" sx={{ fontWeight: 600 }}>Mã hóa đơn: <span style={{ color: "#ff5722" }}>{order.id}</span></Typography>
                     <Typography variant="body1" sx={{ mt: 1 }}>Ngày đặt: {new Date(order.orderDate).toLocaleDateString()}</Typography>
+                    <Typography variant="body1" sx={{ mt: 1 }}>Ngày nhận hàng dự kiến: {new Date(order.estimatedDeliveryDate).toLocaleDateString()}</Typography>
                 </Box>
 
                 <Grid container spacing={2} sx={{ mt: 1, alignItems: 'center', justifyContent: 'space-between' }}>

@@ -17,8 +17,8 @@ export type voucherDto = {
     discount: number;
     voucherType: VoucherType;
     scope: Scope;
-    startDate: string;
-    expiredDate: string;
+    startDate: Date | string;
+    expiredDate: Date | string;
     maxDiscountAmount: number;
     minOrderAmount: number;
     quantity: number;

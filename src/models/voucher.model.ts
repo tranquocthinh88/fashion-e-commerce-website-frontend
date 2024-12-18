@@ -1,3 +1,4 @@
+import { Status } from "./enum/status.enum";
 
 export enum VoucherType {
     FOR_PRODUCT = 'FOR_PRODUCT',
@@ -21,4 +22,5 @@ export type VoucherModel = {
     scope: Scope;
     maxDiscountAmount: number;
     minOrderAmount: number;
+    status?: Status;
 }

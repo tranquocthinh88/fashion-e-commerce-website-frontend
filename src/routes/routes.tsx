@@ -11,7 +11,6 @@ import Register from "../pages/user/auth/Register";
 import RevenueStatistics from "../pages/admin/statistics/RevenueStatistics";
 import BestSeller from "../pages/admin/statistics/BestSeller";
 import Message from "../pages/admin/message/Message";
-import Invoice from "../pages/admin/invoice/Invoice";
 import ProductDetail from "../pages/user/products/ProductDetail";
 import RoomChat from "../pages/user/chat/RoomChat";
 import ProtectRouter from "./ProtectRoutes";
@@ -37,6 +36,8 @@ import Promotion from "../pages/user/promotions/Promotion";
 import Introduce from "../pages/user/information/Introduce";
 import Police from "../pages/user/information/Police";
 import Instruct from "../pages/user/information/Instruct";
+import Order from "../pages/admin/orders/Order";
+import Invoice from "../pages/admin/invoices/Invoice";
 
 const adminRoutes = [
   {
@@ -84,8 +85,8 @@ const adminRoutes = [
     element: <ProtectRouter role={Role.ROLE_ADMIN}> <AdminLayout><User /></AdminLayout></ProtectRouter>
   },
   {
-    path: '/admin/invoices',
-    element: <ProtectRouter role={Role.ROLE_ADMIN}> <AdminLayout><Invoice /></AdminLayout></ProtectRouter>
+    path: '/admin/orders',
+    element: <ProtectRouter role={Role.ROLE_ADMIN}> <AdminLayout><Order /></AdminLayout></ProtectRouter>
   },
   {
     path: '/admin/messages',
@@ -106,6 +107,10 @@ const adminRoutes = [
   {
     path: '/admin/stokes',
     element: <ProtectRouter role={Role.ROLE_ADMIN}> <AdminLayout><Stoke /></AdminLayout></ProtectRouter>
+  },
+  {
+    path: '/admin/invoices',
+    element: <ProtectRouter role={Role.ROLE_ADMIN}> <AdminLayout><Invoice /></AdminLayout></ProtectRouter>
   },
 ];
 

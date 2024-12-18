@@ -26,7 +26,7 @@ import { removeVietnameseTones } from "../../utils/remove-vietnamese-tones";
 import RoomChat from "../../pages/user/chat/RoomChat";
 import { deleteAllNotificationsUser } from "../../services/notification.service";
 import { useDispatch } from "react-redux";
-import { setNotification } from "../../redux/reducers/notification.reducer";
+import { clearNotification } from "../../redux/reducers/notification.reducer";
 
 const Header = () => {
     const navigate = useNavigate();
@@ -122,11 +122,16 @@ const Header = () => {
     const handleDeleteAll = async () => {
         try {
             await deleteAllNotificationsUser(user!.id!);
-            dispatch(setNotification([]));
+            
+            dispatch(clearNotification());
         } catch (error) {
             console.log(error);
         }
     }
+
+    const sortedNotifications = [...notifications].sort(
+        (a, b) => new Date(b.notificationTime).getTime() - new Date(a.notificationTime).getTime()
+      );
 
     return (
         <Box>
@@ -201,10 +206,10 @@ const Header = () => {
                                         </Box>
                                     ))}
                                 </Box>
-                            ) : 
-                            (
-                               search.trim() && <Typography sx={{ color: 'red', fontSize: '16px' }}>Không tìm thấy sản phẩm phù hợp!</Typography>
-                            )}
+                            ) :
+                                (
+                                    search.trim() && <Typography sx={{ color: 'red', fontSize: '16px' }}>Không tìm thấy sản phẩm phù hợp!</Typography>
+                                )}
                         </Box>
                     </Box>
 
@@ -253,8 +258,8 @@ const Header = () => {
                                 <Typography>Xóa tất cả thông báo</Typography>
                             </Button>
                             }
-
-                            {notifications.map((notification) => (
+                            
+                            {sortedNotifications.map((notification) => (
                                 <NotificationView key={notification.id} notification={notification} />
                             ))}
                         </Menu>

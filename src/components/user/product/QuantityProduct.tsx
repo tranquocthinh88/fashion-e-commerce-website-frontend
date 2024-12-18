@@ -6,6 +6,8 @@ import { useDispatch } from "react-redux";
 import { useEffect } from "react";
 import { updateQuantityProduct } from "../../../utils/cart.handle";
 import { updateCartState } from "../../../redux/reducers/cart.reducer";
+import { UserModel } from "../../../models/user.model";
+import { getUserFromLocalStorage } from "../../../services/user.service";
 
 type Props = {
     quantity: number,
@@ -17,11 +19,15 @@ type Props = {
 const QuantityProduct = ({ quantity, setQuantity, maxValue, cartItem }: Props) => {
 
     const distpatch = useDispatch();
+    const user : UserModel | null = getUserFromLocalStorage();
 
     const increasement = (e: React.MouseEvent<HTMLButtonElement, MouseEvent>) => {
         e.stopPropagation();
         if (maxValue > quantity) {
             setQuantity(quantity + 1);
+        }
+        else {
+            alert("Trong kho chỉ còn " + maxValue + " sản phẩm");
         }
     }
 
@@ -36,8 +42,10 @@ const QuantityProduct = ({ quantity, setQuantity, maxValue, cartItem }: Props) =
     useEffect(() => {
         if (cartItem) {
             let newCartItem: CartItemModel = { ...cartItem, quantity: quantity };
-            updateQuantityProduct(newCartItem);
-            distpatch(updateCartState());
+            if (user?.id !== undefined) {
+                updateQuantityProduct(newCartItem, user.id);
+            }
+            distpatch(updateCartState(user?.id));
         }
     }, [quantity])
 

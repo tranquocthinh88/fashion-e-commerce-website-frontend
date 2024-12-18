@@ -9,6 +9,8 @@ import { useDispatch } from "react-redux";
 import { updateCartState } from "../../../redux/reducers/cart.reducer";
 import { removeProductFromCart } from "../../../utils/cart.handle";
 import useMediaQuery from '@mui/material/useMediaQuery';
+import { UserModel } from "../../../models/user.model";
+import { getUserFromLocalStorage } from "../../../services/user.service";
 
 type Props = {
     item: CartItemModel;
@@ -20,14 +22,17 @@ const CartItem = ({ item, isSelected, onSelect }: Props) => {
     const [quantity, setQuantity] = useState<number>(item.quantity);
     const dispatch = useDispatch();
     const isMobile = useMediaQuery('(max-width:600px)');
+     const user: UserModel | null = getUserFromLocalStorage();
 
     const setQuantityProp = (quantity: number) => {
         setQuantity(quantity);
     }
     const handleDeleleProductOutCart = (e: React.MouseEvent) => {
         e.stopPropagation(); // Để tránh kích hoạt điều hướng khi nhấn nút "Xóa"
-        removeProductFromCart(item);
-        dispatch(updateCartState());
+        if (user?.id !== undefined) {
+            removeProductFromCart(item, user.id); // Xóa sản phẩm khỏi giỏ hàng
+        }
+        dispatch(updateCartState(user?.id)); // Cập nhật lại giỏ hàng
     };
 
     const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
