@@ -1,0 +1,17 @@
+.red-panel-enter {
+  transform: translateX(100%);
+}
+
+.red-panel-enter-active {
+  transform: translateX(100);
+  transition: transform 600ms;
+}
+
+.red-panel-exit {
+  transform: translateX(0);
+}
+
+.red-panel-exit-active {
+  transform: translateX(-100%);
+  transition: transform 600ms;
+}

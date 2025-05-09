@@ -1,0 +1,33 @@
+@import '@fontsource/roboto/300.css';
+@import '@fontsource/roboto/400.css';
+@import '@fontsource/roboto/500.css';
+@import '@fontsource/roboto/700.css';
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+.sticky-header { // làm hàng đầu của bảng cố định
+  position: sticky;
+  top: 0;
+  background-color: white ;
+  z-index: 1;
+}
+/* Tùy chỉnh toàn bộ thanh cuộn */
+::-webkit-scrollbar {
+  width: 6px;
+}
+/* Tùy chỉnh thanh cuộn dọc */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+/* Tùy chỉnh thanh trượt (thumb) */
+::-webkit-scrollbar-thumb {
+  background: #cbc7c7;
+  border-radius: 5px;
+}
+/* Tùy chỉnh thanh trượt khi hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #888;
+}

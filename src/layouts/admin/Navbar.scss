@@ -1,0 +1,13 @@
+.logo-shop-item {
+    width: 80px;
+    height: 80px;
+    transition: transform 0.5s;
+}
+
+.navbar.open .logo-shop-item {
+    transform: translateX(50px);
+}
+
+.navbar.closed .logo-shop-item {
+    transform: translateX(0);
+}
